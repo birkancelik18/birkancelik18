@@ -359,13 +359,14 @@ body::before {
 }
 
 .about-image {
-    width: 250px;
-    height: 250px;
+    width: 360px;
+    height: 360px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid transparent;
+    object-fit: contain;
+    object-position: center;
+    border: 2px solid transparent;
     background: var(--gradient-primary);
-    padding: 5px;
+    padding: 2px;
     box-shadow: var(--shadow-glow), var(--shadow-premium);
     transition: var(--transition-normal);
     position: relative;
@@ -505,8 +506,8 @@ body::before {
     }
     
     .about-image {
-        width: 200px;
-        height: 200px;
+        width: 300px;
+        height: 300px;
     }
     
     .hero-cta {

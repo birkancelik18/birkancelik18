@@ -12,7 +12,7 @@ const aboutData = {
     name: "Birkan Celik",
     title: "Computer Engineering Master's Student",
     bio: "I am a passionate computer engineering master's student at Politecnico di Milano with diverse interests spanning Human-Computer Interaction, side projects, and biomedical signal processing. Through my work, I explore the intersection of technology and human experience, building AI systems, conducting research, and developing innovative solutions.",
-    profileImage: "images/profile.jpg", // Add your profile image to the images folder
+    profileImage: "images/birkan_furhat_selfie.jpg", // Add your profile image to the images folder
     skills: [
         "Python",
         "PyTorch",
