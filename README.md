@@ -63,4 +63,6 @@ Koç University (2019-2024) | CGPA: 3.59/4.0 | Full-Merit Scholarship
 
 ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=birkancelik18&show_icons=true&theme=default&hide_border=true&count_private=true)
 
+![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=birkancelik18&layout=compact&theme=default&hide_border=true&count_private=true)
+
 </div>
