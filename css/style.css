@@ -519,22 +519,51 @@ body::before {
 }
 
 .dimension-card {
-    background: rgba(250, 250, 249, 0.05);
-    border: 1px solid rgba(250, 250, 249, 0.2);
-    border-radius: 12px;
+    background: rgba(250, 250, 249, 0.03);
+    border: 1px solid rgba(250, 250, 249, 0.15);
+    border-radius: 8px;
     padding: var(--spacing-lg);
-    transition: var(--transition-fast);
+    transition: var(--transition-normal);
     cursor: pointer;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: var(--spacing-md);
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.dimension-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: transparent;
+    transition: var(--transition-normal);
+    opacity: 0;
+}
+
+.dimension-card:hover::before {
+    opacity: 1;
 }
 
 .dimension-card-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.dimension-accent {
+    width: 3px;
+    height: 100%;
+    border-radius: 2px;
+    transition: var(--transition-normal);
+    flex-shrink: 0;
+    align-self: stretch;
 }
 
 .dimension-badge {
@@ -547,7 +576,7 @@ body::before {
 }
 
 .dimension-card-content {
-    text-align: center;
+    text-align: left;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -570,36 +599,37 @@ body::before {
 }
 
 .dimension-card:hover {
-    border-color: rgba(250, 250, 249, 0.4);
+    border-color: rgba(250, 250, 249, 0.3);
     transform: translateY(-2px);
-    background: rgba(250, 250, 249, 0.08);
+    background: rgba(250, 250, 249, 0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dimension-card:hover .dimension-accent {
+    opacity: 1;
+    width: 4px;
 }
 
 .dimension-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin: 0 auto var(--spacing-md);
-    transition: var(--transition-fast);
-    position: relative;
+    display: none;
 }
 
 .dimension-title {
     font-size: var(--font-size-xl);
-    font-weight: 800;
+    font-weight: 700;
     color: #FFFFFF;
     margin-bottom: var(--spacing-xs);
+    letter-spacing: -0.01em;
 }
 
 .dimension-subtitle {
     font-size: var(--font-size-base);
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: var(--spacing-sm);
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
 }
 
 .dimension-description {
@@ -610,6 +640,14 @@ body::before {
 @media (max-width: 768px) {
     .dimensions-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .dimension-card {
+        flex-direction: row;
+    }
+    
+    .dimension-card-header {
+        margin-bottom: 0;
     }
 }
 
@@ -1446,22 +1484,16 @@ body::before {
 
 .dimension-page-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-md);
     padding: var(--spacing-md) 0;
     background: transparent;
     margin-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-md);
 }
 
 .dimension-page-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
+    display: none;
 }
 
 .dimension-page-title-section {
@@ -2104,17 +2136,17 @@ body::before {
     }
 
     .dimension-card-header {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: row;
+        align-items: flex-start;
         gap: var(--spacing-sm);
     }
 
     .dimension-badge {
-        align-self: center;
+        align-self: flex-start;
     }
 
     .dimension-quick-highlight {
-        text-align: center;
+        text-align: left;
     }
 
     .project-header-row {

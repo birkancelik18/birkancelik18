@@ -106,9 +106,7 @@ function renderDimensions() {
         return `
         <div class="dimension-card" data-dimension="${dim.id}">
             <div class="dimension-card-header">
-                <div class="dimension-icon" style="background-color: ${dim.color}20; color: ${dim.color}">
-                    ${dim.icon}
-                </div>
+                <div class="dimension-accent" style="background-color: ${dim.color}"></div>
             </div>
             <div class="dimension-card-content">
                 <h3 class="dimension-title">${dim.title}</h3>
@@ -656,9 +654,6 @@ function navigateToDimension(dimensionId, updateHistory = true) {
                 <span class="breadcrumb-current">${dimension.title}</span>
             </div>
             <div class="dimension-page-header" style="border-left: 4px solid ${dimension.color}">
-                <div class="dimension-page-icon" style="background-color: ${dimension.color}20; color: ${dimension.color}">
-                    ${dimension.icon}
-                </div>
                 <div class="dimension-page-title-section">
                     <h1 class="dimension-page-title">${dimension.title}</h1>
                     <h2 class="dimension-page-subtitle">${dimension.subtitle}</h2>

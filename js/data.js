@@ -41,7 +41,7 @@ const dimensionsData = {
         title: "HCI",
         subtitle: "Human-Computer Interaction",
         description: "Previously researched and developed sketch recognition models by integrating human perception principles at Koc University Intelligent User Interfaces Laboratory. Worked on accessible e-learning interfaces and tangible computing to improve human-computer interaction.",
-        icon: "👥", // You can replace with an image path if preferred
+        icon: "", // Removed emoji for elegant design
         color: "#4A90E2",
         pageContent: {
             overview: "My work in Human-Computer Interaction focuses on creating more intuitive and accessible interfaces that bridge the gap between human cognition and digital systems. Through previous research at Koc University's Intelligent User Interfaces Laboratory, I explored how we can make technology more natural and inclusive.",
@@ -64,7 +64,7 @@ const dimensionsData = {
         title: "Side Projects",
         subtitle: "Personal Projects & Innovation",
         description: "Projects I work on in my free time alongside my studies and research. These include intelligent web applications and other innovative solutions that combine technical expertise with practical applications.",
-        icon: "🚀",
+        icon: "", // Removed emoji for elegant design
         color: "#50C878",
         pageContent: {
             overview: "My side projects represent a space for experimentation and innovation. These personal initiatives allow me to explore new technologies, solve interesting problems, and build solutions that combine my technical skills with creative thinking.",
@@ -86,7 +86,7 @@ const dimensionsData = {
         title: "Biomedical Signals",
         subtitle: "Healthcare Technology",
         description: "Researching brain-computer interfaces and neural engineering at University of Essex. Preprocessing EEG data through spectral analysis and engineering deep learning models for mental state classification to improve healthcare outcomes.",
-        icon: "🏥",
+        icon: "", // Removed emoji for elegant design
         color: "#E74C3C",
         pageContent: {
             overview: "My research in biomedical signals focuses on understanding and interpreting neural data to create assistive technologies and improve healthcare outcomes. Working with EEG data and brain-computer interfaces, I develop deep learning models that can decode mental states and neural patterns.",
