@@ -11,7 +11,7 @@
 const aboutData = {
     name: "Birkan Celik",
     title: "Computer Engineering Master's Student",
-    bio: "I am a passionate computer engineering master's student at Politecnico di Milano with diverse interests spanning Human-Computer Interaction, entrepreneurship, and biomedical signal processing. Through my work, I explore the intersection of technology and human experience, building AI systems, conducting research, and developing innovative solutions.",
+    bio: "I am a passionate computer engineering master's student at Politecnico di Milano with diverse interests spanning Human-Computer Interaction, side projects, and biomedical signal processing. Through my work, I explore the intersection of technology and human experience, building AI systems, conducting research, and developing innovative solutions.",
     profileImage: "images/profile.jpg", // Add your profile image to the images folder
     skills: [
         "Python",
@@ -46,9 +46,9 @@ const dimensionsData = {
     },
     startup: {
         id: "startup",
-        title: "Start Up",
-        subtitle: "Entrepreneurship & Innovation",
-        description: "Building production-grade AI systems as Applied AI Engineer at Novus, developing RAG pipelines and conversational AI chatbots. Previously worked on autonomous robotics systems at Delivers.AI, creating innovative solutions that combine technical expertise with business impact.",
+        title: "Side Projects",
+        subtitle: "Personal Projects & Innovation",
+        description: "Projects I work on in my free time alongside my studies and research. These include autonomous robotics systems, AI applications, and other innovative solutions that combine technical expertise with practical applications.",
         icon: "🚀",
         color: "#50C878"
     },
