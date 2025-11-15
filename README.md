@@ -20,9 +20,6 @@ EEG signal processing and deep learning for mental state classification
 **Undergraduate Researcher** @ Koç University IUI Lab (2018-2024)  
 Sketch recognition models integrating human perception principles
 
-**Robotics Engineering Intern** @ Delivers.AI (Jun-Sep 2022)  
-Autonomous systems and deep learning-based automation
-
 ---
 
 ## Education
