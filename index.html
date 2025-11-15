@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Birkan Celik - Computer Engineering Master's student at Politecnico di Milano. Showcasing projects, research, and experience in HCI, Start Up, and Biomedical Signals.">
+    <title>Birkan Celik - Computer Engineering Master's Student</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#about" class="nav-logo">Birkan Celik</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#dimensions" class="nav-link">Dimensions</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero/About Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-content" id="aboutContent">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Dimensions Section -->
+    <section id="dimensions" class="section dimensions-section">
+        <div class="container">
+            <h2 class="section-title">Dimensions</h2>
+            <p class="section-subtitle">Different facets of my work and interests</p>
+            <div class="dimensions-grid" id="dimensionsGrid">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">Showcase of my work over the years</p>
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="hci">HCI</button>
+                <button class="filter-btn" data-filter="startup">Start Up</button>
+                <button class="filter-btn" data-filter="biomedical">Biomedical Signals</button>
+            </div>
+            <div class="projects-slider-container">
+                <button class="slider-btn slider-btn-prev" id="prevBtn" aria-label="Previous project">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="projects-slider-wrapper">
+                    <div class="projects-slider" id="projectsGrid">
+                        <!-- Content will be dynamically generated from data.js -->
+                    </div>
+                </div>
+                <button class="slider-btn slider-btn-next" id="nextBtn" aria-label="Next project">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="slider-dots" id="sliderDots">
+                <!-- Dots will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience/Timeline Section -->
+    <section id="experience" class="section experience-section">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <p class="section-subtitle">My journey and achievements</p>
+            <div class="timeline" id="timeline">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact</h2>
+            <p class="section-subtitle">Get in touch</p>
+            <div class="contact-content" id="contactContent">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+
