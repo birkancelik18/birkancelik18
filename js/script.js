@@ -97,35 +97,665 @@ function renderDimensions() {
     const dimensionsGrid = document.getElementById('dimensionsGrid');
     if (!dimensionsGrid || !dimensionsData) return;
 
-    const dimensions = [dimensionsData.hci, dimensionsData.startup, dimensionsData.biomedical];
-    
-    dimensionsGrid.innerHTML = dimensions.map(dim => {
-        // Get first highlight for quick preview
-        const quickHighlight = dim.pageContent?.highlights?.[0] || dim.description.substring(0, 80) + '...';
-        
-        return `
-        <div class="dimension-card" data-dimension="${dim.id}">
-            <div class="dimension-card-header">
-                <div class="dimension-accent" style="background-color: ${dim.color}"></div>
+    // Create algebraic dimensions visualization
+    dimensionsGrid.innerHTML = `
+        <div class="dimensions-visualization-container">
+            <div class="dimensions-visualization" id="dimensionsVisualization">
+                <!-- SVG visualization will be inserted here -->
             </div>
-            <div class="dimension-card-content">
-                <h3 class="dimension-title">${dim.title}</h3>
-                <h4 class="dimension-subtitle">${dim.subtitle}</h4>
-                <div class="dimension-quick-highlight">
-                    <span>${quickHighlight}</span>
-                </div>
+            <div class="dimensions-legend" id="dimensionsLegend">
+                <!-- Legend will be inserted here -->
             </div>
         </div>
     `;
+
+    // Initialize the algebraic visualization
+    initAlgebraicDimensionsVisualization();
+}
+
+function initAlgebraicDimensionsVisualization() {
+    const container = document.getElementById('dimensionsVisualization');
+    const legend = document.getElementById('dimensionsLegend');
+    if (!container || !dimensionsData || !projectsData || typeof THREE === 'undefined') {
+        // Fallback if Three.js is not loaded
+        container.innerHTML = '<p style="color: rgba(255,255,255,0.7); text-align: center; padding: 2rem;">Loading 3D visualization...</p>';
+        return;
+    }
+
+    const dimensions = [dimensionsData.hci, dimensionsData.startup, dimensionsData.biomedical];
+    const dimIds = ['hci', 'startup', 'biomedical'];
+    
+    // Calculate project positions in 3D space based on their dimension affiliations
+    const projects = projectsData.map(project => {
+        const coords = [0, 0, 0]; // [hci, startup, biomedical]
+        const dimCount = project.dimensions.length;
+        
+        // Set coordinates based on which dimensions the project belongs to
+        project.dimensions.forEach(dimId => {
+            const index = dimIds.indexOf(dimId);
+            if (index !== -1) {
+                coords[index] = 1; // Full value for each dimension
+            }
+        });
+        
+        // Determine which plane the project lies on
+        let plane = '3D'; // Default to 3D space
+        const hasHCI = coords[0] > 0;
+        const hasStartup = coords[1] > 0;
+        const hasBiomedical = coords[2] > 0;
+        
+        if (dimCount === 1) {
+            // Single dimension - lies on an axis
+            if (hasHCI) plane = 'X-axis';
+            else if (hasStartup) plane = 'Y-axis';
+            else if (hasBiomedical) plane = 'Z-axis';
+        } else if (dimCount === 2) {
+            // Two dimensions - lies on a plane
+            if (hasHCI && hasStartup) plane = 'XY-plane';
+            else if (hasHCI && hasBiomedical) plane = 'XZ-plane';
+            else if (hasStartup && hasBiomedical) plane = 'YZ-plane';
+        } else if (dimCount === 3) {
+            // All three dimensions - lies in 3D space
+            plane = '3D-space';
+        }
+        
+        // Calculate vector coordinates - use actual dimension values
+        // This creates proper vector representation:
+        // - Single dimension: vector along that axis (e.g., [1,0,0] for HCI)
+        // - Two dimensions: vector in the plane (e.g., [1,1,0] for HCI+Startup)
+        // - Three dimensions: vector in 3D space (e.g., [1,1,1])
+        const scale = 2.5; // Scale factor for visualization
+        const magnitude = Math.sqrt(coords[0]**2 + coords[1]**2 + coords[2]**2);
+        
+        return {
+            ...project,
+            coords: coords,
+            plane: plane,
+            // 3D coordinates: actual vector coordinates scaled
+            // This preserves the mathematical meaning - vectors point in the direction
+            // of their dimension composition
+            x: coords[0] * scale,
+            y: coords[1] * scale,
+            z: coords[2] * scale,
+            magnitude: magnitude
+        };
+    });
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0F0E0D);
+    
+    // Camera setup
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    const camera = new THREE.PerspectiveCamera(
+        75,
+        width / height,
+        0.1,
+        1000
+    );
+    camera.position.set(5, 5, 5);
+    camera.lookAt(0, 0, 0);
+    
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    
+    // Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 3;
+    controls.maxDistance = 15;
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xFAFAF9, 0.4);
+    scene.add(ambientLight);
+    
+    const directionalLight1 = new THREE.DirectionalLight(0xFAFAF9, 0.6);
+    directionalLight1.position.set(5, 5, 5);
+    scene.add(directionalLight1);
+    
+    const directionalLight2 = new THREE.DirectionalLight(0xFAFAF9, 0.3);
+    directionalLight2.position.set(-5, -5, -5);
+    scene.add(directionalLight2);
+    
+    // Helper function to convert hex color to Three.js Color
+    function hexToColor(hex) {
+        return new THREE.Color(hex);
+    }
+    
+    // Create axes with clickable functionality
+    const axisLength = 3.5;
+    const axisRadius = 0.03;
+    const axisObjects = [];
+    
+    // X-axis (HCI) - Blue
+    const xAxisGeometry = new THREE.CylinderGeometry(axisRadius, axisRadius, axisLength, 16);
+    const xAxisMaterial = new THREE.MeshPhongMaterial({ 
+        color: hexToColor(dimensions[0].color),
+        emissive: hexToColor(dimensions[0].color),
+        emissiveIntensity: 0.3
+    });
+    const xAxis = new THREE.Mesh(xAxisGeometry, xAxisMaterial);
+    xAxis.rotation.z = -Math.PI / 2;
+    xAxis.position.x = axisLength / 2;
+    xAxis.userData = { dimension: 'hci', type: 'axis' };
+    scene.add(xAxis);
+    axisObjects.push(xAxis);
+    
+    // Y-axis (Side Projects) - Green
+    const yAxisGeometry = new THREE.CylinderGeometry(axisRadius, axisRadius, axisLength, 16);
+    const yAxisMaterial = new THREE.MeshPhongMaterial({ 
+        color: hexToColor(dimensions[1].color),
+        emissive: hexToColor(dimensions[1].color),
+        emissiveIntensity: 0.3
+    });
+    const yAxis = new THREE.Mesh(yAxisGeometry, yAxisMaterial);
+    yAxis.position.y = axisLength / 2;
+    yAxis.userData = { dimension: 'startup', type: 'axis' };
+    scene.add(yAxis);
+    axisObjects.push(yAxis);
+    
+    // Z-axis (Biomedical) - Red
+    const zAxisGeometry = new THREE.CylinderGeometry(axisRadius, axisRadius, axisLength, 16);
+    const zAxisMaterial = new THREE.MeshPhongMaterial({ 
+        color: hexToColor(dimensions[2].color),
+        emissive: hexToColor(dimensions[2].color),
+        emissiveIntensity: 0.3
+    });
+    const zAxis = new THREE.Mesh(zAxisGeometry, zAxisMaterial);
+    zAxis.rotation.x = Math.PI / 2;
+    zAxis.position.z = axisLength / 2;
+    zAxis.userData = { dimension: 'biomedical', type: 'axis' };
+    scene.add(zAxis);
+    axisObjects.push(zAxis);
+    
+    // Create HTML overlay for axis labels
+    const axisLabelsContainer = document.createElement('div');
+    axisLabelsContainer.className = 'axis-labels-container';
+    axisLabelsContainer.style.position = 'absolute';
+    axisLabelsContainer.style.top = '0';
+    axisLabelsContainer.style.left = '0';
+    axisLabelsContainer.style.width = '100%';
+    axisLabelsContainer.style.height = '100%';
+    axisLabelsContainer.style.pointerEvents = 'none';
+    container.appendChild(axisLabelsContainer);
+    
+    // Add instruction text
+    const instructionText = document.createElement('div');
+    instructionText.className = 'dimensions-instruction';
+    instructionText.textContent = 'Drag to rotate • Scroll to zoom • Click projects to view';
+    instructionText.style.position = 'absolute';
+    instructionText.style.bottom = '10px';
+    instructionText.style.left = '50%';
+    instructionText.style.transform = 'translateX(-50%)';
+    instructionText.style.color = 'rgba(250, 250, 249, 0.5)';
+    instructionText.style.fontSize = '12px';
+    instructionText.style.pointerEvents = 'none';
+    instructionText.style.zIndex = '10';
+    container.appendChild(instructionText);
+    
+    function updateAxisLabels() {
+        axisLabelsContainer.innerHTML = '';
+        
+        // Project 3D positions to screen coordinates
+        const vector = new THREE.Vector3();
+        
+        // X-axis label (HCI) - make clickable
+        vector.set(axisLength, 0, 0);
+        vector.project(camera);
+        const xLabel = document.createElement('div');
+        xLabel.className = 'axis-label clickable-axis-label';
+        xLabel.textContent = dimensions[0].title + ' →';
+        xLabel.style.color = dimensions[0].color;
+        xLabel.style.position = 'absolute';
+        xLabel.style.left = `${(vector.x * 0.5 + 0.5) * width}px`;
+        xLabel.style.top = `${(-vector.y * 0.5 + 0.5) * height}px`;
+        xLabel.style.transform = 'translate(-50%, -50%)';
+        xLabel.style.fontSize = '14px';
+        xLabel.style.fontWeight = '600';
+        xLabel.style.cursor = 'pointer';
+        xLabel.style.pointerEvents = 'auto';
+        xLabel.style.padding = '4px 8px';
+        xLabel.style.borderRadius = '4px';
+        xLabel.style.background = 'rgba(15, 14, 13, 0.7)';
+        xLabel.style.transition = 'all 0.2s ease';
+        xLabel.addEventListener('click', () => navigateToDimension('hci'));
+        xLabel.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.9)';
+            this.style.transform = 'translate(-50%, -50%) scale(1.1)';
+        });
+        xLabel.addEventListener('mouseleave', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.7)';
+            this.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        axisLabelsContainer.appendChild(xLabel);
+        
+        // Y-axis label (Side Projects) - make clickable
+        vector.set(0, axisLength, 0);
+        vector.project(camera);
+        const yLabel = document.createElement('div');
+        yLabel.className = 'axis-label clickable-axis-label';
+        yLabel.textContent = dimensions[1].title + ' →';
+        yLabel.style.color = dimensions[1].color;
+        yLabel.style.position = 'absolute';
+        yLabel.style.left = `${(vector.x * 0.5 + 0.5) * width}px`;
+        yLabel.style.top = `${(-vector.y * 0.5 + 0.5) * height}px`;
+        yLabel.style.transform = 'translate(-50%, -50%)';
+        yLabel.style.fontSize = '14px';
+        yLabel.style.fontWeight = '600';
+        yLabel.style.cursor = 'pointer';
+        yLabel.style.pointerEvents = 'auto';
+        yLabel.style.padding = '4px 8px';
+        yLabel.style.borderRadius = '4px';
+        yLabel.style.background = 'rgba(15, 14, 13, 0.7)';
+        yLabel.style.transition = 'all 0.2s ease';
+        yLabel.addEventListener('click', () => navigateToDimension('startup'));
+        yLabel.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.9)';
+            this.style.transform = 'translate(-50%, -50%) scale(1.1)';
+        });
+        yLabel.addEventListener('mouseleave', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.7)';
+            this.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        axisLabelsContainer.appendChild(yLabel);
+        
+        // Z-axis label (Biomedical) - make clickable
+        vector.set(0, 0, axisLength);
+        vector.project(camera);
+        const zLabel = document.createElement('div');
+        zLabel.className = 'axis-label clickable-axis-label';
+        zLabel.textContent = dimensions[2].title + ' →';
+        zLabel.style.color = dimensions[2].color;
+        zLabel.style.position = 'absolute';
+        zLabel.style.left = `${(vector.x * 0.5 + 0.5) * width}px`;
+        zLabel.style.top = `${(-vector.y * 0.5 + 0.5) * height}px`;
+        zLabel.style.transform = 'translate(-50%, -50%)';
+        zLabel.style.fontSize = '14px';
+        zLabel.style.fontWeight = '600';
+        zLabel.style.cursor = 'pointer';
+        zLabel.style.pointerEvents = 'auto';
+        zLabel.style.padding = '4px 8px';
+        zLabel.style.borderRadius = '4px';
+        zLabel.style.background = 'rgba(15, 14, 13, 0.7)';
+        zLabel.style.transition = 'all 0.2s ease';
+        zLabel.addEventListener('click', () => navigateToDimension('biomedical'));
+        zLabel.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.9)';
+            this.style.transform = 'translate(-50%, -50%) scale(1.1)';
+        });
+        zLabel.addEventListener('mouseleave', function() {
+            this.style.background = 'rgba(15, 14, 13, 0.7)';
+            this.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        axisLabelsContainer.appendChild(zLabel);
+    }
+    
+    // Create coordinate planes (XY, XZ, YZ) to show where projects lie
+    const planeSize = 3;
+    const planeOpacity = 0.08;
+    
+    // XY Plane (HCI + Side Projects)
+    const xyPlaneGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
+    const xyPlaneMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x50C878, // Green tint for Side Projects
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: planeOpacity
+    });
+    const xyPlane = new THREE.Mesh(xyPlaneGeometry, xyPlaneMaterial);
+    xyPlane.rotation.x = Math.PI / 2;
+    xyPlane.position.z = 0;
+    scene.add(xyPlane);
+    
+    // XZ Plane (HCI + Biomedical)
+    const xzPlaneGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
+    const xzPlaneMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xE74C3C, // Red tint for Biomedical
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: planeOpacity
+    });
+    const xzPlane = new THREE.Mesh(xzPlaneGeometry, xzPlaneMaterial);
+    xzPlane.position.y = 0;
+    scene.add(xzPlane);
+    
+    // YZ Plane (Side Projects + Biomedical)
+    const yzPlaneGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
+    const yzPlaneMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x4A90E2, // Blue tint for HCI
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: planeOpacity
+    });
+    const yzPlane = new THREE.Mesh(yzPlaneGeometry, yzPlaneMaterial);
+    yzPlane.rotation.y = Math.PI / 2;
+    yzPlane.position.x = 0;
+    scene.add(yzPlane);
+    
+    // Origin point
+    const originGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+    const originMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xFAFAF9,
+        emissive: 0xFAFAF9,
+        emissiveIntensity: 0.5
+    });
+    const origin = new THREE.Mesh(originGeometry, originMaterial);
+    scene.add(origin);
+    
+    // Project vectors (arrows)
+    const projectObjects = [];
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    
+    projects.forEach((project, index) => {
+        // Determine color based on dimensions
+        let vectorColor = 0xFAFAF9;
+        if (project.dimensions.length === 1) {
+            // Single dimension - use that dimension's color
+            vectorColor = hexToColor(dimensionsData[project.dimensions[0]].color).getHex();
+        } else if (project.dimensions.length === 2) {
+            // Two dimensions - blend colors or use average
+            const colors = project.dimensions.map(dimId => 
+                hexToColor(dimensionsData[dimId].color)
+            );
+            // Average the colors
+            vectorColor = new THREE.Color()
+                .add(colors[0])
+                .add(colors[1])
+                .multiplyScalar(0.5)
+                .getHex();
+        } else {
+            // Three dimensions - white or blend all three
+            const colors = project.dimensions.map(dimId => 
+                hexToColor(dimensionsData[dimId].color)
+            );
+            vectorColor = new THREE.Color()
+                .add(colors[0])
+                .add(colors[1])
+                .add(colors[2])
+                .multiplyScalar(1/3)
+                .getHex();
+        }
+        
+        // Create vector from origin to project position
+        const direction = new THREE.Vector3(project.x, project.y, project.z);
+        const length = direction.length();
+        
+        if (length > 0.01) { // Only create vector if it has meaningful length
+            // Normalize direction for arrow
+            const normalizedDirection = direction.clone().normalize();
+            
+            // Create arrow helper with proper length
+            const arrowLength = length;
+            const arrowHeadLength = Math.min(0.25, arrowLength * 0.12);
+            const arrowHeadWidth = arrowHeadLength * 0.7;
+            
+            const arrowHelper = new THREE.ArrowHelper(
+                normalizedDirection,
+                new THREE.Vector3(0, 0, 0),
+                arrowLength,
+                vectorColor,
+                arrowHeadLength,
+                arrowHeadWidth
+            );
+            
+            // Store project and plane information
+            arrowHelper.userData.originalLength = arrowLength;
+            arrowHelper.userData.project = project;
+            arrowHelper.userData.type = 'vector';
+            arrowHelper.userData.plane = project.plane;
+            
+            // Create a larger invisible sphere for easier clicking (positioned along the vector)
+            const clickGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const clickMaterial = new THREE.MeshBasicMaterial({ 
+                visible: false,
+                transparent: true,
+                opacity: 0
+            });
+            const clickSphere = new THREE.Mesh(clickGeometry, clickMaterial);
+            // Position sphere at midpoint of vector for better interaction
+            clickSphere.position.set(
+                project.x * 0.5, 
+                project.y * 0.5, 
+                project.z * 0.5
+            );
+            clickSphere.userData = { 
+                project: project, 
+                type: 'vector', 
+                arrowHelper: arrowHelper,
+                plane: project.plane
+            };
+            
+            scene.add(arrowHelper);
+            scene.add(clickSphere);
+            projectObjects.push(clickSphere); // Use click sphere for interaction
+        }
+    });
+    
+    // Add grid helpers for each plane to show coordinate system
+    // XY plane grid (horizontal)
+    const xyGrid = new THREE.GridHelper(6, 20, 0x50C878, 0x0F0E0D);
+    xyGrid.rotation.x = Math.PI / 2;
+    xyGrid.material.opacity = 0.15;
+    xyGrid.material.transparent = true;
+    scene.add(xyGrid);
+    
+    // XZ plane grid (vertical, facing camera initially)
+    const xzGrid = new THREE.GridHelper(6, 20, 0xE74C3C, 0x0F0E0D);
+    xzGrid.material.opacity = 0.15;
+    xzGrid.material.transparent = true;
+    scene.add(xzGrid);
+    
+    // YZ plane grid (vertical, side)
+    const yzGrid = new THREE.GridHelper(6, 20, 0x4A90E2, 0x0F0E0D);
+    yzGrid.rotation.y = Math.PI / 2;
+    yzGrid.material.opacity = 0.15;
+    yzGrid.material.transparent = true;
+    scene.add(yzGrid);
+    
+    // Mouse interaction
+    let hoveredObject = null;
+    let hoveredAxis = null;
+    
+    function onMouseMove(event) {
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Check for axis intersections first
+        const axisIntersects = raycaster.intersectObjects(axisObjects);
+        const projectIntersects = raycaster.intersectObjects(projectObjects);
+        
+        // Handle axis hover
+        if (axisIntersects.length > 0) {
+            const axis = axisIntersects[0].object;
+            if (hoveredAxis !== axis) {
+                if (hoveredAxis) {
+                    hoveredAxis.material.emissiveIntensity = 0.3;
+                }
+                hoveredAxis = axis;
+                axis.material.emissiveIntensity = 0.8;
+                const dim = dimensionsData[axis.userData.dimension];
+                showProjectTooltip3D(`View ${dim.title} projects →`, event.clientX, event.clientY);
+                renderer.domElement.style.cursor = 'pointer';
+            }
+            if (hoveredObject) {
+                hoveredObject = null;
+            }
+        } else if (projectIntersects.length > 0) {
+            const object = projectIntersects[0].object;
+            if (hoveredObject !== object) {
+                if (hoveredObject && hoveredObject.userData.arrowHelper) {
+                    // Reset previous arrow scale
+                    const prevArrow = hoveredObject.userData.arrowHelper;
+                    prevArrow.scale.set(1, 1, 1);
+                }
+                hoveredObject = object;
+                if (object.userData.arrowHelper) {
+                    // Scale up the arrow on hover
+                    const arrow = object.userData.arrowHelper;
+                    arrow.scale.set(1.3, 1.3, 1.3);
+                }
+                const project = object.userData.project;
+                const plane = object.userData.plane || project.plane;
+                // Format plane text nicely
+                let planeText = plane;
+                if (plane.includes('-')) {
+                    planeText = plane.replace('-', ' ').toUpperCase();
+                } else {
+                    planeText = plane.charAt(0).toUpperCase() + plane.slice(1);
+                }
+                showProjectTooltip3D(`${project.title} | ${planeText}`, event.clientX, event.clientY);
+                renderer.domElement.style.cursor = 'pointer';
+            }
+            if (hoveredAxis) {
+                hoveredAxis.material.emissiveIntensity = 0.3;
+                hoveredAxis = null;
+            }
+        } else {
+            if (hoveredObject && hoveredObject.userData.arrowHelper) {
+                // Reset arrow scale
+                hoveredObject.userData.arrowHelper.scale.set(1, 1, 1);
+                hoveredObject = null;
+            }
+            if (hoveredAxis) {
+                hoveredAxis.material.emissiveIntensity = 0.3;
+                hoveredAxis = null;
+            }
+            hideProjectTooltip();
+            renderer.domElement.style.cursor = 'default';
+        }
+    }
+    
+    function onMouseClick(event) {
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Check axes first (higher priority)
+        const axisIntersects = raycaster.intersectObjects(axisObjects);
+        if (axisIntersects.length > 0) {
+            const axis = axisIntersects[0].object;
+            const dimensionId = axis.userData.dimension;
+            navigateToDimension(dimensionId);
+            return;
+        }
+        
+        // Then check projects
+        const projectIntersects = raycaster.intersectObjects(projectObjects);
+        if (projectIntersects.length > 0) {
+            const project = projectIntersects[0].object.userData.project;
+            navigateToProject(project.id);
+        }
+    }
+    
+    renderer.domElement.addEventListener('mousemove', onMouseMove);
+    renderer.domElement.addEventListener('click', onMouseClick);
+    
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+        updateAxisLabels(); // Update labels position as camera moves
+    }
+    animate();
+    
+    // Handle resize
+    function onWindowResize() {
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newWidth, newHeight);
+    }
+    window.addEventListener('resize', onWindowResize);
+    
+    // Create legend
+    legend.innerHTML = dimensions.map(dim => {
+        const projectCount = projectsData.filter(p => p.dimensions.includes(dim.id)).length;
+        return `
+            <div class="dimension-legend-item" data-dimension="${dim.id}">
+                <div class="legend-color" style="background-color: ${dim.color}"></div>
+                <div class="legend-content">
+                    <div class="legend-title">${dim.title}</div>
+                    <div class="legend-subtitle">${dim.subtitle}</div>
+                    <div class="legend-count">${projectCount} project${projectCount !== 1 ? 's' : ''}</div>
+                </div>
+            </div>
+        `;
     }).join('');
 
-    // Add click interaction to navigate to dimension page
-    document.querySelectorAll('.dimension-card').forEach(card => {
-        card.addEventListener('click', function() {
+    // Add click handlers to legend items
+    document.querySelectorAll('.dimension-legend-item').forEach(item => {
+        item.addEventListener('click', function() {
             const dimension = this.dataset.dimension;
             navigateToDimension(dimension);
         });
+        item.style.cursor = 'pointer';
     });
+}
+
+function showProjectTooltip3D(title, x, y) {
+    hideProjectTooltip();
+    const tooltip = document.createElement('div');
+    tooltip.className = 'project-tooltip';
+    tooltip.textContent = title;
+    tooltip.style.position = 'fixed';
+    tooltip.style.left = `${x + 15}px`;
+    tooltip.style.top = `${y - 10}px`;
+    tooltip.style.background = 'rgba(15, 14, 13, 0.95)';
+    tooltip.style.color = '#FAFAF9';
+    tooltip.style.padding = '6px 12px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.fontSize = '12px';
+    tooltip.style.fontWeight = '500';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.zIndex = '1000';
+    tooltip.style.border = '1px solid rgba(250, 250, 249, 0.2)';
+    tooltip.style.whiteSpace = 'nowrap';
+    tooltip.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+    document.body.appendChild(tooltip);
+}
+
+function showProjectTooltip(element, title, x, y) {
+    // Remove existing tooltip
+    const existing = document.querySelector('.project-tooltip');
+    if (existing) existing.remove();
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'project-tooltip';
+    tooltip.textContent = title;
+    tooltip.style.position = 'fixed';
+    tooltip.style.left = `${x + 15}px`;
+    tooltip.style.top = `${y - 10}px`;
+    tooltip.style.background = 'rgba(15, 14, 13, 0.95)';
+    tooltip.style.color = '#FAFAF9';
+    tooltip.style.padding = '6px 12px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.fontSize = '12px';
+    tooltip.style.fontWeight = '500';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.zIndex = '1000';
+    tooltip.style.border = '1px solid rgba(250, 250, 249, 0.2)';
+    tooltip.style.whiteSpace = 'nowrap';
+    tooltip.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+    
+    document.body.appendChild(tooltip);
+}
+
+function hideProjectTooltip() {
+    const tooltip = document.querySelector('.project-tooltip');
+    if (tooltip) tooltip.remove();
 }
 
 function renderProjects() {
