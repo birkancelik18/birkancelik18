@@ -836,7 +836,7 @@ body::before {
     min-width: 0;
     max-width: 100%;
     position: relative;
-    min-height: 400px;
+    min-height: 200px;
     align-items: stretch;
     cursor: pointer;
 }
@@ -862,9 +862,9 @@ body::before {
 
 .project-image-container {
     position: relative;
-    width: 45%;
-    min-width: 300px;
-    max-width: 500px;
+    width: 40%;
+    min-width: 200px;
+    max-width: 350px;
     height: 100%;
     overflow: hidden;
     background-color: var(--bg-light);
@@ -925,7 +925,7 @@ body::before {
 }
 
 .project-content {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -937,8 +937,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: var(--spacing-sm);
-    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    gap: var(--spacing-xs);
 }
 
 .project-dimensions {
@@ -949,9 +949,9 @@ body::before {
 }
 
 .project-date-badge {
-    padding: 4px 12px;
+    padding: 2px 8px;
     background: rgba(250, 250, 249, 0.1);
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: rgba(255, 255, 255, 0.7);
@@ -960,8 +960,8 @@ body::before {
 }
 
 .project-key-result {
-    margin: var(--spacing-sm) 0;
-    padding: var(--spacing-sm) 0;
+    margin: var(--spacing-xs) 0;
+    padding: var(--spacing-xs) 0;
     border-left: 2px solid #FAFAF9;
     padding-left: var(--spacing-sm);
     display: flex;
@@ -998,9 +998,9 @@ body::before {
 
 .project-dimension {
     font-size: var(--font-size-sm);
-    padding: 4px 10px;
+    padding: 2px 8px;
     background: rgba(250, 250, 249, 0.1);
-    border-radius: 6px;
+    border-radius: 4px;
     color: #FFFFFF;
     font-weight: 500;
     transition: var(--transition-fast);
@@ -1011,33 +1011,34 @@ body::before {
 }
 
 .project-title {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: #FFFFFF;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 
 .project-description {
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: var(--spacing-md);
-    line-height: 1.7;
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.5;
     flex-grow: 1;
+    font-size: var(--font-size-sm);
 }
 
 .project-tech {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 0;
 }
 
 .tech-tag {
     font-size: var(--font-size-sm);
-    padding: 5px 12px;
+    padding: 3px 8px;
     background: rgba(250, 250, 249, 0.1);
     color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(250, 250, 249, 0.15);
-    border-radius: 6px;
+    border-radius: 4px;
     font-weight: 500;
     transition: var(--transition-fast);
 }

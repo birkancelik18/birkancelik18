@@ -116,7 +116,7 @@ const projectsData = [
         id: 3,
         title: "Sketch Recognition Models",
         description: "Developed sketch recognition models by integrating human perception principles at Koc University Intelligent User Interfaces Laboratory (Nov 2018 - June 2024). Utilized deep learning, real-time databases, and extensive data collection from web scraping, crowdsourcing (Amazon MTurk), and face-to-face experiments.",
-        image: "images/project3.jpg",
+        image: "images/sketch_recognition.png",
         techStack: ["Python", "Deep Learning", "TensorFlow", "PyTorch"],
         dimensions: ["hci"],
         links: {
@@ -200,7 +200,7 @@ const projectsData = [
         id: 5,
         title: "Kart-ON: Accessible e-Learning Interfaces",
         description: "Contributed to the development of Kart-ON at TUBITAK, utilizing AI-powered mobile applications and tangible interfaces, as well as community workshop guides to improve the delivery of high-quality, accessible programming education to diverse learners.",
-        image: "images/project5.jpg",
+        image: "images/karton.png",
         techStack: ["AI", "Mobile Development", "Tangible Interfaces", "Accessibility"],
         dimensions: ["hci"],
         links: {
@@ -242,7 +242,7 @@ const projectsData = [
         id: 7,
         title: "Health Big Data: Fetal Biosignals Integration Pipeline",
         description: "Developed an end-to-end data integration pipeline for managing biosignal and clinical data from pregnant women and their fetuses across multiple hospitals in Italy. The project includes fetal heart rate (FHR), uterine contraction (TOCO), and clinical metadata processing, with data profiling, cleaning, integration, and migration into a relational SQLite database mapped to OMOP Common Data Model. Built a FastAPI-based API and graphical user interface for clinicians and researchers.",
-        image: "images/project7.jpg",
+        image: "images/hbd.png",
         techStack: ["Python", "FastAPI", "SQLite", "Pandas", "SciPy", "OMOP CDM", "Data Integration", "Signal Processing", "Data Cleaning", "API Development", "Web Interface"],
         dimensions: ["biomedical"],
         links: {
@@ -308,7 +308,7 @@ const projectsData = [
         id: 8,
         title: "Thought2Text: Brain Signal to Text Conversion",
         description: "A brain-computer interface (BCI) project focused on converting neural signals and brain activity patterns into text output. This project involves preprocessing EEG/neural signals, feature extraction, and implementing machine learning models for classification and translation of brain signals into readable text, advancing assistive communication technologies.",
-        image: "images/project8.jpg",
+        image: "images/thought2text.png",
         techStack: ["Python", "EEG", "Signal Processing", "Machine Learning", "BCI", "Deep Learning"],
         dimensions: ["biomedical"],
         links: {
@@ -317,7 +317,8 @@ const projectsData = [
         },
         date: "2024",
         details: {
-            overview: "Thought2Text is a brain-computer interface project that converts neural signals into text, advancing assistive communication technologies for individuals with communication disabilities.",
+            teamPhoto: "images/thought2text_team.png",
+            overview: "Thought2Text is a brain-computer interface project that converts neural signals into text, advancing assistive communication technologies for individuals with communication disabilities. This project was developed collaboratively by our research team.",
             problem: "Individuals with severe communication disabilities need alternative methods to express themselves. Traditional interfaces may not be accessible to everyone.",
             solution: "I developed a BCI system that processes EEG/neural signals, extracts features, and uses machine learning models to translate brain activity patterns into readable text output.",
             methodology: [
@@ -356,7 +357,7 @@ const projectsData = [
         id: 9,
         title: "ATLAS: Your Intelligent Travel Assistant",
         description: "Developed an intelligent mobile travel assistant that personalizes flight recommendations using AI and real-time flight data. Built with Flutter, Python FastAPI, Firebase, and integrated LLM agent powered by OpenAI GPT-4 Turbo. Features include personalized flight search, route tracking, push notifications, and conversational AI interface.",
-        image: "images/project9.jpg",
+        image: "images/atlas.png",
         techStack: ["Flutter", "Python", "FastAPI", "Firebase", "LangChain", "OpenAI GPT-4", "Kiwi Tequila API", "Dart", "Cloud Functions"],
         dimensions: ["startup"],
         links: {
@@ -365,7 +366,8 @@ const projectsData = [
         },
         date: "Spring 2024",
         details: {
-            overview: "ATLAS is an intelligent travel assistant mobile application that streamlines the travel planning process by understanding user preferences and suggesting appropriate flights in real-time. The application leverages Kiwi Tequila API for flight data and uses personalization algorithms to filter results based on user personas such as business travelers, budget-conscious travelers, eco-friendly travelers, and family travelers. The unique value proposition is having an intelligent assistant that knows your preferences and applies them in the background, sending push notifications when it finds flights you might be interested in.",
+            teamPhoto: "images/atlas_2.png",
+            overview: "ATLAS is an intelligent travel assistant mobile application that streamlines the travel planning process by understanding user preferences and suggesting appropriate flights in real-time. The application leverages Kiwi Tequila API for flight data and uses personalization algorithms to filter results based on user personas such as business travelers, budget-conscious travelers, eco-friendly travelers, and family travelers. The unique value proposition is having an intelligent assistant that knows your preferences and applies them in the background, sending push notifications when it finds flights you might be interested in. This project was developed collaboratively by our team at Koç University.",
             problem: "The travel planning process is time-consuming and overwhelming due to information overload. Traditional flight search platforms require users to manually filter through numerous options, and most websites reset filtered options during different searches, making the process repetitive and frustrating. Additionally, there's a lack of personalization in real-time flight recommendations, and users need to constantly check for price changes manually.",
             solution: "ATLAS solves these problems by providing a personalized, intelligent travel assistant that works in the background. The application uses session-based recommendation systems to create user personas during signup, then automatically filters flight results based on these preferences. It tracks flights and routes, sending push notifications when prices change or better deals are found. The integrated LLM agent allows users to search and track flights through natural conversation, similar to talking with a travel agency personnel.",
             methodology: [

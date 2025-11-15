@@ -813,6 +813,12 @@ function navigateToProject(projectId, updateHistory = true) {
                 <div class="project-detail-section">
                     <h3>Overview</h3>
                     <p>${project.details.overview}</p>
+                    ${project.details.teamPhoto ? `
+                        <div style="margin-top: var(--spacing-md); text-align: center;">
+                            <img src="${project.details.teamPhoto}" alt="${project.title} Team" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(250, 250, 249, 0.2);" onerror="this.style.display='none'">
+                            <p style="margin-top: var(--spacing-xs); color: rgba(255, 255, 255, 0.7); font-size: var(--font-size-sm);">The ${project.title} team</p>
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="project-detail-section">
                     <h3>The Problem</h3>
