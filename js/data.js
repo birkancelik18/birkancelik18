@@ -306,10 +306,10 @@ const projectsData = [
     },
     {
         id: 8,
-        title: "Thought2Text: Brain Signal to Text Conversion",
-        description: "A brain-computer interface (BCI) project focused on converting neural signals and brain activity patterns into text output. This project involves preprocessing EEG/neural signals, feature extraction, and implementing machine learning models for classification and translation of brain signals into readable text, advancing assistive communication technologies.",
+        title: "Thought2Text: Brain Computer Interface using P300 Signals to Generate Text",
+        description: "A state-of-the-art brain-computer interface (BCI) system using P300 signals to enable text generation through brain activity. Designed to assist individuals with severe motor disabilities, the system achieves 90% accuracy and 11 bits/min information transfer rate using an 8-channel g.tec EEG device and the row-column paradigm.",
         image: "images/thought2text.png",
-        techStack: ["Python", "EEG", "Signal Processing", "Machine Learning", "BCI", "Deep Learning"],
+        techStack: ["Python", "MATLAB", "EEG", "Signal Processing", "Machine Learning", "BCI", "LDA", "XDAWN", "MNE-Python", "Lab Streaming Layer"],
         dimensions: ["biomedical"],
         links: {
             github: "https://github.com/birkancelik18",
@@ -318,37 +318,64 @@ const projectsData = [
         date: "2024",
         details: {
             teamPhoto: "images/thought2text_team.png",
-            overview: "Thought2Text is a brain-computer interface project that converts neural signals into text, advancing assistive communication technologies for individuals with communication disabilities. This project was developed collaboratively by our research team.",
-            problem: "Individuals with severe communication disabilities need alternative methods to express themselves. Traditional interfaces may not be accessible to everyone.",
-            solution: "I developed a BCI system that processes EEG/neural signals, extracts features, and uses machine learning models to translate brain activity patterns into readable text output.",
+            team: "Arda Gürsul (72728) & Birkan Çelik (68813)",
+            advisors: "Beren Semiz & Hakan Ürey",
+            overview: "Thought2Text is a Brain Computer Interface (BCI) system that uses P300 signals to generate text, primarily designed to assist individuals with severe motor disabilities such as amyotrophic lateral sclerosis (ALS), spinal cord injuries, or neuromuscular disorders. The system employs an 8-channel g.tec g.Nautilus Research EEG device with electrodes strategically placed around the parietal and occipital lobes. Using the row-column paradigm introduced by Farwell and Donchin, the system achieves state-of-the-art performance with 90% accuracy and 11 bits/min information transfer rate, allowing users to type a letter in 4.5 seconds.",
+            problem: "Approximately 5.4 million individuals worldwide face paralysis, with 72.1% under 65 years old. Stroke (33.7%) is the most prevalent cause, followed by multiple sclerosis, spinal cord injury, and cerebral palsy. For those whose paralysis affects communication, traditional interfaces are not accessible. Brain-Computer Interfaces (BCIs) emerge as a cutting-edge solution, but existing systems often struggle with data quality, signal-to-noise ratio, and achieving reliable real-time performance.",
+            solution: "We developed Thought2Text, a P300-based BCI speller system using an 8-channel non-invasive g.tec g.Nautilus Research EEG device. The system implements a 6x6 matrix interface that prompts users to focus on a letter or number, with rows and columns randomly illuminating. When the desired character's row or column is lit, a P300 signal (positive deflection around 300ms after the stimulus) is triggered, allowing the interface to identify and display the intended letter. The system includes comprehensive signal processing pipelines, XDAWN spatial filtering, and Linear Discriminant Analysis (LDA) classification to achieve robust performance.",
             methodology: [
-                "EEG/neural signal preprocessing",
-                "Feature extraction from brain signals",
-                "Machine learning model development for classification",
-                "Text generation from neural patterns",
-                "System integration and testing"
+                "EEG Device Setup: Selected and configured the 8-channel g.tec g.Nautilus Research EEG device after initial testing with Emotiv EPOC+ (14-channel) and Biopac (4-channel) devices. The g.tec device provided 35% better accuracy and more stable results despite requiring electro-gel injection.",
+                "Lab Streaming Layer (LSL): Implemented LSL middleware for data streaming and synchronization from multiple sources, enabling easy hardware/software component swapping and maintaining system modularity.",
+                "EEG Recording and Stimulations: Designed a 6x6 matrix interface with 50ms flash duration and 25ms inter-stimulus intervals. Implemented 5 cycles of 12 flashes (6 rows + 6 columns) per letter, with proper event marking for target and non-target stimuli.",
+                "Signal Processing: Applied notch filter (50Hz) for powerline noise removal and 4th-order Butterworth bandpass filter (1-20Hz) for P300 frequency range extraction. Trained XDAWN spatial filters to increase signal-to-signal-plus-noise ratio (SSNR) by intensifying channels most likely to detect P300 signals.",
+                "Classifier Training: Implemented binary classification distinguishing target (focused letter's row/column) from non-target segments. Averaged data segments to enhance P300 responses. Evaluated Linear Discriminant Analysis (LDA), Support Vector Machine (SVM), and Multi-Layer Perceptron (MLP), with LDA achieving best performance. Addressed class imbalance (2 targets vs 10 non-targets) using weighted loss functions.",
+                "Real-Time Text Generation: Developed real-time processing pipeline converting brain signals to letters. System calibration takes ~20 minutes per new user, after which users can type with 4.5 seconds per letter."
             ],
             results: [
-                "Successfully converted brain signals to text",
-                "Advanced assistive communication technology",
-                "Demonstrated potential for real-world applications",
-                "Published research findings"
+                "Achieved 90% accuracy in typing experiments (9 out of 10 letters correctly identified)",
+                "Reached 11 bits/min information transfer rate, matching state-of-the-art performance (12 bits/min)",
+                "Typing speed of 4.5 seconds per letter",
+                "Superior fatigue performance: 60% accuracy under fatigue vs 50% for state-of-the-art models",
+                "Average 82% accuracy across multiple users in single-session train/test scenarios",
+                "35% accuracy improvement after switching from Emotiv EPOC+ to g.tec g.Nautilus device",
+                "Successfully implemented Farwell and Donchin's row-column paradigm with modern signal processing techniques",
+                "Validated system stability through consistent offline experiment results"
             ],
             subpages: [
                 {
-                    id: "signal-processing",
-                    title: "Neural Signal Processing",
-                    content: "The system processes raw EEG signals through sophisticated preprocessing pipelines, removing artifacts and extracting meaningful features that represent neural activity patterns."
+                    id: "p300-signals",
+                    title: "P300 Signals and Row-Column Paradigm",
+                    content: "P300 signals are positive deflections in EEG waves occurring around 300 milliseconds after specific, infrequent, yet expected stimuli. The row-column paradigm, introduced by Farwell and Donchin in 1988, uses a 6x6 matrix where rows and columns flash randomly. When a user focuses on a specific letter, the P300 response is triggered when that letter's row or column is illuminated. Our implementation follows this classic paradigm while incorporating modern signal processing techniques. The system flashes each row and column for 50 milliseconds with 25 milliseconds between flashes, performing 5 cycles (60 total flashes) per letter to robustly discriminate P300 responses from normal EEG data."
                 },
                 {
-                    id: "text-generation",
-                    title: "Text Generation",
-                    content: "Machine learning models classify neural patterns and translate them into text output, enabling communication through brain signals alone."
+                    id: "signal-processing",
+                    title: "Signal Processing Pipeline",
+                    content: "The signal processing pipeline consists of multiple stages: (1) Notch filtering at 50Hz to eliminate powerline noise, (2) 4th-order Butterworth bandpass filtering (1-20Hz) to extract the P300 frequency range while balancing passband smoothness and roll-off sharpness, (3) XDAWN spatial filtering to enhance signal-to-signal-plus-noise ratio by training on user-specific data to intensify channels most likely to detect P300 signals while reducing noise from less informative channels. XDAWN performs singular value decomposition on sensor inputs, selecting the first 2 singular vectors corresponding to the largest singular values to estimate vector sources and weight channels with more P300 information. This preprocessing significantly improves classification accuracy."
+                },
+                {
+                    id: "classification",
+                    title: "Classification and Model Selection",
+                    content: "We implemented binary classification to distinguish target (focused letter's row/column) from non-target segments. Data segments were averaged to enhance P300 responses. We evaluated three classifiers: Linear Discriminant Analysis (LDA), Support Vector Machine (SVM), and Multi-Layer Perceptron (MLP). LDA achieved the best performance with our dataset. A major challenge was class imbalance - only 2 out of 12 flashes are targets (the row and column containing the intended letter), while 10 are non-targets. We addressed this using weighted loss functions that give higher punishment to small class (target) classification mistakes, particularly when training neural networks. The final model (Model 08-01-05) achieved 90% accuracy and 11 bits/min performance."
+                },
+                {
+                    id: "system-architecture",
+                    title: "System Architecture and Hardware",
+                    content: "The system architecture includes: (1) 8-channel g.tec g.Nautilus Research EEG device with electrodes placed around parietal and occipital lobes, sampling at 512Hz, (2) Lab Streaming Layer (LSL) middleware for synchronized data streaming from EEG device and stimulus presentation system, (3) Real-time signal processing pipeline applying filters and XDAWN spatial filters, (4) Trained LDA classifier for target/non-target discrimination, (5) Letter prediction algorithm that identifies the most likely row and column based on P300 responses. The system was initially tested with Emotiv EPOC+ (14-channel) and Biopac (4-channel) devices, but the g.tec device provided significantly better data quality and 35% higher accuracy, making it the clear choice despite requiring electro-gel injection."
+                },
+                {
+                    id: "performance-evaluation",
+                    title: "Performance Evaluation and Results",
+                    content: "Performance was evaluated through multiple experiments: (1) Ten back-to-back experiments requiring subjects to write 10 letters each, achieving 90% accuracy (9 out of 10 letters correct), (2) Information transfer rate measurement of 11 bits/min (state-of-the-art is 12 bits/min), (3) Typing speed of 4.5 seconds per letter, (4) Fatigue testing showing 60% accuracy under fatigue vs 50% for state-of-the-art models, attributed to training on fatigued user data, (5) Multi-user testing with single train/test sessions achieving average 82% accuracy, demonstrating system stability. The system outperforms state-of-the-art in fatigue conditions and matches performance in normal conditions, validating the data collection and processing pipeline."
                 },
                 {
                     id: "applications",
-                    title: "Real-World Applications",
-                    content: "This technology has significant potential for assistive communication devices, helping individuals with communication disabilities express themselves more effectively."
+                    title: "Real-World Applications and Impact",
+                    content: "Thought2Text is primarily designed to assist individuals with severe motor disabilities, particularly those with limited or no muscle control such as ALS patients, spinal cord injury survivors, or individuals with neuromuscular disorders. The system provides a lifeline for communication, offering independent expression and regaining control over their lives. The P300 speller system enables typing through brain signals alone, requiring only the ability to focus attention. While the system requires ~20 minutes of calibration per new user, it enables real-time typing after training. The technology demonstrates significant potential for assistive communication devices and could be extended with additional stimulus paradigms (visual faces, audio, tactile) for users with visual impairments or other specific needs."
+                },
+                {
+                    id: "literature-comparison",
+                    title: "State-of-the-Art Comparison",
+                    content: "Our implementation achieves state-of-the-art performance with the Farwell-Donchin (FD) row-column paradigm. When compared to other approaches in the literature, we see that classifiers vary among Linear Discriminant Analysis and its variations, Support Vector Machines, and Random Forest models. However, the major performance differences stem from stimulus creation methodologies rather than classifiers. Since P300 responses are stronger for more stimulating or unexpected events, researchers have used human faces (which create larger responses due to evolutionary brain responses), single-display paradigms (flashing each letter separately), and non-visual stimuli (audio, tactile) for visually impaired users. Our implementation proves that with correct data collection and processing, the FD paradigm can achieve near state-of-the-art performance (11 vs 12 bits/min), providing a solid foundation for future enhancements."
                 }
             ]
         }
