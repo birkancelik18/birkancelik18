@@ -81,21 +81,14 @@ function renderAbout() {
     const aboutContent = document.getElementById('aboutContent');
     if (!aboutContent || !aboutData) return;
 
-    const skillsHTML = aboutData.skills.map(skill => 
-        `<span class="skill-tag">${skill}</span>`
-    ).join('');
-
     aboutContent.innerHTML = `
         <div class="about-image-container">
             <img src="${aboutData.profileImage}" alt="${aboutData.name}" class="about-image" onerror="this.style.display='none'">
         </div>
         <div class="about-text">
-            <h1 class="about-name">${aboutData.name}</h1>
+            <h1 class="about-name gradient-text">${aboutData.name}</h1>
             <h2 class="about-title">${aboutData.title}</h2>
             <p class="about-bio">${aboutData.bio}</p>
-            <div class="skills-container">
-                ${skillsHTML}
-            </div>
         </div>
     `;
 }
@@ -323,10 +316,9 @@ function initProjectsSlider() {
     sliderState.visibleProjects = projectCards;
 
     // Calculate items per view based on screen size
+    // Since cards are now horizontal (image left, content right), show 1 at a time
     function getItemsPerView() {
-        if (window.innerWidth >= 1024) return 3;
-        if (window.innerWidth >= 768) return 2;
-        return 1;
+        return 1; // Always show one project card at a time
     }
 
     function updateSlider() {
@@ -417,7 +409,7 @@ function updateSliderDots() {
     const dotsContainer = document.getElementById('sliderDots');
     if (!dotsContainer) return;
 
-    const itemsPerView = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+    const itemsPerView = 1; // Always show one project at a time
     const visibleCount = sliderState.filteredProjects.length;
     const totalSlides = Math.ceil(visibleCount / itemsPerView);
 
