@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initProjectFiltering();
     initProjectsSlider();
     initContactForm();
+    initRouting();
     setCurrentYear();
 });
 
@@ -99,34 +100,33 @@ function renderDimensions() {
 
     const dimensions = [dimensionsData.hci, dimensionsData.startup, dimensionsData.biomedical];
     
-    dimensionsGrid.innerHTML = dimensions.map(dim => `
+    dimensionsGrid.innerHTML = dimensions.map(dim => {
+        // Get first highlight for quick preview
+        const quickHighlight = dim.pageContent?.highlights?.[0] || dim.description.substring(0, 80) + '...';
+        
+        return `
         <div class="dimension-card" data-dimension="${dim.id}">
-            <div class="dimension-icon" style="background-color: ${dim.color}20; color: ${dim.color}">
-                ${dim.icon}
+            <div class="dimension-card-header">
+                <div class="dimension-icon" style="background-color: ${dim.color}20; color: ${dim.color}">
+                    ${dim.icon}
+                </div>
             </div>
-            <h3 class="dimension-title">${dim.title}</h3>
-            <h4 class="dimension-subtitle">${dim.subtitle}</h4>
-            <p class="dimension-description">${dim.description}</p>
+            <div class="dimension-card-content">
+                <h3 class="dimension-title">${dim.title}</h3>
+                <h4 class="dimension-subtitle">${dim.subtitle}</h4>
+                <div class="dimension-quick-highlight">
+                    <span>${quickHighlight}</span>
+                </div>
+            </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
-    // Add click interaction to filter projects
+    // Add click interaction to navigate to dimension page
     document.querySelectorAll('.dimension-card').forEach(card => {
         card.addEventListener('click', function() {
             const dimension = this.dataset.dimension;
-            const filterBtn = document.querySelector(`[data-filter="${dimension}"]`);
-            if (filterBtn) {
-                // Trigger filter button click
-                filterBtn.click();
-                // Scroll to projects section
-                const projectsSection = document.getElementById('projects');
-                if (projectsSection) {
-                    window.scrollTo({
-                        top: projectsSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            }
+            navigateToDimension(dimension);
         });
     });
 }
@@ -155,27 +155,48 @@ function renderProjects() {
             `<span class="tech-tag">${tech}</span>`
         ).join('');
 
+        // Get key highlight from details if available
+        const keyHighlight = project.details?.results?.[0] || project.details?.overview?.substring(0, 100) + '...' || '';
+        const hasSubpages = project.details?.subpages && project.details.subpages.length > 0;
+        
         return `
-            <div class="project-card" data-dimensions="${project.dimensions.join(',')}">
+            <div class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}">
                 <div class="project-image-container">
                     <img src="${project.image}" alt="${project.title}" class="project-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
                     <div class="project-overlay">
                         ${linksHTML}
                     </div>
+                    ${hasSubpages ? '<div class="project-subpages-badge">Details</div>' : ''}
                 </div>
                 <div class="project-content">
-                    <div class="project-dimensions">${dimensionsHTML}</div>
+                    <div class="project-header-row">
+                        <div class="project-dimensions">${dimensionsHTML}</div>
+                        <div class="project-date-badge">${project.date}</div>
+                    </div>
                     <h3 class="project-title">${project.title}</h3>
+                    ${keyHighlight ? `<div class="project-key-result">
+                        <span class="result-text">${keyHighlight}</span>
+                    </div>` : ''}
                     <p class="project-description">${project.description}</p>
                     <div class="project-tech">${techStackHTML}</div>
-                    <div class="project-date">${project.date}</div>
                 </div>
             </div>
         `;
     }).join('');
 
-    // Reinitialize slider after projects are rendered
+    // Add click handlers to project cards
     setTimeout(() => {
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't navigate if clicking on links
+                if (e.target.closest('.project-link')) return;
+                
+                const projectId = parseInt(this.dataset.projectId);
+                navigateToProject(projectId);
+            });
+        });
+        
+        // Reinitialize slider after projects are rendered
         if (typeof initProjectsSlider === 'function') {
             initProjectsSlider();
         }
@@ -514,5 +535,428 @@ function setCurrentYear() {
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
+}
+
+// ============================================
+// ROUTING SYSTEM
+// ============================================
+function initRouting() {
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            navigateToHome();
+        });
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        if (e.state) {
+            if (e.state.type === 'dimension') {
+                navigateToDimension(e.state.id, false);
+            } else if (e.state.type === 'project') {
+                navigateToProject(e.state.id, false);
+            } else if (e.state.type === 'subpage') {
+                navigateToSubpage(e.state.projectId, e.state.subpageId, false);
+            }
+        } else {
+            navigateToHome(false);
+        }
+    });
+
+    // Check initial hash
+    handleInitialRoute();
+}
+
+function handleInitialRoute() {
+    const hash = window.location.hash;
+    if (hash) {
+        const parts = hash.substring(1).split('/');
+        if (parts[0] === 'dimension' && parts[1]) {
+            navigateToDimension(parts[1], false);
+        } else if (parts[0] === 'project' && parts[1]) {
+            const projectId = parseInt(parts[1]);
+            if (parts[2]) {
+                navigateToSubpage(projectId, parts[2], false);
+            } else {
+                navigateToProject(projectId, false);
+            }
+        }
+    }
+}
+
+function navigateToHome(updateHistory = true) {
+    const pageContainer = document.getElementById('pageContainer');
+    const mainSections = document.querySelectorAll('.section, .footer');
+    
+    if (pageContainer) {
+        pageContainer.classList.add('hidden');
+    }
+    
+    mainSections.forEach(section => {
+        section.style.display = '';
+    });
+    
+    if (updateHistory) {
+        window.history.pushState({ type: 'home' }, '', '#');
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateToDimension(dimensionId, updateHistory = true) {
+    const dimension = dimensionsData[dimensionId];
+    if (!dimension) return;
+
+    const pageContainer = document.getElementById('pageContainer');
+    const pageContent = document.getElementById('pageContent');
+    const mainSections = document.querySelectorAll('.section, .footer');
+
+    if (!pageContainer || !pageContent) return;
+
+    // Hide main sections
+    mainSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show page container
+    pageContainer.classList.remove('hidden');
+
+    // Get projects for this dimension
+    const dimensionProjects = projectsData.filter(p => p.dimensions.includes(dimensionId));
+
+    // Render dimension page - projects listed one after another
+    const projectsHTML = dimensionProjects.map(project => {
+        const hasDetails = project.details ? 'has-details' : 'no-details';
+        return `
+        <div class="dimension-project-card ${hasDetails}" data-project-id="${project.id}">
+            <div class="dimension-project-image">
+                <img src="${project.image}" alt="${project.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="dimension-project-content">
+                <div class="dimension-project-header">
+                    <h3 class="dimension-project-title">${project.title}</h3>
+                    ${project.details ? '<span class="project-details-badge">View Details →</span>' : ''}
+                </div>
+                <p class="dimension-project-description">${project.description}</p>
+                <div class="dimension-project-footer">
+                    <div class="dimension-project-tech">
+                        ${project.techStack.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                    </div>
+                    <div class="dimension-project-date">${project.date}</div>
+                </div>
+            </div>
+        </div>
+    `;
+    }).join('');
+
+    pageContent.innerHTML = `
+        <div class="dimension-page">
+            <div class="dimension-breadcrumb">
+                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">${dimension.title}</span>
+            </div>
+            <div class="dimension-page-header" style="border-left: 4px solid ${dimension.color}">
+                <div class="dimension-page-icon" style="background-color: ${dimension.color}20; color: ${dimension.color}">
+                    ${dimension.icon}
+                </div>
+                <div class="dimension-page-title-section">
+                    <h1 class="dimension-page-title">${dimension.title}</h1>
+                    <h2 class="dimension-page-subtitle">${dimension.subtitle}</h2>
+                </div>
+            </div>
+            <div class="dimension-projects-section-top">
+                <h3 class="dimension-projects-title">Projects</h3>
+                <div class="dimension-projects-list">
+                    ${projectsHTML}
+                </div>
+            </div>
+            <div class="dimension-page-content">
+                <div class="dimension-overview">
+                    <h3>Overview</h3>
+                    <p>${dimension.pageContent.overview}</p>
+                </div>
+                <div class="dimension-research-areas">
+                    <h3>Research Areas</h3>
+                    <div class="research-areas-grid">
+                        ${dimension.pageContent.researchAreas.map(area => `<span class="research-area-tag">${area}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add click handlers to project cards
+    setTimeout(() => {
+        document.querySelectorAll('.dimension-project-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const projectId = parseInt(this.dataset.projectId);
+                const project = projectsData.find(p => p.id === projectId);
+                if (project && project.details) {
+                    navigateToProject(projectId);
+                }
+            });
+        });
+        
+        // Add breadcrumb home link
+        const breadcrumbLink = document.querySelector('.dimension-breadcrumb .breadcrumb-link');
+        if (breadcrumbLink) {
+            breadcrumbLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToHome();
+            });
+        }
+    }, 50);
+
+    if (updateHistory) {
+        window.history.pushState({ type: 'dimension', id: dimensionId }, '', `#dimension/${dimensionId}`);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateToProject(projectId, updateHistory = true) {
+    const project = projectsData.find(p => p.id === projectId);
+    if (!project || !project.details) {
+        // If no details, navigate to dimension instead
+        if (project && project.dimensions.length > 0) {
+            navigateToDimension(project.dimensions[0]);
+        }
+        return;
+    }
+
+    const pageContainer = document.getElementById('pageContainer');
+    const pageContent = document.getElementById('pageContent');
+    const mainSections = document.querySelectorAll('.section, .footer');
+
+    if (!pageContainer || !pageContent) return;
+
+    // Hide main sections
+    mainSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show page container
+    pageContainer.classList.remove('hidden');
+
+    const dimension = dimensionsData[project.dimensions[0]];
+    const dimensionColor = dimension ? dimension.color : '#6366F1';
+
+    const subpagesHTML = project.details.subpages && project.details.subpages.length > 0 ? `
+        <div class="project-subpages">
+            <h3>Learn More</h3>
+            <div class="subpages-grid">
+                ${project.details.subpages.map(subpage => `
+                    <div class="subpage-card" data-subpage-id="${subpage.id}">
+                        <h4>${subpage.title}</h4>
+                        <p>${subpage.content.substring(0, 150)}...</p>
+                        <span class="subpage-link">Read more →</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
+
+    const linksHTML = project.links ? `
+        <div class="project-detail-links">
+            ${project.links.live ? `<a href="${project.links.live}" target="_blank" rel="noopener noreferrer" class="project-detail-link">Live Demo</a>` : ''}
+            ${project.links.github ? `<a href="${project.links.github}" target="_blank" rel="noopener noreferrer" class="project-detail-link">GitHub</a>` : ''}
+            ${project.links.pdf ? `<a href="${project.links.pdf}" target="_blank" rel="noopener noreferrer" class="project-detail-link">View PDF</a>` : ''}
+        </div>
+    ` : '';
+
+    // Create quick summary box
+    const quickSummary = `
+        <div class="project-quick-summary" style="border-left: 4px solid ${dimensionColor}">
+            <div class="summary-item">
+                <span class="summary-label">Problem</span>
+                <span class="summary-text">${project.details.problem.substring(0, 120)}${project.details.problem.length > 120 ? '...' : ''}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Solution</span>
+                <span class="summary-text">${project.details.solution.substring(0, 120)}${project.details.solution.length > 120 ? '...' : ''}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Key Results</span>
+                <div class="summary-results">
+                    ${project.details.results.slice(0, 3).map(r => `<span class="summary-result-badge">${r.substring(0, 60)}${r.length > 60 ? '...' : ''}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+
+    const primaryDimension = dimensionsData[project.dimensions[0]];
+    
+    pageContent.innerHTML = `
+        <div class="project-detail-page">
+            <div class="project-breadcrumb">
+                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="#" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">${project.title}</span>
+            </div>
+            <div class="project-detail-header" style="border-left: 4px solid ${dimensionColor}">
+                <div class="project-detail-image">
+                    <img src="${project.image}" alt="${project.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="project-detail-title-section">
+                    <div class="project-detail-dimensions">
+                        ${project.dimensions.map(dim => `<span class="project-dimension-tag" style="background-color: ${dimensionsData[dim]?.color}20; color: ${dimensionsData[dim]?.color}">${dimensionsData[dim]?.title || dim}</span>`).join('')}
+                    </div>
+                    <h1 class="project-detail-title">${project.title}</h1>
+                    <div class="project-detail-meta">
+                        <span class="project-detail-date">${project.date}</span>
+                        <div class="project-detail-tech">
+                            ${project.techStack.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                        </div>
+                    </div>
+                    ${linksHTML}
+                </div>
+            </div>
+            ${quickSummary}
+            <div class="project-detail-content">
+                <div class="project-detail-section">
+                    <h3>Overview</h3>
+                    <p>${project.details.overview}</p>
+                </div>
+                <div class="project-detail-section">
+                    <h3>The Problem</h3>
+                    <p>${project.details.problem}</p>
+                </div>
+                <div class="project-detail-section">
+                    <h3>The Solution</h3>
+                    <p>${project.details.solution}</p>
+                </div>
+                <div class="project-detail-section">
+                    <h3>Methodology</h3>
+                    <ul class="methodology-list">
+                        ${project.details.methodology.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="project-detail-section">
+                    <h3>Results</h3>
+                    <ul class="results-list">
+                        ${project.details.results.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                ${subpagesHTML}
+            </div>
+        </div>
+    `;
+
+    // Add click handlers to subpage cards
+    if (project.details.subpages && project.details.subpages.length > 0) {
+        setTimeout(() => {
+            document.querySelectorAll('.subpage-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const subpageId = this.dataset.subpageId;
+                    navigateToSubpage(projectId, subpageId);
+                });
+            });
+        }, 50);
+    }
+    
+    // Add breadcrumb navigation
+    setTimeout(() => {
+        const breadcrumbLinks = document.querySelectorAll('.project-breadcrumb .breadcrumb-link');
+        breadcrumbLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.dataset.action;
+                const dimensionId = this.dataset.dimension;
+                
+                if (action === 'home') {
+                    navigateToHome();
+                } else if (dimensionId) {
+                    navigateToDimension(dimensionId);
+                }
+            });
+        });
+    }, 50);
+
+    if (updateHistory) {
+        window.history.pushState({ type: 'project', id: projectId }, '', `#project/${projectId}`);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateToSubpage(projectId, subpageId, updateHistory = true) {
+    const project = projectsData.find(p => p.id === projectId);
+    if (!project || !project.details) return;
+
+    const subpage = project.details.subpages?.find(sp => sp.id === subpageId);
+    if (!subpage) return;
+
+    const pageContainer = document.getElementById('pageContainer');
+    const pageContent = document.getElementById('pageContent');
+    const mainSections = document.querySelectorAll('.section, .footer');
+
+    if (!pageContainer || !pageContent) return;
+
+    // Hide main sections
+    mainSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show page container
+    pageContainer.classList.remove('hidden');
+
+    const dimension = dimensionsData[project.dimensions[0]];
+    const dimensionColor = dimension ? dimension.color : '#6366F1';
+    const primaryDimension = dimension;
+    
+    pageContent.innerHTML = `
+        <div class="subpage-detail-page">
+            <div class="subpage-breadcrumb">
+                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="#" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="#" class="breadcrumb-link" data-project-id="${projectId}">${project.title}</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">${subpage.title}</span>
+            </div>
+            <div class="subpage-header" style="border-left: 4px solid ${dimensionColor}">
+                <h1 class="subpage-title">${subpage.title}</h1>
+                <div class="subpage-project-info">
+                    <span class="subpage-project-name">From: ${project.title}</span>
+                </div>
+            </div>
+            <div class="subpage-content">
+                <div class="subpage-text">
+                    ${subpage.content.split('\n').map(p => `<p>${p}</p>`).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add click handlers to breadcrumb
+    setTimeout(() => {
+        const breadcrumbLinks = document.querySelectorAll('.subpage-breadcrumb .breadcrumb-link');
+        breadcrumbLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.dataset.action;
+                const dimensionId = this.dataset.dimension;
+                const projectIdAttr = this.dataset.projectId;
+                
+                if (action === 'home') {
+                    navigateToHome();
+                } else if (dimensionId) {
+                    navigateToDimension(dimensionId);
+                } else if (projectIdAttr) {
+                    navigateToProject(parseInt(projectIdAttr));
+                }
+            });
+        });
+    }, 50);
+
+    if (updateHistory) {
+        window.history.pushState({ type: 'subpage', projectId: projectId, subpageId: subpageId }, '', `#project/${projectId}/${subpageId}`);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
