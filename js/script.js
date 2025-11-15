@@ -87,7 +87,6 @@ function renderAbout() {
             <img src="${aboutData.profileImage}" alt="${aboutData.name}" class="about-image" onerror="this.style.display='none'">
         </div>
         <div class="about-text">
-            <h1 class="about-name gradient-text">${aboutData.name}</h1>
             <h2 class="about-title">${aboutData.title}</h2>
             <p class="about-bio">${aboutData.bio}</p>
         </div>
