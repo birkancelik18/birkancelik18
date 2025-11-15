@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimations();
     initProjectFiltering();
     initProjectsSlider();
-    initContactForm();
+    // initContactForm() is now called from renderContact()
     initRouting();
     setCurrentYear();
 });
@@ -260,6 +260,9 @@ function renderContact() {
             <button type="submit" class="submit-btn">Send Message</button>
         </form>
     `;
+    
+    // Initialize form after it's rendered
+    initContactForm();
 }
 
 // ============================================
@@ -490,10 +493,14 @@ function initScrollAnimations() {
 // CONTACT FORM
 // ============================================
 function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    if (!contactForm) return;
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+    
+    // Check if already initialized to prevent duplicate listeners
+    if (form.dataset.initialized === 'true') return;
+    form.dataset.initialized = 'true';
 
-    contactForm.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Basic validation
@@ -518,9 +525,7 @@ function initContactForm() {
         const mailtoLink = `mailto:${contactData.email}?subject=Contact from Portfolio&body=Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage: ${message}`;
         window.location.href = mailtoLink;
 
-        // Show success message
-        alert('Thank you for your message! Your email client should open now.');
-        contactForm.reset();
+        form.reset();
     });
 }
 
