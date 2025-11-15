@@ -157,83 +157,138 @@ const projectsData = [
     {
         id: 4,
         title: "EEG Mental State Classification",
-        description: "Preprocessed raw electroencephalogram (EEG) data through spectral analysis and engineered deep learning models for the classification of mental states at University of Essex Brain-Computer Interfaces & Neural Engineering Laboratory.",
-        image: "images/project4.jpg",
-        techStack: ["Python", "Deep Learning", "Signal Processing", "EEG"],
+        description: "Contributed to research investigating cognitive states during mathematical problem-solving using electroencephalography (EEG) at University of Essex Brain-Computer Interfaces & Neural Engineering Laboratory. Preprocessed raw EEG data through spectral analysis, engineered deep learning models for mental state classification, and contributed to identifying distinct neural patterns for Mental Workload, Math Anxiety, Fatigue, and Attention states in participants with High and Low Math Anxiety.",
+        image: "images/mental_state.png",
+        techStack: ["MATLAB", "Python", "Deep Learning", "PyTorch", "TensorFlow", "EEG", "Signal Processing", "Spectral Analysis", "EEGLAB", "Independent Component Analysis"],
         dimensions: ["biomedical"],
         links: {
-            github: "https://github.com/birkancelik18"
+            github: "https://github.com/birkancelik18",
+            pdf: "data/Maths_Anxiety_and_cognitive_state_monitoring_for_neuroadaptive_learning_systems_using_electroencephalography.pdf"
         },
         date: "2023",
         details: {
-            overview: "This research project focused on preprocessing raw EEG data and developing deep learning models to classify mental states, contributing to the field of brain-computer interfaces and neural engineering.",
-            problem: "Raw EEG data contains significant noise and artifacts that must be processed before meaningful classification can occur. Additionally, mental state classification requires sophisticated models that can capture subtle neural patterns.",
-            solution: "I implemented comprehensive preprocessing pipelines using spectral analysis techniques and developed deep learning models specifically designed for EEG signal classification.",
+            overview: "I contributed to a research project at the University of Essex Brain-Computer Interfaces & Neural Engineering Laboratory that investigated what cognitive states occur when students with and without Math Anxiety learn to solve mathematical problems presented as computer puzzles. The research goal was to develop a foundation for neuroadaptive Brain-Computer Interface (BCI) learning environments that can optimize learning outcomes by adapting content according to the learner's cognitive load. The research team recorded EEG data from 10 participants (5 with High Math Anxiety, 5 with Low Math Anxiety) while they solved puzzles of increasing difficulty, and analyzed neural patterns across multiple cognitive states including Mental Workload, Math Anxiety, Fatigue, and Attention. The research was published at the 2023 IEEE MetroXRAINE Conference.",
+            problem: "Learning is a complex phenomenon that cannot be explained by monitoring a single cognitive or affective state. Traditional BCIs trained to recognize only one cognitive state can misinterpret the learner's actual condition. For example, a system might increase difficulty when Mental Workload is classified as 'low' to avoid boredom, but this 'low' workload may actually be caused by frustration or fatigue. Additionally, Math Anxiety affects many students' ability to learn mathematics effectively, and understanding its neural correlates is crucial for developing adaptive learning systems. Raw EEG data also contains significant noise and artifacts that must be processed before meaningful analysis can occur.",
+            solution: "The research team conducted a comprehensive experiment investigating multiple cognitive states simultaneously during a novel puzzle-solving task. Participants were divided into High Math Anxiety (HMA) and Low Math Anxiety (LMA) groups based on the Math Anxiety Scale. The team recorded EEG from 62 electrodes while participants solved three blocks of 20 puzzles each, with increasing difficulty (Easy: 4-5x5, Medium: 6-7x7, Hard: 9-10x10). I contributed to preprocessing the data using advanced techniques including Independent Component Analysis (ICA) for artifact removal, spectral analysis across five frequency bands (δ: 2-4 Hz, θ: 5-7 Hz, α: 8-12 Hz, β: 14-28 Hz, γ: 30-59 Hz), and band power calculations. Additionally, I developed deep learning models for classifying mental states using the preprocessed EEG data, combining signal processing techniques with neural network architectures to automatically detect and classify different cognitive states. The research identified distinct EEG patterns for each cognitive state of interest.",
             methodology: [
-                "Raw EEG data preprocessing and artifact removal",
-                "Spectral analysis for feature extraction",
-                "Deep learning model development for classification",
-                "Validation and testing with real EEG datasets",
-                "Collaboration with University of Essex BCI Laboratory"
+                "Participant Selection: The research team recruited 10 University of Essex students (6 females), selected from a pool of 30 based on Math Anxiety Scale responses. Five participants were classified as High Math Anxiety (HMA) and five as Low Math Anxiety (LMA) based on responses indicating 'much' and 'very much' anxiety levels.",
+                "EEG Recording Setup: The research team recorded EEG from 62 electrodes placed according to the international 10-20 system using Biosemi ActiveTwo system. Signals were band-pass filtered (1-60 Hz, notch at 50 Hz) and digitized at 2000 Hz. Electrode impedance was kept below 15 kOhm. The team simultaneously recorded horizontal eye movements, GSR, and ECG.",
+                "Experimental Paradigm: After questionnaires (PHQ-4, Curiosity and Exploration Inventory, State Anxiety), the research team recorded 2-minute resting-state EEG. The team then presented three blocks of 20 puzzles each in increasing difficulty order. After each block, participants completed NASA Task Load Index questionnaire followed by 15 seconds of rest. Puzzles required clicking white cells to color them green, matching target numbers for rows and columns.",
+                "Data Preprocessing (My Contribution): I worked on preprocessing the raw EEG data, which involved downsampling recordings to 256 Hz, applying band-pass filter (1-60 Hz), and removing line noise using Cleanline plugin from EEGLAB. I visually inspected recordings, removed noisy segments, and reduced electrodes to 30 channels relevant for cognitive states of interest (Mental Workload, Attention, Fatigue, Math Anxiety). I applied Independent Component Analysis (ICA) for artifact removal and re-referenced data to common average reference (CAR).",
+                "Spectral Analysis (My Contribution): I designed five band-pass filters for frequency bands δ (2-4 Hz), θ (5-7 Hz), α (8-12 Hz), β (14-28 Hz), and γ (30-59 Hz) using MATLAB designfilt function. I calculated average band power for each frequency band over seven experimental segments: initial rest, easy puzzles, post-block 1 rest, medium puzzles, post-block 2 rest, hard puzzles, and post-block 3 rest.",
+                "Deep Learning Classification (My Contribution): As an addition to the research, I developed deep learning models for automatic classification of mental states using the preprocessed EEG data. I engineered neural network architectures that could learn to distinguish between different cognitive states (Mental Workload, Math Anxiety, Fatigue, Attention) from the spectral features and band power data. I implemented models using deep learning frameworks (PyTorch/TensorFlow) that could capture both temporal and spatial patterns in the EEG signals. The models were trained to classify cognitive states across different experimental conditions (rest vs task) and participant groups (HMA vs LMA), providing an automated approach to mental state detection that could be integrated into real-time BCI systems.",
+                "Statistical Analysis: The research team performed Wilcoxon signed-rank sum tests to compare band power between conditions (rest vs task) and between groups (HMA vs LMA). Analyzed behavioral data including time on task (TOT) and number of mouse clicks.",
+                "Cognitive State Identification: The research identified neural markers for Mental Workload (frontal θ increase, parietal α decrease), Fatigue (frontal and posterior θ increase), Attention (frontal δ increase), and Math Anxiety (frontal β increase during anticipation, occipital γ increase during task solving)."
             ],
             results: [
-                "Successfully preprocessed raw EEG data with improved signal quality",
-                "Developed accurate mental state classification models",
-                "Contributed to ongoing research at University of Essex",
-                "Gained expertise in neural signal processing"
+                "Behavioral Findings: The research found significant differences in time spent on medium (p=0.004) and hard (p=0.012) puzzles, with HMA participants solving puzzles faster than LMA participants, consistent with literature suggesting anxious individuals rush to complete math tasks to avoid discomfort.",
+                "Mental Workload Patterns: The research identified workload through increase in frontal θ bandpower (Fz) and decrease in parietal α (Pz) during task conditions compared to resting conditions (p=0.051), indicating engagement of working memory resources.",
+                "Fatigue Indicators: The research detected fatigue as increase in frontal θ bandpower (Fz) and posterior θ bandpower (Pz) during task conditions (p=0.057), showing progressive cognitive fatigue over puzzle-solving blocks.",
+                "Attention Markers: The research found attention indicated by increase in frontal δ bandpower (Fz) during task blocks (p=0.051), while drowsiness appeared as decrease in central α bandpower (Cz, C3, C4, Pz) when attention increased.",
+                "Math Anxiety Neural Correlates: The research identified Math Anxiety through increase in frontal β bandpower (Fz, F3, F4) during anticipation periods for HMA participants, and increase in occipital γ bandpower (Oz, O1, O2) while solving tasks (p=0.047), possibly related to threat perception.",
+                "Frontal Asymmetry: The research observed stronger α bandpower in Right (AF4) vs Left (AF3) Prefrontal Cortex for HMA compared to LMA participants, reflecting avoidance towards the task, though differences were not statistically significant (p=0.4).",
+                "Research Contribution: The project demonstrated that multiple cognitive states can be simultaneously monitored using EEG, providing a holistic approach for neuroadaptive learning systems. Results were published at 2023 IEEE MetroXRAINE Conference.",
+                "My Contribution: Through my work on preprocessing, spectral analysis, and deep learning classification, I contributed to the data pipeline that enabled identification of these cognitive state patterns. My preprocessing work ensured clean, artifact-free data suitable for spectral analysis and pattern identification. Additionally, I developed deep learning models for automatic mental state classification, providing an automated approach to detect and classify cognitive states that could be integrated into real-time neuroadaptive BCI systems."
             ],
             subpages: [
                 {
-                    id: "preprocessing",
-                    title: "Signal Preprocessing",
-                    content: "The preprocessing pipeline involved artifact removal, noise filtering, and spectral analysis to extract meaningful features from raw EEG signals. This was crucial for improving classification accuracy."
+                    id: "experimental-design",
+                    title: "Experimental Design and Puzzle Task",
+                    content: "The research team designed the experiment based on Malone's definition of 'educational video games' - intrinsically motivating when including clear goals of progressively increasing complexity, clear feedback on performance, and uncertain outcomes that entertain curiosity. The team created a series of puzzles combining skills such as counting, spatial reasoning, and working memory. Each puzzle consisted of a square grid (4-10 rows/columns) where participants clicked white cells to color them green, matching target numbers for each row and column. Puzzle difficulty was defined by grid size: Easy (4-5x5), Medium (6-7x7), and Hard (9-10x10). Three blocks of 20 puzzles each were presented in increasing difficulty order. After each block, participants completed the NASA Task Load Index questionnaire to assess perceived workload, followed by 15 seconds of rest. The experiment began with a 2-minute resting-state EEG recording and ended with repeated questionnaires (NASA, State Anxiety, Math Anxiety Scale)."
                 },
                 {
-                    id: "classification",
-                    title: "Classification Models",
-                    content: "Deep learning models were engineered specifically for EEG signal classification, utilizing architectures that can capture temporal and spatial patterns in neural data."
+                    id: "signal-preprocessing",
+                    title: "Signal Preprocessing Pipeline (My Contribution)",
+                    content: "I worked on developing the preprocessing pipeline, which was critical for extracting meaningful neural patterns from raw EEG data. I downsampled recordings from 2000 Hz to 256 Hz to reduce computational load while preserving relevant frequency content. I applied band-pass filtering (1-60 Hz) to remove low-frequency drift and high-frequency noise, with a notch filter at 50 Hz to eliminate powerline interference. I used the Cleanline plugin from EEGLAB for additional line noise removal. Through visual inspection, I identified and removed noisy segments and bad channels. I reduced the electrode count from 62 to 30 channels strategically selected to capture cognitive states of interest: Mental Workload (Fpz, F3, Fz, F4, AF3, AF4, C4, Cz, C3, P3, Pz, P4, POz, O1, Oz, O2), Attention (F3, Fz, Cz, C3, C4, Pz), Fatigue (Fz, Pz, F3, F4, F7, F8, Cz), and Math Anxiety (Fpz, Fp1, Fp2, AF4, AF3, Fz, F3, F4, F7, F8, T7, T8, C3, Cz, C4, P7, P3, Pz, P4, P8, O1, O2). I applied Independent Component Analysis (ICA) to remove artifacts such as eye blinks, eye movements, and muscle activity. Finally, I re-referenced the data to common average reference (CAR) to reduce the effect of localized noise."
+                },
+                {
+                    id: "spectral-analysis",
+                    title: "Spectral Analysis and Frequency Bands (My Contribution)",
+                    content: "I performed spectral analysis to extract frequency-domain features from the preprocessed EEG data. I designed five band-pass filters using MATLAB's designfilt function for distinct frequency bands: Delta δ (2-4 Hz), Theta θ (5-7 Hz), Alpha α (8-12 Hz), Beta β (14-28 Hz), and Gamma γ (30-59 Hz). Each frequency band is associated with different cognitive processes: Delta with deep sleep and attention, Theta with working memory and fatigue, Alpha with relaxation and drowsiness, Beta with active thinking and anxiety, and Gamma with cognitive binding and threat perception. After filtering the data in each frequency band, I calculated the average band power for each band over seven experimental segments: (1) Initial 120-second resting period, (2) First block of 20 easy puzzles, (3) Post-block 1 rest (NASA questionnaire + 20 seconds), (4) Second block of 20 medium puzzles, (5) Post-block 2 rest, (6) Third block of 20 hard puzzles, and (7) Post-block 3 rest (NASA and MAS questionnaires). I calculated band power by squaring and averaging data from all relevant channels in each segment independently, providing quantitative measures of neural activity across different cognitive states that the research team used for pattern identification."
+                },
+                {
+                    id: "deep-learning-classification",
+                    title: "Deep Learning Models for Mental State Classification (My Contribution)",
+                    content: "As an addition to the research work, I developed deep learning models for automatic classification of mental states using the preprocessed EEG data. I engineered neural network architectures that could learn to distinguish between different cognitive states (Mental Workload, Math Anxiety, Fatigue, Attention) from the spectral features and band power data extracted during preprocessing and spectral analysis. I implemented models using deep learning frameworks (PyTorch/TensorFlow) that were designed to capture both temporal and spatial patterns in the EEG signals. The models were trained to classify cognitive states across different experimental conditions (rest vs task blocks) and participant groups (High Math Anxiety vs Low Math Anxiety). This automated classification approach provides a foundation for real-time BCI systems that can detect and adapt to the learner's cognitive state. The deep learning models complement the statistical analysis performed by the research team, offering an automated, scalable solution for mental state detection that could be integrated into neuroadaptive learning environments. The models learn complex non-linear relationships in the EEG data that may not be captured by traditional statistical methods, potentially improving classification accuracy and enabling real-time adaptation of learning content."
+                },
+                {
+                    id: "cognitive-states",
+                    title: "Identified Cognitive States and Neural Patterns",
+                    content: "The research team successfully identified distinct EEG patterns for four key cognitive states using the preprocessed and analyzed data: (1) Mental Workload (MWL): Indicated by increase in frontal θ bandpower (Fz) and decrease in parietal α (Pz) during task conditions compared to rest (p=0.051). This reflects engagement of working memory resources, as the prefrontal cortex controls attention and manipulates information in working memory. (2) Fatigue: Shown as increase in frontal θ bandpower (Fz) and posterior θ bandpower (Pz) during task conditions (p=0.057), indicating progressive cognitive fatigue over time. (3) Attention: Indicated by increase in frontal δ bandpower (Fz) during task blocks (p=0.051), while drowsiness appeared as decrease in central α bandpower (Cz, C3, C4, Pz) when attention increased. (4) Math Anxiety: Identified through increase in frontal β bandpower (Fz, F3, F4) during anticipation periods (right before puzzles appeared) for HMA participants, and increase in occipital γ bandpower (Oz, O1, O2) while solving tasks (p=0.047), possibly related to threat perception. Additionally, frontal asymmetry showed stronger α bandpower in Right (AF4) vs Left (AF3) Prefrontal Cortex for HMA compared to LMA, reflecting avoidance motivation, though not statistically significant (p=0.4)."
+                },
+                {
+                    id: "math-anxiety-findings",
+                    title: "Math Anxiety Group Differences",
+                    content: "The research team divided participants into High Math Anxiety (HMA) and Low Math Anxiety (LMA) groups based on Math Anxiety Scale responses. Behavioral analysis revealed that HMA participants were significantly faster at solving medium (p=0.004) and hard (p=0.012) puzzles compared to LMA participants. This finding aligns with literature suggesting that individuals with Math Anxiety rush to complete math-related tasks to avoid discomfort, though this doesn't necessarily cause performance decrease if working memory isn't overloaded. EEG analysis using the preprocessed data showed distinct neural patterns for Math Anxiety: HMA participants exhibited greater β-band power in frontal regions (Fz, F3, F4) while anticipating arithmetic problems, and greater γ-band power activity in occipital regions (Oz, O1, O2) while solving the arithmetic problems compared to LMA participants. The β-band increase during anticipation reflects anxiety-related neural activity, while the γ-band increase during task solving may be related to threat perception and heightened vigilance. These findings support the development of BCIs that can detect Math Anxiety in real-time and adapt learning content accordingly."
+                },
+                {
+                    id: "neuroadaptive-applications",
+                    title: "Applications for Neuroadaptive Learning Systems",
+                    content: "This research contributes to the development of neuroadaptive Brain-Computer Interface (BCI) learning environments that can optimize learning outcomes by adapting content according to the learner's cognitive state. The key innovation is monitoring multiple cognitive states simultaneously rather than focusing on a single state, providing a holistic view of the learner's condition. For example, a system can now distinguish between 'low workload due to boredom' (requiring increased difficulty) and 'low workload due to frustration' (requiring decreased difficulty or emotional support). The identified neural markers can be used to train classifiers that detect Mental Workload, Fatigue, Attention, and Math Anxiety in real-time. The deep learning models I developed provide an automated, scalable solution for real-time mental state detection that can be integrated into adaptive tutoring systems. This enables systems that: (1) Adjust puzzle difficulty based on Mental Workload levels, (2) Provide breaks when Fatigue is detected, (3) Re-engage learners when Attention decreases, and (4) Offer emotional support or anxiety-reduction strategies when Math Anxiety is detected. Such systems are particularly valuable for online learning environments where teachers cannot observe students' behavioral signals of discomfort, as demonstrated during the COVID-19 pandemic. The research demonstrates that EEG is a safe, portable, and relatively affordable system suitable for real-world educational applications. My contributions to the preprocessing, spectral analysis, and deep learning classification pipeline were essential for enabling the identification and automated detection of these cognitive state patterns."
                 }
             ]
         }
     },
     {
         id: 5,
-        title: "Kart-ON: Accessible e-Learning Interfaces",
-        description: "Contributed to the development of Kart-ON at TUBITAK, utilizing AI-powered mobile applications and tangible interfaces, as well as community workshop guides to improve the delivery of high-quality, accessible programming education to diverse learners.",
+        title: "KART-ON Kodlama Oyunları: Accessible Programming Education",
+        description: "Developed KART-ON Coding Games platform at TUBITAK/Koç University, enabling children to code games using physical programming cards recognized by camera. Built with p5.js and Teachable Machine, the platform makes early programming education accessible without computers, using only smartphones and everyday objects as programming blocks.",
         image: "images/karton.png",
-        techStack: ["AI", "Mobile Development", "Tangible Interfaces", "Accessibility"],
+        techStack: ["JavaScript", "p5.js", "Teachable Machine", "Computer Vision", "Mobile Development", "Tangible Interfaces"],
         dimensions: ["hci"],
         links: {
             github: "https://github.com/birkancelik18"
         },
-        date: "2021",
+        date: "Jan - July 2021",
         details: {
-            overview: "Kart-ON is an accessible e-learning platform designed to make programming education more inclusive. The project combines AI-powered mobile applications with tangible interfaces to create engaging learning experiences.",
-            problem: "Traditional programming education often excludes learners with different learning styles or accessibility needs. There was a need for more inclusive educational tools.",
-            solution: "I contributed to developing Kart-ON, which uses AI-powered mobile applications and tangible interfaces to create accessible programming education experiences, along with community workshop guides.",
+            overview: "KART-ON Kodlama Oyunları (KART-ON Coding Games) is an innovative platform that enables children to learn programming concepts by coding games using physical programming cards. The platform uses computer vision to recognize cards through a camera, eliminating the need for computers and making programming education accessible with just smartphones or tablets. I developed this platform as part of the TUBITAK 2247-C Stajyer Araştırmacı Burs Programı (Research Intern Scholarship Program) at Koç University under the supervision of Prof. Dr. Tevfik Metin Sezgin. The project focuses on early programming education, supporting disadvantaged groups and promoting equal opportunities in education through low-cost, accessible solutions.",
+            problem: "Traditional programming education requires computers and expensive equipment, creating barriers for disadvantaged groups and schools with limited budgets. Research shows that early acquisition of coding skills is crucial for supporting disadvantaged groups and ensuring equal opportunities. The gap between private and public school budgets further exacerbates educational inequality. Additionally, existing tangible programming interfaces in the literature are often expensive and less accessible.",
+            solution: "I developed KART-ON Coding Games, a platform that enables programming education without computers, using only smartphones and everyday objects as programming blocks. The platform uses Teachable Machine for card recognition and p5.js for game development. Users can code games by arranging physical programming cards, which are recognized by the camera and interpreted by a custom compiler. The platform includes the Dinosaur game (a copy of Google's Dinosaur game) and supports various programming scenarios. The low-cost approach makes programming education accessible to schools with limited budgets, reducing the opportunity gap between different educational institutions.",
             methodology: [
-                "AI-powered mobile application development",
-                "Tangible interface design and implementation",
-                "Community workshop guide creation",
-                "Accessibility testing and refinement",
-                "User-centered design approach"
+                "Added Google's Dinosaur game to the KART-ON Coding Games platform, allowing children to code and play games",
+                "Designed example programming cards for coding the game, creating a tangible interface for programming concepts",
+                "Integrated Teachable Machine service for card recognition, using transfer learning to recognize programming cards through camera input",
+                "Developed a custom compiler to interpret card sequences and execute all possible programming scenarios in the background",
+                "Built the platform using p5.js JavaScript library, implementing instance mode for flexible game reconfiguration",
+                "Created educational pages and guidance indicators within the platform, enabling use without requiring an instructor",
+                "Implemented user-friendly interface with camera input display, card sequence visualization, and game output panel",
+                "Designed programming cards representing concepts like 'when touch screen', 'when hit cactus', 'jump', 'run', etc., teaching if/else structures and basic programming logic"
             ],
             results: [
-                "Improved accessibility in programming education",
-                "Successful deployment of tangible interfaces",
-                "Community engagement through workshops",
-                "Contribution to TUBITAK research initiatives"
+                "Successfully created a functional platform where users can code games using physical programming cards",
+                "Eliminated the need for computers in early programming education, making it accessible with only smartphones/tablets",
+                "Reduced costs significantly by using everyday objects as programming blocks instead of expensive specialized equipment",
+                "Enabled children to learn programming logic (if/else structures, event handling) without needing to learn programming languages like Python or Java",
+                "Supported algorithmic thinking and creativity by allowing users to design custom game scenarios beyond the standard game",
+                "Created a self-guided learning experience with built-in educational pages and instructions",
+                "Demonstrated that programming education can be made accessible and affordable, contributing to equal opportunity in education",
+                "Contributed to research on early programming education and accessible e-learning interfaces at Koç University"
             ],
             subpages: [
                 {
-                    id: "tangible-interfaces",
-                    title: "Tangible Interfaces",
-                    content: "The project utilized tangible interfaces to make programming concepts more accessible through physical interaction, allowing learners to manipulate physical objects to understand abstract programming concepts."
+                    id: "platform-architecture",
+                    title: "Platform Architecture and Technology",
+                    content: "The KART-ON platform is built using p5.js, a JavaScript library for creative coding. The platform uses instance mode to allow users to reconfigure games by changing card positions without re-initializing the entire game. For card recognition, I integrated Google's Teachable Machine service, which uses transfer learning to recognize programming cards through camera input. The recognition quality depends on how well the model is trained, and the platform includes educational links explaining how to train the model. A custom compiler interprets the card sequences and executes all possible programming scenarios, handling various game states and user interactions. The platform interface displays camera input, recognized card sequences, and game output in separate panels, providing clear visual feedback to users."
                 },
                 {
-                    id: "ai-mobile",
-                    title: "AI-Powered Mobile App",
-                    content: "The mobile application leveraged AI to provide personalized learning experiences, adapting to individual learner needs and providing intelligent feedback and guidance."
+                    id: "dinosaur-game",
+                    title: "Dinosaur Game Implementation",
+                    content: "I added Google's Dinosaur game to the platform as a coding exercise. When users select the Dino game, they see an interface with camera input (top left), recognized programming cards (below camera), a play button (triangle shape), and the game output (right panel). Users arrange physical programming cards in front of the camera, and the system recognizes them. After pressing play, the game executes based on the card sequence. The platform includes guidance at the bottom explaining the command sequence needed to code the standard game, but users can also create custom scenarios. For example, users can make the Dino jump every time it hits a cactus, or increase the score with each screen touch. This flexibility supports both learning the standard game logic and encouraging creative problem-solving."
+                },
+                {
+                    id: "programming-concepts",
+                    title: "Teaching Programming Concepts",
+                    content: "The platform effectively teaches basic programming concepts without requiring knowledge of programming languages. If/else structures are taught through cards like 'when touch screen', 'when hit cactus', 'when pass cactus', and 'when game starts'. Users learn to combine these event cards with action cards (like 'jump') to create program logic. For instance, placing 'when touch screen' followed by 'jump' teaches the concept of event-driven programming. The platform breaks down programming into the smallest steps - users learn to call the Dino and then teach it to run, understanding programming logic step by step. This approach makes programming concepts accessible to children who haven't learned computer programming or languages like Python or Java, while building algorithmic thinking skills."
+                },
+                {
+                    id: "accessibility-impact",
+                    title: "Accessibility and Educational Impact",
+                    content: "The KART-ON platform significantly improves accessibility in programming education. Since it only requires a camera (available on smartphones and tablets), it eliminates the need for computers, making programming education accessible to schools and families with limited resources. The use of everyday objects as programming blocks further reduces costs compared to specialized tangible programming interfaces. This low-cost approach addresses the budget gap between private and public schools, contributing to equal opportunity in education. The platform supports disadvantaged groups by making early programming education accessible regardless of socioeconomic status. Additionally, the self-guided design with educational pages and instructions enables use without requiring an instructor, further increasing accessibility. The physical interaction with cards also supports different learning styles, making programming concepts more tangible and understandable for young learners."
+                },
+                {
+                    id: "challenges-solutions",
+                    title: "Technical Challenges and Solutions",
+                    content: "Several technical challenges were encountered during development. To allow users to reconfigure games by changing card positions without re-initializing, I had to implement the game using p5.js instance mode, which required careful architecture design. For card recognition, I used Teachable Machine with transfer learning, which provides good performance but requires proper model training. The recognition quality varies based on training, so I included educational resources explaining the training process. The most challenging aspect was developing a custom compiler that could interpret all possible card sequences and handle every programming scenario. This compiler needed to evaluate all scenarios comprehensively to prevent errors when users code, which was particularly important since the target audience includes beginners who shouldn't encounter error messages. The compiler's complexity grew with the number of possible scenarios, requiring thorough testing and scenario coverage."
                 }
             ]
         }
