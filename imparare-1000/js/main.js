@@ -14,8 +14,8 @@ document.getElementById('hearBtn').addEventListener('click', () => {
 });
 document.getElementById('bigBtn').addEventListener('click', handleBigBtn);
 
-loadState();
 loadProgress();
+loadSession(); // restores score/level/lives/streak; falls back to defaults if no save
 renderHearts();
 updateScore();
 updateStreak();

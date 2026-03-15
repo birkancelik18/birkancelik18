@@ -1,4 +1,10 @@
 function pickWord() {
+  // Serve a repeat if one is due (scheduled 2 questions after the mistake)
+  const due = state.repeatQueue.find(e => state.answered >= e.after);
+  if (due) {
+    state.repeatQueue.splice(state.repeatQueue.indexOf(due), 1);
+    return due.word;
+  }
   if (state.usedIndices.length >= WORDS.length - 4) state.usedIndices = [];
   let idx;
   do { idx = ~~(Math.random() * WORDS.length); }
@@ -129,6 +135,7 @@ function handleAnswer(btn, isCorrect, word) {
     updateScore();
     updateStreak();
     updateLevel();
+    saveSession();
     showFeedback(true, word);
     speak(word[4]);
 
@@ -150,8 +157,12 @@ function handleAnswer(btn, isCorrect, word) {
       else if (t !== btn) t.classList.add('dimmed');
     });
 
+    // Schedule this word to reappear 2 questions from now
+    state.repeatQueue.push({ word, after: state.answered + 2 });
+
     renderHearts();
     updateStreak();
+    saveSession();
 
     const card = document.getElementById('wordCard');
     card.classList.add('shake');
@@ -217,6 +228,8 @@ function resetGame() {
   state.answered = 0;
   state.correct = 0;
   state.usedIndices = [];
+  state.repeatQueue = [];
+  clearSession();
   renderHearts();
   updateScore();
   updateStreak();
