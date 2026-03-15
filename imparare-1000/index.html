@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Parole!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div id="app">
+  <div class="topbar">
+    <div class="hearts" id="heartsEl"></div>
+    <div class="score-wrap">
+      <div class="score-num" id="scoreEl">0</div>
+      <div class="score-lbl">score</div>
+    </div>
+    <div class="streak-badge" id="streakEl">
+      <span class="streak-fire">🔥</span>
+      <span id="streakNum">0</span>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="lv-label">Lv.<span id="lvNum">1</span></div>
+    <div class="lv-bar"><div class="lv-fill" id="lvBar" style="width:0%"></div></div>
+    <div class="lv-num"><span id="lvProgress">0</span>/10</div>
+  </div>
+
+  <div class="goal-row">
+    <div class="goal-label">Words unlocked</div>
+    <div class="goal-num" id="goalNum">0 / 1000</div>
+  </div>
+
+  <div class="word-card" id="wordCard">
+    <div class="word-card-inner" id="cardInner">
+      <div class="cat-badge" id="catBadge"></div>
+      <div class="q-instruction">Fill in the blank 👇</div>
+      <div class="sentence-display" id="sentenceDisplay"></div>
+      <div class="sentence-en" id="sentenceEn"></div>
+      <button class="hear-btn" id="hearBtn">🔊 <span>Hear sentence</span></button>
+    </div>
+  </div>
+
+  <div class="tiles" id="tilesEl"></div>
+</div>
+
+<!-- Feedback bubble -->
+<div class="feedback-overlay" id="fbOverlay">
+  <div class="fb-bubble">
+    <div class="fb-emoji" id="fbEmoji"></div>
+    <div class="fb-word" id="fbWord"></div>
+    <div class="fb-example" id="fbExample"></div>
+  </div>
+</div>
+
+<!-- Combo burst -->
+<div class="combo-burst" id="comboBurst"></div>
+
+<!-- Level-up / game-over overlay -->
+<div class="big-overlay" id="bigOverlay">
+  <div class="big-icon" id="bigIcon"></div>
+  <div class="big-title" id="bigTitle"></div>
+  <div class="big-sub" id="bigSub"></div>
+  <div class="big-stats" id="bigStats"></div>
+  <button class="big-btn" id="bigBtn">Play Again</button>
+</div>
+
+<script defer src="js/words.js"></script>
+<script defer src="js/state.js"></script>
+<script defer src="js/confetti.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/game.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>
