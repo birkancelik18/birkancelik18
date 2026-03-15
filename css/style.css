@@ -908,7 +908,7 @@ body::before {
     min-width: 0;
     max-width: 100%;
     position: relative;
-    min-height: 200px;
+    height: 280px;
     align-items: stretch;
     cursor: pointer;
 }
@@ -1095,6 +1095,10 @@ body::before {
     line-height: 1.5;
     flex-grow: 1;
     font-size: var(--font-size-sm);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
 .project-tech {
@@ -1145,7 +1149,7 @@ body::before {
     .project-card {
         flex: 0 0 calc(100% - var(--spacing-sm));
         flex-direction: column;
-        min-height: auto;
+        height: auto;
     }
     
     .project-image-container {

@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initDynamicContent();
     initScrollAnimations();
-    initProjectFiltering();
-    initProjectsSlider();
     // initContactForm() is now called from renderContact()
     initRouting();
     setCurrentYear();
@@ -193,10 +191,8 @@ function renderProjects() {
             });
         });
         
-        // Reinitialize slider after projects are rendered
-        if (typeof initProjectsSlider === 'function') {
-            initProjectsSlider();
-        }
+        initProjectsSlider();
+        initProjectFiltering();
     }, 100);
 }
 
