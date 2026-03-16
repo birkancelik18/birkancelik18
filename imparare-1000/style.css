@@ -238,8 +238,16 @@ body::before {
   font-size: 0.8rem;
   color: var(--muted);
   font-style: italic;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   line-height: 1.4;
+}
+.word-hint {
+  font-size: 0.7rem;
+  color: rgba(255, 190, 80, 0.75);
+  font-style: italic;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 .hear-btn {
   background: rgba(255,255,255,0.1);

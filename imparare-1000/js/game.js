@@ -40,6 +40,13 @@ function fillCard(italian, cat) {
 
   document.getElementById('sentenceDisplay').innerHTML = buildBlankedSentence(italian, word[4]);
   document.getElementById('sentenceEn').textContent = '🇬🇧 ' + word[5];
+
+  const hintEl = document.getElementById('wordHint');
+  if (hintEl) {
+    const hint = word[6];
+    hintEl.textContent = hint ? '💡 ' + hint : '';
+    hintEl.style.display = hint ? '' : 'none';
+  }
 }
 
 function renderQuestion(animate) {
