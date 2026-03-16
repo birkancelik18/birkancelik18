@@ -8,6 +8,24 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- Mode select -->
+<div id="modeSelect" class="mode-select">
+  <div class="ms-title">Parole! 🇮🇹</div>
+  <div class="ms-sub">How do you want to study?</div>
+  <div class="ms-cards">
+    <button class="ms-card" id="btnQuiz">
+      <div class="ms-card-icon">🧩</div>
+      <div class="ms-card-name">Quiz</div>
+      <div class="ms-card-desc">Fill in the blank<br>Multiple choice</div>
+    </button>
+    <button class="ms-card" id="btnSwipe">
+      <div class="ms-card-icon">👆</div>
+      <div class="ms-card-name">Swipe</div>
+      <div class="ms-card-desc">Flashcards<br>Self-assess</div>
+    </button>
+  </div>
+</div>
+
 <canvas id="confetti"></canvas>
 
 <div id="app">
@@ -48,6 +66,23 @@
   <div class="tiles" id="tilesEl"></div>
 </div>
 
+<!-- Swipe mode -->
+<div id="swipeApp" class="swipe-app">
+  <div class="sw-topbar">
+    <button class="sw-back-btn" id="swBackBtn">← Back</button>
+    <div class="sw-progress" id="swProgress">0 known</div>
+  </div>
+
+  <div class="sw-deck" id="swDeck">
+    <!-- Cards injected by swipe.js -->
+  </div>
+
+  <div class="sw-hint-row">
+    <span class="sw-hint-left">👈 Don't know</span>
+    <span class="sw-hint-right">Know it 👉</span>
+  </div>
+</div>
+
 <!-- Feedback bubble -->
 <div class="feedback-overlay" id="fbOverlay">
   <div class="fb-bubble">
@@ -74,6 +109,7 @@
 <script defer src="js/confetti.js"></script>
 <script defer src="js/ui.js"></script>
 <script defer src="js/game.js"></script>
+<script defer src="js/swipe.js"></script>
 <script defer src="js/main.js"></script>
 </body>
 </html>
