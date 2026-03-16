@@ -2,6 +2,7 @@ const swState = {
   deck: [],
   known: 0,
   total: 0,
+  flying: false,
 };
 
 function startSwipeSession() {
@@ -133,12 +134,21 @@ function attachDragHandlers(card, word) {
   }
 
   card.addEventListener('pointerdown', onPointerDown);
-  card.addEventListener('pointermove', onPointerMove);
+  card.addEventListener('pointermove', onPointerMove, { passive: false });
   card.addEventListener('pointerup', onPointerUp);
-  card.addEventListener('pointercancel', onPointerUp);
+  card.addEventListener('pointercancel', () => {
+    if (!dragging) return;
+    dragging = false;
+    card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
+    card.style.transform = '';
+    card.querySelector('.sw-label-know').style.opacity = 0;
+    card.querySelector('.sw-label-dontknow').style.opacity = 0;
+  });
 }
 
 function flyCard(card, word, isKnown) {
+  if (swState.flying) return;
+  swState.flying = true;
   const dir = isKnown ? 1 : -1;
   card.style.transition = 'transform 0.38s ease-in, opacity 0.38s ease-in';
   card.style.transform = `translateX(${dir * window.innerWidth * 1.4}px) rotate(${dir * 30}deg)`;
@@ -160,6 +170,7 @@ function flyCard(card, word, isKnown) {
   updateSwProgress();
 
   setTimeout(() => {
+    swState.flying = false;
     renderSwipeDeck();
   }, 380);
 }
