@@ -457,3 +457,247 @@ body::before {
   0%{ opacity:0; transform: scale(0.88) translateY(8px); }
   100%{ opacity:1; transform: scale(1) translateY(0); }
 }
+
+/* ── Mode visibility ─────────────────────────── */
+#app        { display: none; }
+#swipeApp   { display: none; }
+#modeSelect { display: flex; }
+
+#app.active        { display: block; }
+#swipeApp.active   { display: flex; }
+#modeSelect.hidden { display: none; }
+
+/* ── Mode Select ─────────────────────────────── */
+.mode-select {
+  position: fixed; inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  z-index: 200;
+  gap: 1.2rem;
+  padding: 2rem;
+}
+
+.ms-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.ms-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.55);
+  font-family: 'Nunito', sans-serif;
+  margin-top: -0.4rem;
+}
+
+.ms-cards {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+}
+
+.ms-card {
+  background: #16213e;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 1.8rem 1.4rem;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+}
+
+.ms-card:hover, .ms-card:focus {
+  transform: translateY(-4px) scale(1.03);
+  border-color: #e94560;
+  background: #0f3460;
+  outline: none;
+}
+
+.ms-card-icon { font-size: 2.4rem; }
+
+.ms-card-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.ms-card-desc {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Swipe App ───────────────────────────────── */
+.swipe-app {
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  background: #1a1a2e;
+  padding: 0 0 1.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.sw-topbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem 0.4rem;
+}
+
+.sw-back-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sw-back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+.sw-progress {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.sw-deck {
+  position: relative;
+  width: min(380px, 92vw);
+  height: 520px;
+  margin-top: 1rem;
+}
+
+.sw-hint-row {
+  display: flex;
+  justify-content: space-between;
+  width: min(380px, 92vw);
+  margin-top: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── Swipe Card ──────────────────────────────── */
+.sw-card {
+  position: absolute;
+  inset: 0;
+  background: #16213e;
+  border-radius: 22px;
+  border: 1.5px solid rgba(255,255,255,0.09);
+  padding: 1.8rem 1.6rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+  transition: box-shadow 0.15s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
+.sw-card:active { cursor: grabbing; }
+
+.sw-card:nth-child(2) {
+  transform: scale(0.96) translateY(10px);
+  z-index: 0;
+  pointer-events: none;
+}
+.sw-card:nth-child(3) {
+  transform: scale(0.92) translateY(20px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sw-card.top { z-index: 10; }
+
+.sw-cat-badge {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sw-word {
+  font-family: 'Nunito', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.sw-sentence {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.65);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.sw-hint {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255,220,80,0.8);
+}
+
+.sw-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 0.2rem 0;
+}
+
+.sw-meaning {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #e8e8f0;
+}
+
+.sw-label {
+  position: absolute;
+  top: 1.4rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  padding: 0.35rem 1rem;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  pointer-events: none;
+  border: 3px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sw-label-know {
+  right: 1.2rem;
+  color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+.sw-label-dontknow {
+  left: 1.2rem;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
