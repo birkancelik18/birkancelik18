@@ -84,8 +84,95 @@ function renderSwipeDeck() {
   attachDragHandlers(topCard, swState.deck[0]);
 }
 
-// attachDragHandlers and flyCard defined in Task 5 — stub to prevent ReferenceError
-function attachDragHandlers(card, word) { /* stub */ }
+function attachDragHandlers(card, word) {
+  let startX = 0, currentX = 0;
+  let dragging = false;
+  const THRESHOLD = window.innerWidth * 0.28;
+
+  function onPointerDown(e) {
+    dragging = true;
+    startX = e.clientX;
+    currentX = 0;
+    card.setPointerCapture(e.pointerId);
+    card.style.transition = 'none';
+  }
+
+  function onPointerMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    currentX = e.clientX - startX;
+    const rotate = currentX * 0.08;
+    card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
+
+    const ratio = Math.min(Math.abs(currentX) / THRESHOLD, 1);
+    const knowLabel = card.querySelector('.sw-label-know');
+    const dontLabel = card.querySelector('.sw-label-dontknow');
+    if (currentX > 0) {
+      knowLabel.style.opacity = ratio;
+      dontLabel.style.opacity = 0;
+    } else {
+      dontLabel.style.opacity = ratio;
+      knowLabel.style.opacity = 0;
+    }
+  }
+
+  function onPointerUp() {
+    if (!dragging) return;
+    dragging = false;
+
+    if (currentX > THRESHOLD) {
+      flyCard(card, word, true);
+    } else if (currentX < -THRESHOLD) {
+      flyCard(card, word, false);
+    } else {
+      card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
+      card.style.transform = '';
+      card.querySelector('.sw-label-know').style.opacity = 0;
+      card.querySelector('.sw-label-dontknow').style.opacity = 0;
+    }
+  }
+
+  card.addEventListener('pointerdown', onPointerDown);
+  card.addEventListener('pointermove', onPointerMove);
+  card.addEventListener('pointerup', onPointerUp);
+  card.addEventListener('pointercancel', onPointerUp);
+}
+
+function flyCard(card, word, isKnown) {
+  const dir = isKnown ? 1 : -1;
+  card.style.transition = 'transform 0.38s ease-in, opacity 0.38s ease-in';
+  card.style.transform = `translateX(${dir * window.innerWidth * 1.4}px) rotate(${dir * 30}deg)`;
+  card.style.opacity = '0';
+
+  if (isKnown) {
+    swState.known++;
+    swState.deck.shift();
+    if (!masteredMap[word[0]]) {
+      masteredMap[word[0]] = true;
+      state.masteredWords = Object.keys(masteredMap).length;
+      saveProgress();
+    }
+  } else {
+    swState.deck.shift();
+    swState.deck.push(word);
+  }
+
+  updateSwProgress();
+
+  setTimeout(() => {
+    renderSwipeDeck();
+  }, 380);
+}
+
+function handleSwipeKey(e) {
+  if (!document.getElementById('swipeApp').classList.contains('active')) return;
+  if (swState.deck.length === 0) return;
+  const topCard = document.getElementById('swDeck').lastElementChild;
+  if (!topCard || !topCard.classList.contains('top')) return;
+  if (e.key === 'ArrowRight') flyCard(topCard, swState.deck[0], true);
+  if (e.key === 'ArrowLeft')  flyCard(topCard, swState.deck[0], false);
+}
+document.addEventListener('keydown', handleSwipeKey);
 
 // showSwipeSummary defined in Task 6 — stub
 function showSwipeSummary() { /* stub */ }
