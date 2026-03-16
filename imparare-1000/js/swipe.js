@@ -185,5 +185,18 @@ function handleSwipeKey(e) {
 }
 document.addEventListener('keydown', handleSwipeKey);
 
-// showSwipeSummary defined in Task 6 — stub
-function showSwipeSummary() { /* stub */ }
+function showSwipeSummary() {
+  const overlay = document.getElementById('bigOverlay');
+  document.getElementById('bigIcon').textContent = '🃏';
+  document.getElementById('bigTitle').textContent = 'All done!';
+  document.getElementById('bigSub').textContent =
+    'You reviewed all ' + swState.total + ' words. Nice work!';
+  document.getElementById('bigStats').innerHTML = `
+    <div class="big-stat"><div class="big-stat-val">${swState.total}</div><div class="big-stat-lbl">Reviewed</div></div>
+    <div class="big-stat"><div class="big-stat-val">${swState.known}</div><div class="big-stat-lbl">Known</div></div>
+  `;
+  document.getElementById('bigBtn').textContent = '🔄 Shuffle again';
+  overlay.dataset.mode = 'swipe';
+  overlay.classList.add('show');
+  spawnConfetti(window.innerWidth / 2, window.innerHeight / 3, 50);
+}
