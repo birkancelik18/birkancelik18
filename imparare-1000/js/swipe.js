@@ -86,9 +86,12 @@ function renderSwipeDeck() {
 }
 
 function attachDragHandlers(card, word) {
+  if (swState.deck.length === 0) return;
   let startX = 0, currentX = 0;
   let dragging = false;
   const THRESHOLD = window.innerWidth * 0.28;
+  const knowLabel = card.querySelector('.sw-label-know');
+  const dontLabel = card.querySelector('.sw-label-dontknow');
 
   function onPointerDown(e) {
     dragging = true;
@@ -106,8 +109,6 @@ function attachDragHandlers(card, word) {
     card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
 
     const ratio = Math.min(Math.abs(currentX) / THRESHOLD, 1);
-    const knowLabel = card.querySelector('.sw-label-know');
-    const dontLabel = card.querySelector('.sw-label-dontknow');
     if (currentX > 0) {
       knowLabel.style.opacity = ratio;
       dontLabel.style.opacity = 0;
@@ -128,8 +129,8 @@ function attachDragHandlers(card, word) {
     } else {
       card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
       card.style.transform = '';
-      card.querySelector('.sw-label-know').style.opacity = 0;
-      card.querySelector('.sw-label-dontknow').style.opacity = 0;
+      knowLabel.style.opacity = 0;
+      dontLabel.style.opacity = 0;
     }
   }
 
@@ -141,8 +142,8 @@ function attachDragHandlers(card, word) {
     dragging = false;
     card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
     card.style.transform = '';
-    card.querySelector('.sw-label-know').style.opacity = 0;
-    card.querySelector('.sw-label-dontknow').style.opacity = 0;
+    knowLabel.style.opacity = 0;
+    dontLabel.style.opacity = 0;
   });
 }
 
