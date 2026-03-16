@@ -5,11 +5,47 @@ const swState = {
   flying: false,
 };
 
-function startSwipeSession() {
+function saveSwipeSession() {
+  try {
+    localStorage.setItem('parole_swipe', JSON.stringify({
+      deckKeys: swState.deck.map(w => w[0]),
+      known: swState.known,
+      total: swState.total,
+    }));
+  } catch (e) {}
+}
+
+function loadSwipeSession() {
+  try {
+    const raw = localStorage.getItem('parole_swipe');
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !Array.isArray(s.deckKeys) || s.deckKeys.length === 0) return false;
+    const wordMap = Object.fromEntries(WORDS.map(w => [w[0], w]));
+    const deck = s.deckKeys.map(k => wordMap[k]).filter(Boolean);
+    if (deck.length === 0) return false;
+    swState.deck = deck;
+    swState.known = s.known || 0;
+    swState.total = s.total || WORDS.length;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function clearSwipeSession() {
+  try { localStorage.removeItem('parole_swipe'); } catch (e) {}
+}
+
+function startSwipeSession(fresh = false) {
   swState.flying = false;
-  swState.deck = shuffle([...WORDS]);
-  swState.known = 0;
-  swState.total = WORDS.length;
+  if (!fresh && loadSwipeSession()) {
+    // restored from saved session
+  } else {
+    swState.deck = shuffle([...WORDS]);
+    swState.known = 0;
+    swState.total = WORDS.length;
+  }
   renderSwipeDeck();
   updateSwProgress();
 }
@@ -170,6 +206,7 @@ function flyCard(card, word, isKnown) {
   }
 
   updateSwProgress();
+  saveSwipeSession();
 
   setTimeout(() => {
     swState.flying = false;
@@ -188,6 +225,7 @@ function handleSwipeKey(e) {
 document.addEventListener('keydown', handleSwipeKey);
 
 function showSwipeSummary() {
+  clearSwipeSession();
   const overlay = document.getElementById('bigOverlay');
   document.getElementById('bigIcon').textContent = '🃏';
   document.getElementById('bigTitle').textContent = 'All done!';

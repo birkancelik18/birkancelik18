@@ -24,7 +24,7 @@ function handleBigBtn() {
   if (mode === 'gameover') {
     resetGame();
   } else if (mode === 'swipe') {
-    startSwipeSession();
+    startSwipeSession(true);
   } else {
     renderQuestion(true);
   }
@@ -36,6 +36,10 @@ document.getElementById('hearBtn').addEventListener('click', () => {
   speak(state.currentWord?.[4] || state.currentWord?.[0] || '');
 });
 document.getElementById('bigBtn').addEventListener('click', handleBigBtn);
+document.getElementById('quizBackBtn').addEventListener('click', () => {
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('modeSelect').classList.remove('hidden');
+});
 document.getElementById('swBackBtn').addEventListener('click', () => {
   document.getElementById('swipeApp').classList.remove('active');
   document.getElementById('modeSelect').classList.remove('hidden');
