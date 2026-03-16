@@ -615,18 +615,22 @@ body::before {
 
 .sw-card:active { cursor: grabbing; }
 
+.sw-card:nth-child(1) {
+  transform: scale(0.92) translateY(20px);
+  z-index: 0;
+  pointer-events: none;
+}
 .sw-card:nth-child(2) {
   transform: scale(0.96) translateY(10px);
   z-index: 0;
   pointer-events: none;
 }
-.sw-card:nth-child(3) {
-  transform: scale(0.92) translateY(20px);
-  z-index: 0;
-  pointer-events: none;
-}
 
-.sw-card.top { z-index: 10; }
+.sw-card.top {
+  z-index: 10;
+  pointer-events: auto;
+  transform: none;
+}
 
 .sw-cat-badge {
   align-self: flex-start;

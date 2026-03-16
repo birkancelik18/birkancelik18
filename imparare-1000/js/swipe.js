@@ -6,6 +6,7 @@ const swState = {
 };
 
 function startSwipeSession() {
+  swState.flying = false;
   swState.deck = shuffle([...WORDS]);
   swState.known = 0;
   swState.total = WORDS.length;
