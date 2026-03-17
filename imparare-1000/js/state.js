@@ -1,7 +1,7 @@
 const LIVES = 5;
 const WORDS_PER_LEVEL = 10;
 const TILE_COLORS = [0, 1, 2, 3];
-const GOAL_WORDS = 1266;
+const GOAL_WORDS = (typeof WORDS !== 'undefined' && Array.isArray(WORDS)) ? WORDS.length : 1266;
 
 function getCurrentLang() {
   const lang = window.paroleLanguage || localStorage.getItem('parole_lang') || 'it';
