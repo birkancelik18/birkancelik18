@@ -7,7 +7,7 @@ const swState = {
 
 function saveSwipeSession() {
   try {
-    localStorage.setItem('parole_swipe', JSON.stringify({
+    localStorage.setItem(storageKey('parole_swipe'), JSON.stringify({
       deckKeys: swState.deck.map(w => w[0]),
       known: swState.known,
       total: swState.total,
@@ -17,7 +17,7 @@ function saveSwipeSession() {
 
 function loadSwipeSession() {
   try {
-    const raw = localStorage.getItem('parole_swipe');
+    const raw = localStorage.getItem(storageKey('parole_swipe'));
     if (!raw) return false;
     const s = JSON.parse(raw);
     if (!s || !Array.isArray(s.deckKeys) || s.deckKeys.length === 0) return false;
@@ -34,7 +34,7 @@ function loadSwipeSession() {
 }
 
 function clearSwipeSession() {
-  try { localStorage.removeItem('parole_swipe'); } catch (e) {}
+  try { localStorage.removeItem(storageKey('parole_swipe')); } catch (e) {}
 }
 
 function startSwipeSession(fresh = false) {

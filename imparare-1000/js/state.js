@@ -3,6 +3,15 @@ const WORDS_PER_LEVEL = 10;
 const TILE_COLORS = [0, 1, 2, 3];
 const GOAL_WORDS = 1266;
 
+function getCurrentLang() {
+  const lang = window.paroleLanguage || localStorage.getItem('parole_lang') || 'it';
+  return (lang === 'nl' || lang === 'it') ? lang : 'it';
+}
+
+function storageKey(base) {
+  return `${base}_${getCurrentLang()}`;
+}
+
 const state = {
   lives: LIVES,
   score: 0,
@@ -38,7 +47,7 @@ function saveHS() {
 
 function loadProgress() {
   try {
-    const raw = localStorage.getItem('parole_words') || '{}';
+    const raw = localStorage.getItem(storageKey('parole_words')) || '{}';
     const parsed = JSON.parse(raw);
     masteredMap = (parsed && typeof parsed === 'object') ? parsed : {};
   } catch (e) {
@@ -49,13 +58,13 @@ function loadProgress() {
 
 function saveProgress() {
   try {
-    localStorage.setItem('parole_words', JSON.stringify(masteredMap));
+    localStorage.setItem(storageKey('parole_words'), JSON.stringify(masteredMap));
   } catch (e) {}
 }
 
 function saveSession() {
   try {
-    localStorage.setItem('parole_session', JSON.stringify({
+    localStorage.setItem(storageKey('parole_session'), JSON.stringify({
       score: state.score,
       level: state.level,
       wordsThisLevel: state.wordsThisLevel,
@@ -70,7 +79,7 @@ function saveSession() {
 
 function loadSession() {
   try {
-    const s = JSON.parse(localStorage.getItem('parole_session') || 'null');
+    const s = JSON.parse(localStorage.getItem(storageKey('parole_session')) || 'null');
     if (!s) return false;
     state.score           = s.score           ?? 0;
     state.level           = s.level           ?? 1;
@@ -87,5 +96,5 @@ function loadSession() {
 }
 
 function clearSession() {
-  try { localStorage.removeItem('parole_session'); } catch (e) {}
+  try { localStorage.removeItem(storageKey('parole_session')); } catch (e) {}
 }

@@ -45,5 +45,20 @@ document.getElementById('swBackBtn').addEventListener('click', () => {
   document.getElementById('modeSelect').classList.remove('hidden');
 });
 
+
+const languageSelect = document.getElementById('languageSelect');
+const modeTitle = document.querySelector('.ms-title');
+const currentLang = localStorage.getItem('parole_lang') || 'it';
+if (modeTitle) {
+  modeTitle.textContent = `Parole! ${currentLang === 'nl' ? '🇳🇱' : '🇮🇹'}`;
+}
+if (languageSelect) {
+  languageSelect.value = currentLang;
+  languageSelect.addEventListener('change', e => {
+    localStorage.setItem('parole_lang', e.target.value);
+    window.location.reload();
+  });
+}
+
 loadState();
 loadProgress();

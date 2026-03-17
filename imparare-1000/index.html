@@ -10,8 +10,15 @@
 <body>
 <!-- Mode select -->
 <div id="modeSelect" class="mode-select">
-  <div class="ms-title">Parole! 🇮🇹</div>
+  <div class="ms-title">Parole!</div>
   <div class="ms-sub">How do you want to study?</div>
+  <div class="ms-lang">
+    <label for="languageSelect">Language</label>
+    <select id="languageSelect">
+      <option value="it">Italiano 🇮🇹</option>
+      <option value="nl">Nederlands 🇳🇱</option>
+    </select>
+  </div>
   <div class="ms-cards">
     <button type="button" class="ms-card" id="btnQuiz">
       <div class="ms-card-icon">🧩</div>
@@ -105,7 +112,11 @@
   <button class="big-btn" id="bigBtn">Play Again</button>
 </div>
 
-<script defer src="js/words.js"></script>
+<script>
+  const selectedLang = localStorage.getItem('parole_lang') || 'it';
+  window.paroleLanguage = selectedLang;
+  document.write(`<script defer src="js/${selectedLang === 'nl' ? 'words-nl' : 'words'}.js"><\/script>`);
+</script>
 <script defer src="js/state.js"></script>
 <script defer src="js/confetti.js"></script>
 <script defer src="js/ui.js"></script>
