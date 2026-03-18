@@ -435,6 +435,97 @@ const WORDS_NL = [
   ["roze","pink","ROH-zuh","color","Ze kocht een roze jurk.","She bought a pink dress.","Think rose (flower)."],
   ["paars","purple","PAHRS","color","De bloemen in de tuin zijn paars.","The flowers in the garden are purple.","Think of 'pur-ple' sound."],
   ["bruin","brown","BROYN","color","Chocolade is bruin.","Chocolate is brown.","Sounds like brown."]
+  // --- ADDITIONAL PEOPLE & RELATIONSHIPS ---
+  ["buurman","neighbor (male)","BUUR-mahn","noun","Mijn buurman is erg vriendelijk.","My neighbor is very friendly.","'Buur' is related to 'boor' (farmer) or 'neighbor'."],
+  ["buurvrouw","neighbor (female)","BUUR-vrow","noun","De buurvrouw heeft de post aangenomen.","The female neighbor took the mail.","Buur (neighbor) + vrouw (woman)."],
+  ["baby","baby","BAY-bee","noun","De baby slaapt eindelijk.","The baby is finally sleeping.","Same as English."],
+  ["volwassene","adult","vol-VAHS-suh-nuh","noun","Dit is een film voor volwassenen.","This is a movie for adults.","'Vol' (full) + 'wassen' (grown)."],
+
+  // --- ADDITIONAL BODY PARTS ---
+  ["nek","neck","NEK","noun","Ik heb last van mijn nek.","I have trouble with my neck.","Same as English."],
+  ["schouder","shoulder","SKHOW-dur","noun","Hij draagt een tas over zijn schouder.","He is carrying a bag over his shoulder.","Cognate to shoulder."],
+  ["knie","knee","KNEE","noun","Ik ben op mijn knie gevallen.","I fell on my knee.","Cognate to knee."],
+  ["bloed","blood","BLOOT","noun","Er zit bloed op je shirt.","There is blood on your shirt.","Cognate to blood."],
+  ["huid","skin","HOYT","noun","Je moet je huid beschermen tegen de zon.","You must protect your skin against the sun.","Think 'hide' (animal skin)."],
+
+  // --- TRAVEL & TRANSPORTATION ---
+  ["kaartje","ticket","KAHR-tyuh","noun","Heb je al een kaartje gekocht?","Have you bought a ticket yet?","Think 'card' + 'je' (small card)."],
+  ["koffer","suitcase","KOF-fur","noun","Mijn koffer is veel te zwaar.","My suitcase is way too heavy.","Think 'coffer' or 'trunk'."],
+  ["paspoort","passport","PAHS-pohrt","noun","Vergeet je paspoort niet!","Don't forget your passport!","Cognate to passport."],
+  ["vertraging","delay","vur-TRAH-khung","noun","De trein heeft tien minuten vertraging.","The train has a ten-minute delay.","Think 'dragging' (it's dragging on)."],
+  ["vliegveld","airport","VLEEKH-velt","noun","We moeten op tijd naar het vliegveld.","We have to get to the airport on time.","Vlieg (fly) + veld (field)."],
+  ["plattegrond","map","plaht-tuh-KRHONT","noun","Kijk op de plattegrond voor de weg.","Look on the map for the way.","Plat (flat) + grond (ground)."],
+
+  // --- TECHNOLOGY & OFFICE ---
+  ["telefoon","phone","tay-lay-FOHN","noun","Waar is mijn telefoon gebleven?","Where did my phone go?","Cognate to telephone."],
+  ["computer","computer","kom-PYOO-tur","noun","Mijn computer is erg traag vandaag.","My computer is very slow today.","Same as English."],
+  ["scherm","screen","SKHERM","noun","Er zit een barst in het scherm.","There is a crack in the screen.","Think 'skirmish' (a shield/screen)."],
+  ["wachtwoord","password","VAHKHT-vohrt","noun","Ik ben mijn wachtwoord vergeten.","I forgot my password.","Wacht (watch/wait) + woord (word)."],
+  ["bericht","message","buh-RIKHT","noun","Ik stuur je straks een berichtje.","I will send you a message later.","Think 'report'."],
+  ["vergadering","meeting","vur-KHAH-duh-ring","noun","De vergadering duurt tot vier uur.","The meeting lasts until four o'clock.","Think 'gathering'."],
+
+  // --- KITCHEN & HOUSEHOLD ---
+  ["koelkast","refrigerator","KOOL-kahst","noun","De melk staat in de koelkast.","The milk is in the fridge.","Koel (cool) + kast (cupboard)."],
+  ["oven","oven","OH-vun","noun","De pizza staat in de oven.","The pizza is in the oven.","Same as English."],
+  ["handdoek","towel","HAHNT-dook","noun","Er liggen schone handdoeken in de kast.","There are clean towels in the cupboard.","Hand (hand) + doek (cloth)."],
+  ["zeep","soap","ZAYP","noun","Was je handen met water en zeep.","Wash your hands with water and soap.","Cognate to soap."],
+  ["tandenborstel","toothbrush","TAHN-dun-bor-stul","noun","Ik moet een nieuwe tandenborstel kopen.","I need to buy a new toothbrush.","Tanden (teeth) + borstel (brush)."],
+  ["spiegel","mirror","SPEE-khul","noun","Kijk in de spiegel.","Look in the mirror.","Think 'spectacles'."],
+
+  // --- CLOTHING ACCESSORIES ---
+  ["rok","skirt","ROK","noun","Zij draagt vandaag een blauwe rok.","She is wearing a blue skirt today.","Sounds like English 'rock' but means skirt."],
+  ["bril","glasses","BRIL","noun","Ik kan niets zien zonder mijn bril.","I can't see anything without my glasses.","Think 'brilliant' eyes."],
+  ["horloge","watch","hor-LOH-zhuh","noun","Hoe laat is het op jouw horloge?","What time is it on your watch?","From French 'horloge'."],
+  ["paraplu","umbrella","pah-rah-PLOO","noun","Neem een paraplu mee, het gaat regenen.","Take an umbrella, it's going to rain.","From French 'parapluie'."],
+  ["tas","bag","TAHS","noun","Zit je laptop in je tas?","Is your laptop in your bag?","Think 'attaché' or 'tote'."],
+
+  // --- EMOTIONS ---
+  ["boos","angry","BOHS","adj","Waarom ben je zo boos op mij?","Why are you so angry at me?","Think of someone being a 'boos' (bossy/mean)."],
+  ["bang","scared","BAHNG","adj","Ik ben bang voor spinnen.","I am scared of spiders.","Think 'bang' (loud noises are scary)."],
+  ["verrast","surprised","vur-RAHST","adj","Ik was erg verrast door het cadeau.","I was very surprised by the gift.","Think 'rest' (stopped in your tracks)."],
+  ["zenuwachtig","nervous","ZAY-nu-vahkh-tukh","adj","Ik ben zenuwachtig voor het examen.","I am nervous for the exam.","Zenuw (nerve) + achtig (ish)."],
+  ["trots","proud","TROTS","adj","Ik ben heel trots op jou.","I am very proud of you.","Think 'trot' (walking proudly)."],
+
+  // --- ADDITIONAL VERBS ---
+  ["helpen","to help","HEL-pun","verb","Kun je me even helpen?","Can you help me for a moment?","Cognate to help."],
+  ["wonen","to live / reside","VOH-nun","verb","Ik woon al vijf jaar in deze stad.","I have lived in this city for five years.","Think 'wagon' (home on wheels)."],
+  ["bellen","to call (phone)","BEL-lun","verb","Ik bel je vanavond terug.","I'll call you back tonight.","Think 'bell' (phones used to ring bells)."],
+  ["ontmoeten","to meet","ont-MOO-tun","verb","Leuk om je te ontmoeten!","Nice to meet you!","Think 'meet'."],
+  ["stoppen","to stop","STOP-pun","verb","De bus stopt hier niet.","The bus doesn't stop here.","Cognate to stop."],
+  ["beginnen","to start","buh-KHIN-nun","verb","De les begint om negen uur.","The lesson starts at nine o'clock.","Cognate to begin."],
+  ["vieren","to celebrate","VEE-run","verb","We vieren dit weekend zijn verjaardag.","We are celebrating his birthday this weekend.","Think 'fire' (fireworks)."],
+  ["vertellen","to tell","vur-TEL-lun","verb","Kun je me een verhaal vertellen?","Can you tell me a story?","Cognate to tell."],
+  ["herinneren","to remember","her-IN-nuh-run","verb","Ik herinner me dat niet meer.","I don't remember that anymore.","Think 'inner' (keeping it inside)."],
+
+  // --- USEFUL ADJECTIVES ---
+  ["rustig","quiet / calm","RUS-tukh","adj","Het is hier zo heerlijk rustig.","It is so wonderfully quiet here.","Think 'rest'."],
+  ["druk","busy / crowded","DRUK","adj","Amsterdam is een erg drukke stad.","Amsterdam is a very busy city.","Think 'press' (pressure)."],
+  ["gratis","free (no cost)","KHRAH-tis","adj","Koffie is vandaag gratis.","Coffee is free today.","Think 'gratuity'."],
+  ["vers","fresh","VERS","adj","Ik hou van vers gebakken brood.","I love freshly baked bread.","Think 'fresh'."],
+  ["gelukkig","happy / lucky","khuh-LUK-kikh","adj","Ik ben heel gelukkig met jou.","I am very happy with you.","Luck (geluk) = happiness."],
+  ["interessant","interesting","in-tuh-ruh-SAHNT","adj","Dat is een interessant verhaal.","That is an interesting story.","Cognate to interesting."],
+
+  // --- ABSTRACT & TIME ---
+  ["toekomst","future","TOO-komst","noun","Wie weet wat de toekomst brengt?","Who knows what the future brings?","Toe (to) + komst (coming)."],
+  ["verleden","past","vur-LAY-dun","noun","Dat is nu echt verleden tijd.","That is truly in the past now.","Think 'laid' (it's been laid to rest)."],
+  ["kans","chance / opportunity","KAHNS","noun","Dit is een grote kans voor jou.","This is a great opportunity for you.","Cognate to chance."],
+  ["fout","mistake / wrong","FOWT","noun","Ik heb een fout gemaakt.","I made a mistake.","Think 'fault'."],
+  ["oplossing","solution","OP-los-sing","noun","We moeten een oplossing vinden.","We must find a solution.","Think 'loosening' a knot."],
+
+  // --- PHRASES ---
+  ["hoe gaat het?","how are you?","HOO khaht ut","phrase","Hallo! Hoe gaat het met je?","Hello! How are you doing?","Literally 'how goes it?'"],
+  ["geen probleem","no problem","KHAYN proh-BLAYM","phrase","Dank je voor de hulp! - Geen probleem.","Thank you for the help! - No problem.","Geen (no) + probleem (problem)."],
+  ["ik heb een vraag","I have a question","IK HEP UN VRAHKH","phrase","Sorry, ik heb een vraagje.","Sorry, I have a little question.","Vraag = question."],
+  ["veel plezier","have fun","FAYL plu-ZEER","phrase","Veel plezier op het feest!","Have fun at the party!","Plezier = pleasure."],
+  ["het geeft niet","it doesn't matter","HET KHAYFT NEET","phrase","Sorry dat ik laat ben. - Het geeft niet.","Sorry I'm late. - It doesn't matter.","Literally 'it gives not'."],
+  ["wat jammer","what a pity / that's too bad","VAHT YAH-mur","phrase","Kun je niet komen? Wat jammer!","You can't come? What a pity!","'Jammer' sounds like 'yammering' (crying)."],
+
+  // --- MISC / ADVERBS ---
+  ["misschien","maybe","mis-SKHEEN","adv","Misschien kom ik morgen langs.","Maybe I'll drop by tomorrow.","Miss (chance) + schien (happen)."],
+  ["eigenlijk","actually","AY-khun-luk","adv","Wat wil je eigenlijk gaan doen?","What do you actually want to do?","Think 'own' (literally 'own-ly')."],
+  ["vooral","especially","vohr-AHL","adv","Ik hou van fruit, vooral van appels.","I love fruit, especially apples.","Voor (before) + al (all)."],
+  ["sowieso","anyway / in any case","SOH-VEE-SOH","adv","Ik kom sowieso naar je feest.","I am coming to your party in any case.","Borrowed from German."],
+  ["tenminste","at least","tun-MIN-stuh","adv","Het regent niet meer, tenminste nu niet.","It isn't raining anymore, at least not now.","Ten + minste (minimum)."],
 ];
 
 const WORDS = WORDS_NL;
