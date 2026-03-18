@@ -46,7 +46,7 @@ function updateGoal() {
   el.textContent = `${state.masteredWords} / ${GOAL_WORDS}`;
 }
 
-function speak(text, lang = 'it-IT') {
+function speak(text, lang = window.paroleLanguage === 'nl' ? 'nl-NL' : 'it-IT') {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
