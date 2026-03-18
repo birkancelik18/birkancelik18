@@ -46,11 +46,29 @@ function updateGoal() {
   el.textContent = `${state.masteredWords} / ${GOAL_WORDS}`;
 }
 
+function getSpeechVoice(lang) {
+  const voices = window.speechSynthesis?.getVoices?.() || [];
+  if (!voices.length) return null;
+
+  const wanted = lang.toLowerCase();
+  const prefix = wanted.split('-')[0];
+
+  return voices.find(v => (v.lang || '').toLowerCase() === wanted)
+    || voices.find(v => (v.lang || '').toLowerCase().startsWith(prefix))
+    || voices.find(v => (v.name || '').toLowerCase().includes(prefix));
+}
+
 function speak(text, lang = window.paroleLanguage === 'nl' ? 'nl-NL' : 'it-IT') {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang;
+  const voice = getSpeechVoice(lang);
+  if (voice) {
+    u.voice = voice;
+    u.lang = voice.lang || lang;
+  } else {
+    u.lang = lang;
+  }
   u.rate = 0.82;
   window.speechSynthesis.speak(u);
 }
