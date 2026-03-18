@@ -1,4 +1,3 @@
-```javascript
 // [italian, english, pronunciation, category, exampleIT, exampleEN, hint]
 const WORDS = [
 ["ciao","hello","CHAH-oh","phrase","Ciao! Come stai?","Hello! How are you?","Casual hello, like saying hi in English."],
@@ -1274,4 +1273,3 @@ const CAT_STYLE = {
   month: { bg: 'rgba(107,203,119,0.2)',  color: '#82d991', label: '🗓️ Month' },
   color: { bg: 'rgba(255,159,67,0.2)',   color: '#ffc07a', label: '🎨 Colour' },
 };
-```
