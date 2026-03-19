@@ -612,18 +612,19 @@ body::before {
 .sw-deck {
   position: relative;
   width: min(380px, 92vw);
-  height: min(520px, 60dvh);
-  margin-top: 1rem;
+  height: min(640px, 72dvh);
+  margin-top: 0.6rem;
 }
 
 .sw-hint-row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  gap: 0.35rem;
   width: min(380px, 92vw);
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   font-family: 'Nunito', sans-serif;
   font-size: 0.82rem;
   color: rgba(255,255,255,0.35);
+  text-align: center;
 }
 
 /* ── Swipe Card ──────────────────────────────── */
@@ -637,7 +638,7 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  cursor: grab;
+  cursor: ns-resize;
   user-select: none;
   touch-action: none;
   will-change: transform;
@@ -710,9 +711,15 @@ body::before {
   color: #e8e8f0;
 }
 
+.sw-hear-btn {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+
 .sw-label {
   position: absolute;
-  top: 1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'Nunito', sans-serif;
   font-size: 1.1rem;
   font-weight: 900;
@@ -727,13 +734,13 @@ body::before {
 }
 
 .sw-label-know {
-  right: 1.2rem;
+  top: 1.2rem;
   color: #2ecc71;
   border-color: #2ecc71;
 }
 
 .sw-label-dontknow {
-  left: 1.2rem;
+  bottom: 1.2rem;
   color: #e74c3c;
   border-color: #e74c3c;
 }

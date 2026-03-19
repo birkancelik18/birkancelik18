@@ -1,50 +1,31 @@
 const swState = {
-  deck: [],
-  known: 0,
-  total: 0,
+  currentWord: null,
+  currentIndex: 0,
+  seen: 0,
   flying: false,
 };
 
-function saveSwipeSession() {
-  try {
-    localStorage.setItem(storageKey('parole_swipe'), JSON.stringify({
-      deckKeys: swState.deck.map(w => w[0]),
-      known: swState.known,
-      total: swState.total,
-    }));
-  } catch (e) {}
+function pickNextWordInOrder() {
+  if (!Array.isArray(WORDS) || WORDS.length === 0) return null;
+  const word = WORDS[swState.currentIndex % WORDS.length];
+  swState.currentIndex = (swState.currentIndex + 1) % WORDS.length;
+  return word;
 }
 
-function loadSwipeSession() {
-  try {
-    const raw = localStorage.getItem(storageKey('parole_swipe'));
-    if (!raw) return false;
-    const s = JSON.parse(raw);
-    if (!s || !Array.isArray(s.deckKeys) || s.deckKeys.length === 0) return false;
-    const wordMap = Object.fromEntries(WORDS.map(w => [w[0], w]));
-    const deck = s.deckKeys.map(k => wordMap[k]).filter(Boolean);
-    if (deck.length === 0) return false;
-    swState.deck = deck;
-    swState.known = s.known || 0;
-    swState.total = s.total || WORDS.length;
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function clearSwipeSession() {
-  try { localStorage.removeItem(storageKey('parole_swipe')); } catch (e) {}
+function pickPrevWordInOrder() {
+  if (!Array.isArray(WORDS) || WORDS.length === 0) return null;
+  const prevIndex = (swState.currentIndex - 2 + WORDS.length) % WORDS.length;
+  const word = WORDS[prevIndex];
+  swState.currentIndex = (prevIndex + 1) % WORDS.length;
+  return word;
 }
 
 function startSwipeSession(fresh = false) {
   swState.flying = false;
-  if (!fresh && loadSwipeSession()) {
-    // restored from saved session
-  } else {
-    swState.deck = shuffle([...WORDS]);
-    swState.known = 0;
-    swState.total = WORDS.length;
+  if (fresh || !swState.currentWord) {
+    swState.currentIndex = 0;
+    swState.currentWord = pickNextWordInOrder();
+    swState.seen = 0;
   }
   renderSwipeDeck();
   updateSwProgress();
@@ -52,11 +33,11 @@ function startSwipeSession(fresh = false) {
 
 function updateSwProgress() {
   document.getElementById('swProgress').textContent =
-    swState.known + ' / ' + swState.total + ' known';
+    swState.seen + ' watched';
 }
 
 function buildSwCard(word) {
-  const [italian, english, , cat, sentenceIT, , hint] = word;
+  const [sourceWord, english, pronunciation, cat, sourceSentence, , hint] = word;
   const style = CAT_STYLE[cat] || CAT_STYLE.noun;
 
   const card = document.createElement('div');
@@ -70,11 +51,11 @@ function buildSwCard(word) {
 
   const wordEl = document.createElement('div');
   wordEl.className = 'sw-word';
-  wordEl.textContent = italian;
+  wordEl.textContent = sourceWord;
 
   const sentenceEl = document.createElement('div');
   sentenceEl.className = 'sw-sentence';
-  sentenceEl.textContent = sentenceIT;
+  sentenceEl.textContent = sourceSentence;
 
   const hintEl = document.createElement('div');
   hintEl.className = 'sw-hint';
@@ -88,15 +69,19 @@ function buildSwCard(word) {
   meaningEl.className = 'sw-meaning';
   meaningEl.textContent = '🇬🇧 ' + english;
 
-  const labelKnow = document.createElement('div');
-  labelKnow.className = 'sw-label sw-label-know';
-  labelKnow.textContent = 'Know it ✓';
+  const hearBtn = document.createElement('button');
+  hearBtn.type = 'button';
+  hearBtn.className = 'hear-btn sw-hear-btn';
+  hearBtn.innerHTML = '🔊 <span>Hear pronunciation</span>';
+  if (pronunciation) hearBtn.title = `Pronunciation: ${pronunciation}`;
+  hearBtn.addEventListener('pointerdown', e => e.stopPropagation());
+  hearBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const lang = window.paroleLanguage === 'nl' ? 'nl-NL' : 'it-IT';
+    speak(sourceWord || sourceSentence || '', lang);
+  });
 
-  const labelDont = document.createElement('div');
-  labelDont.className = 'sw-label sw-label-dontknow';
-  labelDont.textContent = "Don't know ✗";
-
-  card.append(badge, wordEl, sentenceEl, hintEl, divider, meaningEl, labelKnow, labelDont);
+  card.append(badge, wordEl, sentenceEl, hintEl, divider, meaningEl, hearBtn);
   return card;
 }
 
@@ -104,36 +89,26 @@ function renderSwipeDeck() {
   const deckEl = document.getElementById('swDeck');
   deckEl.innerHTML = '';
 
-  if (swState.deck.length === 0) {
-    showSwipeSummary();
+  if (!swState.currentWord) {
     return;
   }
 
-  // Render up to 3 cards; bottom-first so the top card is the last DOM child (highest paint order)
-  const visible = swState.deck.slice(0, 3).reverse();
-  visible.forEach(word => {
-    const card = buildSwCard(word);
-    deckEl.appendChild(card);
-  });
-
-  // The last appended card is the top card
-  const topCard = deckEl.lastElementChild;
+  const topCard = buildSwCard(swState.currentWord);
+  deckEl.appendChild(topCard);
   topCard.classList.add('top');
-  attachDragHandlers(topCard, swState.deck[0]);
+  attachDragHandlers(topCard);
 }
 
-function attachDragHandlers(card, word) {
-  if (swState.deck.length === 0) return;
-  let startX = 0, currentX = 0;
+function attachDragHandlers(card) {
+  if (!swState.currentWord) return;
+  let startY = 0, currentY = 0;
   let dragging = false;
-  const THRESHOLD = window.innerWidth * 0.28;
-  const knowLabel = card.querySelector('.sw-label-know');
-  const dontLabel = card.querySelector('.sw-label-dontknow');
+  const THRESHOLD = window.innerHeight * 0.2;
 
   function onPointerDown(e) {
     dragging = true;
-    startX = e.clientX;
-    currentX = 0;
+    startY = e.clientY;
+    currentY = 0;
     card.setPointerCapture(e.pointerId);
     card.style.transition = 'none';
   }
@@ -141,74 +116,54 @@ function attachDragHandlers(card, word) {
   function onPointerMove(e) {
     if (!dragging) return;
     e.preventDefault();
-    currentX = e.clientX - startX;
-    const rotate = currentX * 0.08;
-    card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
-
-    const ratio = Math.min(Math.abs(currentX) / THRESHOLD, 1);
-    if (currentX > 0) {
-      knowLabel.style.opacity = ratio;
-      dontLabel.style.opacity = 0;
-    } else {
-      dontLabel.style.opacity = ratio;
-      knowLabel.style.opacity = 0;
-    }
+    currentY = e.clientY - startY;
+    card.style.transform = `translateY(${currentY}px)`;
   }
 
   function onPointerUp() {
     if (!dragging) return;
     dragging = false;
 
-    if (currentX > THRESHOLD) {
-      flyCard(card, word, true);
-    } else if (currentX < -THRESHOLD) {
-      flyCard(card, word, false);
+    if (currentY < -THRESHOLD) {
+      flyCard(card, -1);
+    } else if (currentY > THRESHOLD) {
+      flyCard(card, 1);
     } else {
       card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
       card.style.transform = '';
-      knowLabel.style.opacity = 0;
-      dontLabel.style.opacity = 0;
     }
+  }
+
+  function onWheel(e) {
+    if (swState.flying) return;
+    e.preventDefault();
+    if (Math.abs(e.deltaY) < 20) return;
+    flyCard(card, e.deltaY < 0 ? -1 : 1);
   }
 
   card.addEventListener('pointerdown', onPointerDown);
   card.addEventListener('pointermove', onPointerMove, { passive: false });
   card.addEventListener('pointerup', onPointerUp);
+  card.addEventListener('wheel', onWheel, { passive: false });
   card.addEventListener('pointercancel', () => {
     if (!dragging) return;
     dragging = false;
     card.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
     card.style.transform = '';
-    knowLabel.style.opacity = 0;
-    dontLabel.style.opacity = 0;
   });
 }
 
-function flyCard(card, word, isKnown) {
+function flyCard(card, direction) {
   if (swState.flying) return;
   swState.flying = true;
-  const dir = isKnown ? 1 : -1;
   card.style.transition = 'transform 0.38s ease-in, opacity 0.38s ease-in';
-  card.style.transform = `translateX(${dir * window.innerWidth * 1.4}px) rotate(${dir * 30}deg)`;
+  card.style.transform = `translateY(${direction * window.innerHeight * 1.2}px)`;
   card.style.opacity = '0';
-
-  if (isKnown) {
-    swState.known++;
-    swState.deck.shift();
-    if (!masteredMap[word[0]]) {
-      masteredMap[word[0]] = true;
-      state.masteredWords = Object.keys(masteredMap).length;
-      saveProgress();
-    }
-  } else {
-    swState.deck.shift();
-    swState.deck.push(word);
-  }
-
+  swState.seen++;
   updateSwProgress();
-  saveSwipeSession();
 
   setTimeout(() => {
+    swState.currentWord = direction < 0 ? pickPrevWordInOrder() : pickNextWordInOrder();
     swState.flying = false;
     renderSwipeDeck();
   }, 380);
@@ -216,27 +171,10 @@ function flyCard(card, word, isKnown) {
 
 function handleSwipeKey(e) {
   if (!document.getElementById('swipeApp').classList.contains('active')) return;
-  if (swState.deck.length === 0) return;
+  if (!swState.currentWord) return;
   const topCard = document.getElementById('swDeck').lastElementChild;
   if (!topCard || !topCard.classList.contains('top')) return;
-  if (e.key === 'ArrowRight') flyCard(topCard, swState.deck[0], true);
-  if (e.key === 'ArrowLeft')  flyCard(topCard, swState.deck[0], false);
+  if (e.key === 'ArrowUp') flyCard(topCard, -1);
+  if (e.key === 'ArrowDown') flyCard(topCard, 1);
 }
 document.addEventListener('keydown', handleSwipeKey);
-
-function showSwipeSummary() {
-  clearSwipeSession();
-  const overlay = document.getElementById('bigOverlay');
-  document.getElementById('bigIcon').textContent = '🃏';
-  document.getElementById('bigTitle').textContent = 'All done!';
-  document.getElementById('bigSub').textContent =
-    'You reviewed all ' + swState.total + ' words. Nice work!';
-  document.getElementById('bigStats').innerHTML = `
-    <div class="big-stat"><div class="big-stat-val">${swState.total}</div><div class="big-stat-lbl">Reviewed</div></div>
-    <div class="big-stat"><div class="big-stat-val">${swState.known}</div><div class="big-stat-lbl">Known</div></div>
-  `;
-  document.getElementById('bigBtn').textContent = '🔄 Shuffle again';
-  overlay.dataset.mode = 'swipe';
-  overlay.classList.add('show');
-  spawnConfetti(window.innerWidth / 2, window.innerHeight / 3, 50);
-}
