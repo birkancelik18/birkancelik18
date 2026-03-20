@@ -5,6 +5,47 @@ const swState = {
   flying: false,
 };
 
+function getSwipeStorageKey(base) {
+  // Prefer shared storageKey(lang) from state.js, but keep a safe fallback.
+  if (typeof storageKey === 'function') return storageKey(base);
+  const lang = window.paroleLanguage || localStorage.getItem('parole_lang') || 'it';
+  return `${base}_${lang}`;
+}
+
+function getWordFromCurrentIndex() {
+  if (!Array.isArray(WORDS) || WORDS.length === 0) return null;
+  const len = WORDS.length;
+  const idx = (swState.currentIndex - 1 + len) % len;
+  return WORDS[idx];
+}
+
+function loadSwipeSession() {
+  try {
+    const raw = localStorage.getItem(getSwipeStorageKey('parole_swipe_session')) || 'null';
+    const s = JSON.parse(raw);
+    if (!s || typeof s !== 'object') return false;
+    if (typeof s.currentIndex !== 'number') return false;
+    swState.currentIndex = s.currentIndex;
+    swState.seen = s.seen ?? 0;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function saveSwipeSession() {
+  try {
+    localStorage.setItem(getSwipeStorageKey('parole_swipe_session'), JSON.stringify({
+      currentIndex: swState.currentIndex,
+      seen: swState.seen,
+    }));
+  } catch (e) {}
+}
+
+function clearSwipeSession() {
+  try { localStorage.removeItem(getSwipeStorageKey('parole_swipe_session')); } catch (e) {}
+}
+
 function pickNextWordInOrder() {
   if (!Array.isArray(WORDS) || WORDS.length === 0) return null;
   const word = WORDS[swState.currentIndex % WORDS.length];
@@ -22,13 +63,27 @@ function pickPrevWordInOrder() {
 
 function startSwipeSession(fresh = false) {
   swState.flying = false;
-  if (fresh || !swState.currentWord) {
+
+  if (fresh) {
+    clearSwipeSession();
     swState.currentIndex = 0;
     swState.currentWord = pickNextWordInOrder();
     swState.seen = 0;
+  } else if (!swState.currentWord) {
+    const restored = loadSwipeSession();
+    if (restored) {
+      swState.currentWord = getWordFromCurrentIndex();
+    }
+    if (!swState.currentWord) {
+      swState.currentIndex = 0;
+      swState.currentWord = pickNextWordInOrder();
+      swState.seen = 0;
+    }
   }
+
   renderSwipeDeck();
   updateSwProgress();
+  saveSwipeSession();
 }
 
 function updateSwProgress() {
@@ -37,7 +92,7 @@ function updateSwProgress() {
 }
 
 function buildSwCard(word) {
-  const [sourceWord, english, pronunciation, cat, sourceSentence, , hint] = word;
+  const [sourceWord, english, pronunciation, cat, sourceSentence, sourceSentenceEn, hint] = word;
   const style = CAT_STYLE[cat] || CAT_STYLE.noun;
 
   const card = document.createElement('div');
@@ -53,6 +108,10 @@ function buildSwCard(word) {
   wordEl.className = 'sw-word';
   wordEl.textContent = sourceWord;
 
+  const meaningEl = document.createElement('div');
+  meaningEl.className = 'sw-meaning';
+  meaningEl.textContent = '🇬🇧 ' + english;
+
   const sentenceEl = document.createElement('div');
   sentenceEl.className = 'sw-sentence';
   sentenceEl.textContent = sourceSentence;
@@ -62,12 +121,17 @@ function buildSwCard(word) {
   if (hint) hintEl.textContent = '💡 ' + hint;
   hintEl.style.display = hint ? '' : 'none';
 
+  const sentenceEnEl = document.createElement('div');
+  sentenceEnEl.className = 'sw-sentence-en';
+  if (sourceSentenceEn) {
+    sentenceEnEl.textContent = '🇬🇧 ' + sourceSentenceEn;
+  } else {
+    sentenceEnEl.textContent = '';
+    sentenceEnEl.style.display = 'none';
+  }
+
   const divider = document.createElement('hr');
   divider.className = 'sw-divider';
-
-  const meaningEl = document.createElement('div');
-  meaningEl.className = 'sw-meaning';
-  meaningEl.textContent = '🇬🇧 ' + english;
 
   const hearBtn = document.createElement('button');
   hearBtn.type = 'button';
@@ -81,7 +145,8 @@ function buildSwCard(word) {
     speak(sourceWord || sourceSentence || '', lang);
   });
 
-  card.append(badge, wordEl, sentenceEl, hintEl, divider, meaningEl, hearBtn);
+  // Visual hierarchy: Italian word -> English translation -> hint -> sentence(s) -> actions.
+  card.append(badge, wordEl, meaningEl, hintEl, sentenceEl, sentenceEnEl, divider, hearBtn);
   return card;
 }
 
@@ -166,6 +231,7 @@ function flyCard(card, direction) {
     swState.currentWord = direction < 0 ? pickPrevWordInOrder() : pickNextWordInOrder();
     swState.flying = false;
     renderSwipeDeck();
+    saveSwipeSession();
   }, 380);
 }
 
