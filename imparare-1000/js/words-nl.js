@@ -434,7 +434,7 @@ const WORDS_NL = [
   ["oranje","orange","oh-RAHN-yuh","color","Oranje is de nationale kleur van Nederland.","Orange is the national color of the Netherlands.","Think orange."],
   ["roze","pink","ROH-zuh","color","Ze kocht een roze jurk.","She bought a pink dress.","Think rose (flower)."],
   ["paars","purple","PAHRS","color","De bloemen in de tuin zijn paars.","The flowers in the garden are purple.","Think of 'pur-ple' sound."],
-  ["bruin","brown","BROYN","color","Chocolade is bruin.","Chocolate is brown.","Sounds like brown."]
+  ["bruin","brown","BROYN","color","Chocolade is bruin.","Chocolate is brown.","Sounds like brown."],
   // --- ADDITIONAL PEOPLE & RELATIONSHIPS ---
   ["buurman","neighbor (male)","BUUR-mahn","noun","Mijn buurman is erg vriendelijk.","My neighbor is very friendly.","'Buur' is related to 'boor' (farmer) or 'neighbor'."],
   ["buurvrouw","neighbor (female)","BUUR-vrow","noun","De buurvrouw heeft de post aangenomen.","The female neighbor took the mail.","Buur (neighbor) + vrouw (woman)."],
