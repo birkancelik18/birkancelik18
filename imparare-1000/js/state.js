@@ -52,10 +52,14 @@ function loadProgress() {
     const raw = localStorage.getItem(storageKey('parole_words')) || '{}';
     const parsed = JSON.parse(raw);
     masteredMap = (parsed && typeof parsed === 'object') ? parsed : {};
+    // Migrate legacy boolean true → 3 (treat as already mastered)
+    for (const k of Object.keys(masteredMap)) {
+      if (masteredMap[k] === true) masteredMap[k] = 3;
+    }
   } catch (e) {
     masteredMap = {};
   }
-  state.masteredWords = Object.keys(masteredMap).length;
+  state.masteredWords = Object.keys(masteredMap).filter(k => masteredMap[k] >= 3).length;
 }
 
 function saveProgress() {
@@ -75,6 +79,8 @@ function saveSession() {
       bestStreak: state.bestStreak,
       answered: state.answered,
       correct: state.correct,
+      usedIndices: state.usedIndices,
+      repeatQueue: state.repeatQueue,
     }));
   } catch (e) {}
 }
@@ -91,6 +97,8 @@ function loadSession() {
     state.bestStreak      = s.bestStreak      ?? 0;
     state.answered        = s.answered        ?? 0;
     state.correct         = s.correct         ?? 0;
+    state.usedIndices     = Array.isArray(s.usedIndices) ? s.usedIndices : [];
+    state.repeatQueue     = Array.isArray(s.repeatQueue) ? s.repeatQueue : [];
     return true;
   } catch (e) {
     return false;

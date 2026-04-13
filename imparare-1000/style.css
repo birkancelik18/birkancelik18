@@ -271,6 +271,14 @@ body::before {
   font-weight: 800;
   margin-bottom: 8px;
 }
+.production-word {
+  display: block;
+  font-size: clamp(1.4rem, 5.5vw, 2rem);
+  font-weight: 900;
+  color: var(--c4);
+  letter-spacing: -0.02em;
+  padding: 4px 0 2px;
+}
 
 /* ── ANSWER TILES ── */
 .tiles {

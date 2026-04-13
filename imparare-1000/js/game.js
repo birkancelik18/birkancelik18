@@ -23,6 +23,9 @@ function _buildInterleavedQueue() {
   return result;
 }
 
+const MASTERED_THRESHOLD = 3;
+let _currentDirection = 'recognition';
+
 // state.sprintMode is set by enterSprintMode(); false = classic random quiz.
 function pickWord() {
   // Serve a repeat if one is due (scheduled 2 questions after the mistake)
@@ -52,7 +55,8 @@ function pickWord() {
 }
 
 function pickWrongAnswers(correct, count) {
-  const pool = WORDS.filter(w => w[1] !== correct[1]);
+  const sameCat = WORDS.filter(w => w[1] !== correct[1] && w[3] === correct[3]);
+  const pool = sameCat.length >= count ? sameCat : WORDS.filter(w => w[1] !== correct[1]);
   return shuffle(pool).slice(0, count);
 }
 
@@ -67,7 +71,7 @@ function buildBlankedSentence(italian, sentenceIT) {
   return `<span class="blank" id="theBlank">___</span><br><span style="font-size:0.72em;opacity:0.55;font-style:italic">${sentenceIT}</span>`;
 }
 
-function fillCard(italian, cat) {
+function fillCard(italian, cat, direction) {
   const word  = state.currentWord;
   const style = CAT_STYLE[cat] || CAT_STYLE.noun;
 
@@ -76,14 +80,25 @@ function fillCard(italian, cat) {
   badge.style.background  = style.bg;
   badge.style.color       = style.color;
 
-  document.getElementById('sentenceDisplay').innerHTML = buildBlankedSentence(italian, word[4]);
-  document.getElementById('sentenceEn').textContent    = '🇬🇧 ' + word[5];
+  const instrEl = document.querySelector('.q-instruction');
+  if (direction === 'production') {
+    const lang = window.paroleLanguage === 'nl' ? 'Dutch' : 'Italian';
+    if (instrEl) instrEl.textContent = `Translate to ${lang} 👇`;
+    document.getElementById('sentenceDisplay').innerHTML =
+      `<span class="production-word">${word[1]}</span>`;
+    document.getElementById('sentenceEn').textContent = '💡 ' + word[5];
+  } else {
+    if (instrEl) instrEl.textContent = 'Fill in the blank 👇';
+    document.getElementById('sentenceDisplay').innerHTML = buildBlankedSentence(italian, word[4]);
+    document.getElementById('sentenceEn').textContent    = '🇬🇧 ' + word[5];
+  }
 
   const hintEl = document.getElementById('wordHint');
   if (hintEl) {
     const hint = word[6];
+    // Hide hint in production mode to avoid giving away the answer
     hintEl.textContent    = hint ? '💡 ' + hint : '';
-    hintEl.style.display  = hint ? '' : 'none';
+    hintEl.style.display  = (hint && direction !== 'production') ? '' : 'none';
   }
 
   // Leech indicator
@@ -100,18 +115,20 @@ function renderQuestion(animate) {
   state.currentWord = word;
   const italian = word[0];
   const cat     = word[3];
+  // Production (English→target) only in Classic Quiz, not Sprint
+  _currentDirection = (!state.sprintMode && Math.random() < 0.5) ? 'production' : 'recognition';
 
   const cardInner = document.getElementById('cardInner');
   if (animate) {
     cardInner.classList.add('exit');
     setTimeout(() => {
-      fillCard(italian, cat);
+      fillCard(italian, cat, _currentDirection);
       cardInner.classList.remove('exit');
       cardInner.classList.add('enter');
       setTimeout(() => cardInner.classList.remove('enter'), 350);
     }, 150);
   } else {
-    fillCard(italian, cat);
+    fillCard(italian, cat, _currentDirection);
   }
 
   const wrongs  = pickWrongAnswers(word, 3);
@@ -191,11 +208,13 @@ function handleAnswer(btn, isCorrect, word, opt) {
     }
     if (leechCleared) setTimeout(() => showRPEBadge('🧠', 'Leech Cleared!', '"' + word[0] + '" is conquered!'), 500);
 
-    if (!masteredMap[word[0]]) {
-      masteredMap[word[0]] = true;
-      state.masteredWords = Object.keys(masteredMap).length;
-      saveProgress();
-      updateGoal();
+    masteredMap[word[0]] = (masteredMap[word[0]] || 0) + 1;
+    const newlyMastered = masteredMap[word[0]] === MASTERED_THRESHOLD;
+    state.masteredWords = Object.keys(masteredMap).filter(k => masteredMap[k] >= MASTERED_THRESHOLD).length;
+    saveProgress();
+    updateGoal();
+    if (newlyMastered) {
+      setTimeout(() => showRPEBadge('⭐', 'Word Mastered!', '"' + word[0] + '" is locked in!'), 500);
     }
 
     // XP + streak system (Sprint keeps its own score too)
