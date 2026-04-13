@@ -1,4 +1,4 @@
-// SRS Review Mode — FSRS-powered flashcard review
+// SRS Review Mode - FSRS-powered flashcard review
 
 const srsSession = {
   queue:   [],
@@ -148,7 +148,7 @@ function rateSRSCard(rating) {
     // Streak
     const sr = recordStreakAnswer();
     if (sr.milestone) setTimeout(() => showRPEBadge('🔥', sr.data.count + '-Day Streak!', 'Amazing consistency!'), 700);
-    if (sr.gainedFreeze) setTimeout(() => showRPEBadge('🧊', 'Streak Freeze!', 'Miss a day — your streak stays safe!'), 700);
+    if (sr.gainedFreeze) setTimeout(() => showRPEBadge('🧊', 'Streak Freeze!', 'Miss a day - your streak stays safe!'), 700);
 
     // Bonus round
     if (maybeStartBonusRound()) showBonusRoundBanner();
@@ -180,7 +180,7 @@ function _finishSRSSession() {
   const reviewed = srsSession.idx;
   _showSRSScreen('complete');
   document.getElementById('srsCompleteTitle').textContent = '🎉 Session complete!';
-  document.getElementById('srsCompleteSub').textContent = 'Great work — FSRS has scheduled your next reviews.';
+  document.getElementById('srsCompleteSub').textContent = 'Great work - FSRS has scheduled your next reviews.';
   document.getElementById('srsCompleteCount').textContent = reviewed + ' card' + (reviewed !== 1 ? 's' : '') + ' reviewed';
   if (reviewed > 0 && typeof spawnConfetti === 'function') {
     spawnConfetti(window.innerWidth / 2, window.innerHeight / 3, 50);

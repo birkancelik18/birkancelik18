@@ -20,7 +20,7 @@ function _today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// Called once on app load — applies freezes / resets streak if day(s) were missed.
+// Called once on app load - applies freezes / resets streak if day(s) were missed.
 function initStreakOnLoad() {
   const d = _loadStreakRaw();
   const today = _today();

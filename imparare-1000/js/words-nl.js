@@ -528,11 +528,11 @@ const WORDS_NL = [
   ["tenminste","at least","tun-MIN-stuh","adv","Het regent niet meer, tenminste nu niet.","It isn't raining anymore, at least not now.","Ten + minste (minimum)."],
 
   // ── TRANSPORT ────────────────────────────────────────────────────────────────
-  ["metro","metro/subway","MEH-troh","noun","Ik neem de metro naar het centrum.","I take the metro to the city centre.","Short for metropolitaan — same as English metro."],
-  ["halte","bus stop","HAHL-tuh","noun","Er is een bushalte om de hoek.","There is a bus stop around the corner.","Think halt — where the bus halts."],
+  ["metro","metro/subway","MEH-troh","noun","Ik neem de metro naar het centrum.","I take the metro to the city centre.","Short for metropolitaan - same as English metro."],
+  ["halte","bus stop","HAHL-tuh","noun","Er is een bushalte om de hoek.","There is a bus stop around the corner.","Think halt - where the bus halts."],
   ["perron","platform","puh-RON","noun","De trein staat op perron vier.","The train is on platform four.","Cognate to perron/platform."],
   ["rijbewijs","driving licence","RAY-buh-vays","noun","Mag ik uw rijbewijs zien?","May I see your driving licence?","Rijden (to drive) + bewijs (proof)."],
-  ["benzine","petrol/gasoline","ben-ZEE-nuh","noun","Ik moet tanken, ik heb geen benzine meer.","I need to fill up, I have no more petrol.","Think benzene — the fuel compound."],
+  ["benzine","petrol/gasoline","ben-ZEE-nuh","noun","Ik moet tanken, ik heb geen benzine meer.","I need to fill up, I have no more petrol.","Think benzene - the fuel compound."],
   ["snelweg","motorway","SNEL-vekhh","noun","Er staat file op de snelweg.","There is a traffic jam on the motorway.","Snel (fast) + weg (road)."],
 
   // ── SHOPPING & MONEY ─────────────────────────────────────────────────────────
@@ -540,24 +540,24 @@ const WORDS_NL = [
   ["geldautomaat","ATM","KHELT-ow-toh-maht","noun","Ik moet even naar de geldautomaat.","I need to go to the ATM quickly.","Geld (money) + automaat (machine)."],
   ["creditcard","credit card","KRED-it-kahrd","noun","Accepteert u creditcard?","Do you accept credit card?","Same as English credit card."],
   ["kassabon","receipt","KAS-sah-bon","noun","Wilt u een kassabon?","Would you like a receipt?","Kassa (cash register) + bon (slip)."],
-  ["kassa","checkout","KAS-sah","noun","Ga naar de kassa om te betalen.","Go to the checkout to pay.","Think cash — the place you pay."],
-  ["korting","discount","KOR-ting","noun","Er is twintig procent korting.","There is a twenty percent discount.","Think cut — a cutting of the price."],
-  ["maat","clothing size","MAHT","noun","Welke maat heeft u?","What size do you wear?","Think measure — the size you measure."],
-  ["aanbieding","deal/offer","AHN-bee-ding","noun","Dit is een geweldige aanbieding.","This is a great deal.","Aan (to) + bieden (offer) — something offered."],
-  ["contant","cash","KON-tant","adj","Betaalt u contant of met pin?","Are you paying cash or by card?","Think contain — physical money you hold."],
+  ["kassa","checkout","KAS-sah","noun","Ga naar de kassa om te betalen.","Go to the checkout to pay.","Think cash - the place you pay."],
+  ["korting","discount","KOR-ting","noun","Er is twintig procent korting.","There is a twenty percent discount.","Think cut - a cutting of the price."],
+  ["maat","clothing size","MAHT","noun","Welke maat heeft u?","What size do you wear?","Think measure - the size you measure."],
+  ["aanbieding","deal/offer","AHN-bee-ding","noun","Dit is een geweldige aanbieding.","This is a great deal.","Aan (to) + bieden (offer) - something offered."],
+  ["contant","cash","KON-tant","adj","Betaalt u contant of met pin?","Are you paying cash or by card?","Think contain - physical money you hold."],
 
   // ── HEALTH ───────────────────────────────────────────────────────────────────
   ["ambulance","ambulance","AM-byoo-lahns","noun","Bel 112 voor een ambulance.","Call 112 for an ambulance.","Cognate to ambulance."],
-  ["koorts","fever","KOHRTS","noun","Het kind heeft hoge koorts.","The child has a high fever.","Think court — your body temperatures court danger."],
-  ["verkoudheid","cold","vur-KOUD-hayt","noun","Ik heb een zware verkoudheid.","I have a bad cold.","Verkoud (cold) + heid (state of) — state of being cold-sick."],
+  ["koorts","fever","KOHRTS","noun","Het kind heeft hoge koorts.","The child has a high fever.","Think court - your body temperatures court danger."],
+  ["verkoudheid","cold","vur-KOUD-hayt","noun","Ik heb een zware verkoudheid.","I have a bad cold.","Verkoud (cold) + heid (state of) - state of being cold-sick."],
   ["hoofdpijn","headache","HOHFT-payn","noun","Ik heb vreselijke hoofdpijn.","I have a terrible headache.","Hoofd (head) + pijn (pain)."],
   ["allergie","allergy","ah-ler-KHEE","noun","Ik heb een allergie voor noten.","I have a nut allergy.","Cognate to allergy."],
   ["allergisch","allergic","ah-LER-khees","adj","Ik ben allergisch voor gluten.","I'm allergic to gluten.","Cognate to allergic."],
-  ["afspraak","appointment","AHF-sprahk","noun","Ik heb een afspraak bij de huisarts.","I have an appointment with my GP.","Af + spraak (agreement) — an agreement made in advance."],
+  ["afspraak","appointment","AHF-sprahk","noun","Ik heb een afspraak bij de huisarts.","I have an appointment with my GP.","Af + spraak (agreement) - an agreement made in advance."],
   ["spoedeisende hulp","emergency room","SPOOT-ay-zen-duh HULP","phrase","We gaan naar de spoedeisende hulp.","We're going to the emergency room.","Spoed (urgency) + eisende (demanding) + hulp (help)."],
-  ["recept","prescription","ruh-SEPT","noun","Ik heb een recept nodig van de dokter.","I need a prescription from the doctor.","Think receipt/recipe — a written instruction."],
-  ["griep","flu","KHREEP","noun","Ik heb de griep te pakken.","I've caught the flu.","Think grip — the flu grips you."],
-  ["hoest","cough","HOOST","noun","Ik heb een hardnekkige hoest.","I have a persistent cough.","Think hust — cognate to Swedish/German for cough."],
+  ["recept","prescription","ruh-SEPT","noun","Ik heb een recept nodig van de dokter.","I need a prescription from the doctor.","Think receipt/recipe - a written instruction."],
+  ["griep","flu","KHREEP","noun","Ik heb de griep te pakken.","I've caught the flu.","Think grip - the flu grips you."],
+  ["hoest","cough","HOOST","noun","Ik heb een hardnekkige hoest.","I have a persistent cough.","Think hust - cognate to Swedish/German for cough."],
 
   // ── WORK & DIGITAL ───────────────────────────────────────────────────────────
   ["salaris","salary","sah-LAH-ris","noun","Mijn salaris wordt maandelijks overgemaakt.","My salary is transferred monthly.","Cognate to salary."],
@@ -565,31 +565,31 @@ const WORDS_NL = [
   ["printer","printer","PRIN-tur","noun","De printer heeft geen papier meer.","The printer has run out of paper.","Same as English printer."],
   ["contract","contract","KON-trakt","noun","Ik heb het contract ondertekend.","I signed the contract.","Cognate to contract."],
   ["deadline","deadline","DED-layn","noun","De deadline is morgen.","The deadline is tomorrow.","Same as English deadline."],
-  ["sollicitatie","job application","sol-lee-see-TAH-tsee","noun","Ik heb een sollicitatiegesprek.","I have a job interview.","Think solicitation — formally asking for a role."],
+  ["sollicitatie","job application","sol-lee-see-TAH-tsee","noun","Ik heb een sollicitatiegesprek.","I have a job interview.","Think solicitation - formally asking for a role."],
   ["smartphone","smartphone","SMART-fohn","noun","Mijn smartphone is kapot.","My smartphone is broken.","Same as English."],
   ["wifi","wifi","WEE-fee","noun","Wat is het wifi-wachtwoord?","What is the wifi password?","Same as English."],
 
   // ── EMOTIONS ─────────────────────────────────────────────────────────────────
-  ["bezorgd","worried","buh-ZORHKT","adj","Ik ben erg bezorgd over hem.","I am very worried about him.","Think 'besorg' — to be concerned/care for."],
+  ["bezorgd","worried","buh-ZORHKT","adj","Ik ben erg bezorgd over hem.","I am very worried about him.","Think 'besorg' - to be concerned/care for."],
   ["verveeld","bored","vur-VAYLT","adj","Ik verveel me zo.","I am so bored.","Vervelen = to bore. Think 'to feel veil-like flatness'."],
-  ["opgewonden","excited","op-khuh-VON-dun","adj","Ik ben zo opgewonden voor het feest.","I am so excited for the party.","Op (up) + gewonden (wound up) — wound up with excitement."],
-  ["teleurgesteld","disappointed","tuh-LUUR-khuh-stelt","adj","Ik ben erg teleurgesteld.","I am very disappointed.","Teleur (astray) + gesteld (placed) — led astray from expectation."],
-  ["jaloers","jealous","yah-LOORS","adj","Ik ben een beetje jaloers.","I'm a little jealous.","Think jealous — nearly the same sound."],
-  ["verliefd","in love","vur-LEEFT","adj","Ik ben verliefd op jou.","I'm in love with you.","Lief (dear/love) — being in a state of love."],
+  ["opgewonden","excited","op-khuh-VON-dun","adj","Ik ben zo opgewonden voor het feest.","I am so excited for the party.","Op (up) + gewonden (wound up) - wound up with excitement."],
+  ["teleurgesteld","disappointed","tuh-LUUR-khuh-stelt","adj","Ik ben erg teleurgesteld.","I am very disappointed.","Teleur (astray) + gesteld (placed) - led astray from expectation."],
+  ["jaloers","jealous","yah-LOORS","adj","Ik ben een beetje jaloers.","I'm a little jealous.","Think jealous - nearly the same sound."],
+  ["verliefd","in love","vur-LEEFT","adj","Ik ben verliefd op jou.","I'm in love with you.","Lief (dear/love) - being in a state of love."],
 
   // ── HOME & DAILY LIFE ────────────────────────────────────────────────────────
-  ["huur","rent","HYUR","noun","Ik betaal elke maand huur.","I pay rent every month.","Think hire — you hire your home."],
-  ["rekening","bill","RAY-kun-ing","noun","De rekening van het gas is hoog.","The gas bill is high.","Think reckoning — a bill you must reckon with."],
+  ["huur","rent","HYUR","noun","Ik betaal elke maand huur.","I pay rent every month.","Think hire - you hire your home."],
+  ["rekening","bill","RAY-kun-ing","noun","De rekening van het gas is hoog.","The gas bill is high.","Think reckoning - a bill you must reckon with."],
   ["lift","elevator","LIFT","noun","De lift is buiten dienst.","The elevator is out of service.","Same as English lift."],
   ["adres","address","ah-DRES","noun","Wat is jouw adres?","What is your address?","Cognate to address."],
-  ["wijk","neighbourhood","VAYK","noun","Ik woon in een rustige wijk.","I live in a quiet neighbourhood.","Think 'wick' — a district within a town."],
+  ["wijk","neighbourhood","VAYK","noun","Ik woon in een rustige wijk.","I live in a quiet neighbourhood.","Think 'wick' - a district within a town."],
   ["flat","apartment","FLAT","noun","Ik woon op de vierde verdieping van een flat.","I live on the fourth floor of an apartment building.","Same as English flat."],
-  ["verdieping","floor/storey","vur-DEE-ping","noun","We wonen op de tweede verdieping.","We live on the second floor.","Ver (further) + dieping (deepening) — a level up."],
-  ["huurder","tenant","HYUR-dur","noun","De nieuwe huurder trekt er morgen in.","The new tenant moves in tomorrow.","Huur (rent) + der (one who) — one who rents."],
+  ["verdieping","floor/storey","vur-DEE-ping","noun","We wonen op de tweede verdieping.","We live on the second floor.","Ver (further) + dieping (deepening) - a level up."],
+  ["huurder","tenant","HYUR-dur","noun","De nieuwe huurder trekt er morgen in.","The new tenant moves in tomorrow.","Huur (rent) + der (one who) - one who rents."],
 
   // ── DINING OUT ───────────────────────────────────────────────────────────────
-  ["ober","waiter","OH-bur","noun","Ober, mag ik de rekening?","Waiter, can I have the bill?","Think über — an elevated position of service."],
-  ["menukaart","menu","muh-NOO-kahrt","noun","Mag ik de menukaart zien?","May I see the menu?","Menu + kaart (card) — the menu card."],
+  ["ober","waiter","OH-bur","noun","Ober, mag ik de rekening?","Waiter, can I have the bill?","Think über - an elevated position of service."],
+  ["menukaart","menu","muh-NOO-kahrt","noun","Mag ik de menukaart zien?","May I see the menu?","Menu + kaart (card) - the menu card."],
   ["voorgerecht","starter","VOHR-khuh-rekht","noun","Als voorgerecht neem ik de soep.","For starter I'll have the soup.","Voor (before) + gerecht (dish)."],
   ["nagerecht","dessert","NAH-khuh-rekht","noun","Voor nagerecht wil ik een pannenkoek.","For dessert I'd like a pancake.","Na (after) + gerecht (dish)."],
   ["reserveren","to book","reh-zur-VAY-run","verb","Ik wil een tafel reserveren.","I'd like to book a table.","Cognate to reserve."],
@@ -597,9 +597,9 @@ const WORDS_NL = [
 
   // ── EMERGENCY ────────────────────────────────────────────────────────────────
   ["brandweer","fire brigade","BRANT-vayr","noun","De brandweer is er snel bij.","The fire brigade arrives quickly.","Brand (fire) + weer (guard/ward)."],
-  ["ongeluk","accident","ON-khuh-luk","noun","Er is een ongeluk op de snelweg.","There is an accident on the motorway.","On (un) + geluk (luck) — bad luck."],
+  ["ongeluk","accident","ON-khuh-luk","noun","Er is een ongeluk op de snelweg.","There is an accident on the motorway.","On (un) + geluk (luck) - bad luck."],
   ["noodgeval","emergency","NOHT-khuh-val","noun","Dit is een noodgeval!","This is an emergency!","Nood (need/distress) + geval (case)."],
-  ["EHBO","first aid","EH-hah-boh","phrase","Ze hebben EHBO-training gehad.","They had first aid training.","Eerste Hulp Bij Ongelukken — First Aid at Accidents."]
+  ["EHBO","first aid","EH-hah-boh","phrase","Ze hebben EHBO-training gehad.","They had first aid training.","Eerste Hulp Bij Ongelukken - First Aid at Accidents."]
 ];
 
 const WORDS = WORDS_NL;

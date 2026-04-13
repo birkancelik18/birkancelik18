@@ -1117,7 +1117,7 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
     const externalQuoteHTML = subpage.quote ? `
         <blockquote class="subpage-external-quote">
             <p class="subpage-external-quote-text">${subpage.quote}</p>
-            ${subpage.quoteAttribution ? `<cite class="subpage-external-quote-attribution">— ${subpage.quoteAttribution}</cite>` : ''}
+            ${subpage.quoteAttribution ? `<cite class="subpage-external-quote-attribution">- ${subpage.quoteAttribution}</cite>` : ''}
         </blockquote>
     ` : '';
     

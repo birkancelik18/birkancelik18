@@ -1,4 +1,4 @@
-// Dutch lexical chunks — multi-word expressions taught as single units
+// Dutch lexical chunks - multi-word expressions taught as single units
 // Format: [chunk, english_translation, dutch_example, english_example, category]
 // Categories: phrase | idiom | connector | expression
 
@@ -17,7 +17,7 @@ const CHUNKS = [
 
   // ── Common expressions ───────────────────────────────────────────────
   ["zin hebben in", "to feel like / fancy (something)", "Ik heb zin in een kop koffie.", "I feel like a cup of coffee.", "expression"],
-  ["haast hebben", "to be in a hurry", "Sorry, ik heb haast — tot later!", "Sorry, I'm in a hurry — talk later!", "expression"],
+  ["haast hebben", "to be in a hurry", "Sorry, ik heb haast - tot later!", "Sorry, I'm in a hurry - talk later!", "expression"],
   ["zijn best doen", "to do one's best", "Hij heeft zijn best gedaan maar het was genoeg.", "He did his best but it wasn't enough.", "expression"],
   ["rekening houden met", "to take into account / consider", "Je moet rekening houden met het verkeer.", "You have to take traffic into account.", "expression"],
   ["zich realiseren dat", "to realize that", "Ik realiseerde me dat ik een fout had gemaakt.", "I realized that I had made a mistake.", "expression"],

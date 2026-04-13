@@ -1,4 +1,4 @@
-// Speak Mode — vocal production checks using SpeechRecognition
+// Speak Mode - vocal production checks using SpeechRecognition
 
 const speakSession = {
   word:        null,
@@ -111,7 +111,7 @@ function _attachSRHandlers(r) {
     speakSession.listening = false;
     const btn = document.getElementById('speakMicBtn');
     if (btn) { btn.textContent = '🎤 Speak it'; btn.classList.remove('listening'); }
-    document.getElementById('speakFeedback').textContent = 'Could not hear — try again';
+    document.getElementById('speakFeedback').textContent = 'Could not hear - try again';
     document.getElementById('speakFeedback').className   = 'speak-feedback wrong';
   };
   r.onend = () => {

@@ -168,7 +168,7 @@ function showFeedback(correct, word, disambiguationHint) {
     fbExampleEl.textContent = disambiguationHint;
     fbExampleEl.classList.add('disambiguation');
   } else {
-    fbExampleEl.textContent = '"' + word[4] + '" — ' + word[5];
+    fbExampleEl.textContent = '"' + word[4] + '" - ' + word[5];
     fbExampleEl.classList.remove('disambiguation');
   }
 
@@ -324,7 +324,7 @@ function showGameOver() {
   document.getElementById('bigTitle').textContent = 'Game Over!';
   document.getElementById('bigSub').textContent   = accuracy >= 80
     ? 'Molto bene! You did great!'
-    : accuracy >= 50 ? 'Bel tentativo! Keep practising!' : 'Non arrenderti — practice makes perfect!';
+    : accuracy >= 50 ? 'Bel tentativo! Keep practising!' : 'Non arrenderti - practice makes perfect!';
   document.getElementById('bigStats').innerHTML = `
     <div class="big-stat"><div class="big-stat-val">${state.score.toLocaleString()}</div><div class="big-stat-lbl">Score</div></div>
     <div class="big-stat"><div class="big-stat-val">${state.bestStreak}</div><div class="big-stat-lbl">Best Streak</div></div>

@@ -14,8 +14,8 @@ until all are known.
 On page load a full-viewport mode-select screen is shown before either mode
 starts. Two large tappable cards let the user choose:
 
-- Quiz Mode — existing fill-in-the-blank game
-- Swipe Mode — new flashcard swiper
+- Quiz Mode - existing fill-in-the-blank game
+- Swipe Mode - new flashcard swiper
 
 Tapping a choice hides the selector and activates the chosen section. Both
 sections live in the same index.html, toggled via CSS classes.
@@ -25,12 +25,12 @@ sections live in the same index.html, toggled via CSS classes.
 ### Card layout (top to bottom)
 
 1. Category badge (coloured, same as quiz mode)
-2. Italian word — large, prominent
+2. Italian word - large, prominent
 3. Example sentence in Italian
 4. Hint (if present)
 5. English meaning
 
-Everything is visible at once — no flip needed. The goal is frictionless
+Everything is visible at once - no flip needed. The goal is frictionless
 exposure to the full context of the word.
 
 ### Interaction
@@ -54,8 +54,8 @@ Keyboard shortcut: ArrowRight / ArrowLeft for desktop convenience.
 ### Deck management
 
 State:
-- `deck[]`  — remaining cards to show (initially a full shuffle of WORDS)
-- `known`   — count of words swiped right this session
+- `deck[]`  - remaining cards to show (initially a full shuffle of WORDS)
+- `known`   - count of words swiped right this session
 
 When a card is swiped left it is pushed to the back of the deck. The session
 ends only when every card has been swiped right (deck is empty).
@@ -79,7 +79,7 @@ Words swiped right that are not already in `masteredMap` are added to it and
 |---|---|
 | index.html | Add mode-select screen HTML, swipe section HTML, load swipe.js |
 | style.css | Mode-select styles; swipe card drag/rotate/overlay styles |
-| js/swipe.js | New file — all swipe mode runtime logic |
+| js/swipe.js | New file - all swipe mode runtime logic |
 
 No changes to state.js, ui.js, game.js, main.js, words.js, or confetti.js.
 

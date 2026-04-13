@@ -68,7 +68,7 @@ Also add `js/swipe.js` to the script tags at the bottom, after `game.js`:
 
 **Step 2: Verify in browser**
 
-Open `index.html` in a browser. You should still see the existing quiz UI — the new sections have no styles yet so they may overlap, but JS is not wired yet so nothing breaks.
+Open `index.html` in a browser. You should still see the existing quiz UI - the new sections have no styles yet so they may overlap, but JS is not wired yet so nothing breaks.
 
 **Step 3: Commit**
 
@@ -372,7 +372,7 @@ git commit -m "feat: add mode-select and swipe mode CSS"
 Create `imparare-1000/js/swipe.js` with just an empty comment for now:
 
 ```js
-// Swipe mode — implemented in Task 4+
+// Swipe mode - implemented in Task 4+
 ```
 
 **Step 2: Modify main.js to wire mode select**
@@ -395,7 +395,7 @@ document.getElementById('btnQuiz').addEventListener('click', enterQuizMode);
 document.getElementById('btnSwipe').addEventListener('click', enterSwipeMode);
 ```
 
-Remove the direct calls at the bottom of `main.js` that immediately start the quiz (`renderHearts()`, `updateScore()` etc.) — they now only run when quiz mode is entered. Wrap them inside `enterQuizMode()` instead. The full new `main.js` should be:
+Remove the direct calls at the bottom of `main.js` that immediately start the quiz (`renderHearts()`, `updateScore()` etc.) - they now only run when quiz mode is entered. Wrap them inside `enterQuizMode()` instead. The full new `main.js` should be:
 
 ```js
 function enterQuizMode() {
@@ -426,7 +426,7 @@ document.getElementById('hearBtn').addEventListener('click', () => {
 document.getElementById('bigBtn').addEventListener('click', handleBigBtn);
 ```
 
-Note: `loadProgress()` is still called at the top level (before mode select) in `state.js` — move its call to inside `enterQuizMode` and `enterSwipeMode` so both modes can access `masteredMap`. Actually `loadProgress` and `loadState` should be called once on page load before mode select. Add these two calls at the very bottom of `main.js` (outside any function) so they run immediately:
+Note: `loadProgress()` is still called at the top level (before mode select) in `state.js` - move its call to inside `enterQuizMode` and `enterSwipeMode` so both modes can access `masteredMap`. Actually `loadProgress` and `loadState` should be called once on page load before mode select. Add these two calls at the very bottom of `main.js` (outside any function) so they run immediately:
 
 ```js
 loadState();
@@ -435,7 +435,7 @@ loadProgress();
 
 **Step 3: Verify**
 
-Open `index.html`. Click "Quiz" — the mode-select disappears and the quiz game starts. Click back won't work yet (not wired), but quiz should be fully functional.
+Open `index.html`. Click "Quiz" - the mode-select disappears and the quiz game starts. Click back won't work yet (not wired), but quiz should be fully functional.
 
 **Step 4: Commit**
 
@@ -525,7 +525,7 @@ function buildSwCard(word) {
 }
 ```
 
-**Step 3: Deck renderer — shows top 3 cards stacked**
+**Step 3: Deck renderer - shows top 3 cards stacked**
 
 ```js
 function renderSwipeDeck() {
@@ -628,7 +628,7 @@ function attachDragHandlers(card, word) {
 }
 ```
 
-**Step 2: flyCard — animates card off screen and updates deck**
+**Step 2: flyCard - animates card off screen and updates deck**
 
 ```js
 function flyCard(card, word, isKnown) {
@@ -678,7 +678,7 @@ document.addEventListener('keydown', handleSwipeKey);
 
 **Step 4: Verify**
 
-Open browser, enter Swipe mode. A stacked card deck appears. Drag the top card left and right — it should rotate and show the label overlays. Release past threshold — card flies off, next card becomes draggable. Left swipe re-queues the word. Progress counter updates.
+Open browser, enter Swipe mode. A stacked card deck appears. Drag the top card left and right - it should rotate and show the label overlays. Release past threshold - card flies off, next card becomes draggable. Left swipe re-queues the word. Progress counter updates.
 
 **Step 5: Commit**
 
@@ -752,7 +752,7 @@ document.getElementById('swBackBtn').addEventListener('click', () => {
 
 **Step 4: Verify**
 
-Run through all cards in swipe mode — summary overlay should appear with total/known stats. "Shuffle again" restarts the deck. "Back" returns to mode select.
+Run through all cards in swipe mode - summary overlay should appear with total/known stats. "Shuffle again" restarts the deck. "Back" returns to mode select.
 
 **Step 5: Commit**
 

@@ -1,4 +1,4 @@
-// Chunks Mode — multi-word expression quiz
+// Chunks Mode - multi-word expression quiz
 
 const CHUNK_CAT_STYLE = {
   phrase:     { label: 'PHRASE',     bg: 'rgba(91,45,142,0.85)',  color: '#e0d0ff' },

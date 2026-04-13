@@ -1,4 +1,4 @@
-// Italian lexical chunks — multi-word expressions taught as single units
+// Italian lexical chunks - multi-word expressions taught as single units
 // Format: [chunk, english_translation, italian_example, english_example, category]
 // Categories: phrase | idiom | connector | expression
 
@@ -17,7 +17,7 @@ const CHUNKS = [
 
   // ── Common expressions ───────────────────────────────────────────────
   ["avere voglia di", "to feel like / to want to", "Ho voglia di mangiare una pizza stasera.", "I feel like eating a pizza tonight.", "expression"],
-  ["avere fretta", "to be in a hurry", "Scusa, ho fretta — parliamo dopo!", "Sorry, I'm in a hurry — let's talk later!", "expression"],
+  ["avere fretta", "to be in a hurry", "Scusa, ho fretta - parliamo dopo!", "Sorry, I'm in a hurry - let's talk later!", "expression"],
   ["fare del proprio meglio", "to do one's best", "Ho fatto del mio meglio ma non era abbastanza.", "I did my best but it wasn't enough.", "expression"],
   ["tenere conto di", "to take into account / bear in mind", "Bisogna tenere conto del traffico.", "You need to take traffic into account.", "expression"],
   ["rendersi conto di", "to realize / become aware of", "Mi sono reso conto dell'errore troppo tardi.", "I realized the mistake too late.", "expression"],

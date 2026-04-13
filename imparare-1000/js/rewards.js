@@ -156,7 +156,7 @@ function handleCorrectReward(currentStreak) {
     setTimeout(() => showRPEBadge('🔥', streakResult.data.count + '-Day Streak!', 'Amazing consistency!'), 700);
   }
   if (streakResult.gainedFreeze) {
-    setTimeout(() => showRPEBadge('🧊', 'Streak Freeze Earned!', 'Miss a day — your streak stays safe!'), 700);
+    setTimeout(() => showRPEBadge('🧊', 'Streak Freeze Earned!', 'Miss a day - your streak stays safe!'), 700);
   }
 
   updateXPDisplay();
