@@ -25,6 +25,8 @@ const state = {
   usedIndices: [],
   locked: false,
   masteredWords: 0,
+  // Sprint mode: use interleaved frequency queue instead of random pick.
+  sprintMode: false,
   // Words answered wrong are inserted here to be repeated 2 questions later.
   // Each entry is { word, after } where `after` is the answered count at insert time.
   repeatQueue: [],

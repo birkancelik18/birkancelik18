@@ -8,10 +8,38 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- Mode select -->
+
+<!-- ── Mode select ──────────────────────────────────────────────────── -->
 <div id="modeSelect" class="mode-select">
-  <div class="ms-title">Parole!</div>
-  <div class="ms-sub">How do you want to study?</div>
+
+  <div class="ms-header">
+    <div class="ms-title">Parole!</div>
+    <div class="ms-sub">How do you want to study?</div>
+
+    <!-- Streak + XP engagement header -->
+    <div class="ms-engagement">
+      <div class="ms-streak-row">
+        <span class="ms-streak-flame">🔥</span>
+        <span id="msStreakEl" class="ms-streak-count">0 day streak</span>
+        <span id="msFreezeEl" class="ms-freeze" style="display:none"></span>
+      </div>
+      <div class="ms-xp-row">
+        <span id="msXPEl" class="ms-xp-val">0 XP</span>
+        <span id="msDailyXPEl" class="ms-xp-daily">0 / 300 today</span>
+      </div>
+      <div class="ms-xp-bar">
+        <div class="ms-xp-bar-fill" id="msXPBarFill"></div>
+      </div>
+      <div id="msStreakDanger" class="ms-streak-danger" style="display:none">
+        🔥 Complete today's session to keep your streak!
+      </div>
+    </div>
+
+    <div class="ms-daily-bar">
+      <div class="ms-daily-fill" id="msDailyProgressEl" style="width:0%"></div>
+    </div>
+  </div>
+
   <div class="ms-lang">
     <label for="languageSelect">Language</label>
     <select id="languageSelect">
@@ -19,29 +47,59 @@
       <option value="nl">Nederlands 🇳🇱</option>
     </select>
   </div>
+
   <div class="ms-cards">
+
+    <button type="button" class="ms-card ms-card-srs" id="btnSRS">
+      <div class="ms-card-icon">🧠</div>
+      <div class="ms-card-name">SRS Review</div>
+      <div class="ms-card-desc">FSRS flashcards<br>Science-optimised</div>
+      <div class="ms-card-badge" id="srsDueBadge">…</div>
+    </button>
+
+    <button type="button" class="ms-card ms-card-sprint" id="btnSprint">
+      <div class="ms-card-icon">⚡</div>
+      <div class="ms-card-name">Sprint</div>
+      <div class="ms-card-desc">Interleaved queue<br>Lives + score</div>
+    </button>
+
+    <button type="button" class="ms-card ms-card-speak" id="btnSpeak">
+      <div class="ms-card-icon">🎤</div>
+      <div class="ms-card-name">Speak</div>
+      <div class="ms-card-desc">Say it aloud<br>Vocal production</div>
+    </button>
+
+    <button type="button" class="ms-card ms-card-chunks" id="btnChunks">
+      <div class="ms-card-icon">🗣️</div>
+      <div class="ms-card-name">Chunks</div>
+      <div class="ms-card-desc">Multi-word phrases<br>Formulaic speech</div>
+    </button>
+
     <button type="button" class="ms-card" id="btnQuiz">
       <div class="ms-card-icon">🧩</div>
-      <div class="ms-card-name">Quiz</div>
+      <div class="ms-card-name">Classic Quiz</div>
       <div class="ms-card-desc">Fill in the blank<br>Multiple choice</div>
     </button>
+
     <button type="button" class="ms-card" id="btnSwipe">
       <div class="ms-card-icon">👆</div>
       <div class="ms-card-name">Reels</div>
-      <div class="ms-card-desc">Reels feed<br>Random words</div>
+      <div class="ms-card-desc">Swipe-through<br>Browse words</div>
     </button>
+
   </div>
 </div>
 
 <canvas id="confetti"></canvas>
 
+<!-- ── Classic Quiz / Sprint ─────────────────────────────────────────── -->
 <div id="app">
   <div class="topbar">
     <button type="button" class="sw-back-btn" id="quizBackBtn">← Menu</button>
     <div class="hearts" id="heartsEl"></div>
     <div class="score-wrap">
       <div class="score-num" id="scoreEl">0</div>
-      <div class="score-lbl">score</div>
+      <div class="score-lbl" id="quizModeLabel">score</div>
     </div>
     <div class="streak-badge" id="streakEl">
       <span class="streak-fire">🔥</span>
@@ -62,6 +120,7 @@
 
   <div class="word-card" id="wordCard">
     <div class="word-card-inner" id="cardInner">
+      <div class="leech-indicator" id="leechIndicator" style="display:none">⚠️ Leech — focus!</div>
       <div class="cat-badge" id="catBadge"></div>
       <div class="q-instruction">Fill in the blank 👇</div>
       <div class="sentence-display" id="sentenceDisplay"></div>
@@ -74,22 +133,139 @@
   <div class="tiles" id="tilesEl"></div>
 </div>
 
-<!-- Reels mode -->
+<!-- ── Reels mode ────────────────────────────────────────────────────── -->
 <div id="swipeApp" class="swipe-app">
   <div class="sw-topbar">
     <button type="button" class="sw-back-btn" id="swBackBtn">← Back</button>
     <div class="sw-progress" id="swProgress">0 known</div>
   </div>
-
-  <div class="sw-deck" id="swDeck">
-    <!-- Cards injected by swipe.js -->
-  </div>
-
+  <div class="sw-deck" id="swDeck"></div>
   <div class="sw-hint-row">
     <span class="sw-hint-up">⬆ Next word</span>
     <span class="sw-hint-down">⬇ Next random word</span>
   </div>
 </div>
+
+<!-- ── SRS Review mode ───────────────────────────────────────────────── -->
+<div id="srsApp" class="mode-app">
+  <div class="mode-topbar">
+    <button type="button" class="sw-back-btn" id="srsBackBtn">← Menu</button>
+    <div class="mode-topbar-title">SRS Review</div>
+    <div class="mode-topbar-right">
+      <div class="srs-progress-text" id="srsProgressText">0 / 0</div>
+    </div>
+  </div>
+  <div class="srs-progress-bar-wrap">
+    <div class="srs-progress-bar-fill" id="srsProgressFill" style="width:0%"></div>
+  </div>
+
+  <!-- Loading screen (labor illusion) -->
+  <div id="srsLoadingScreen" class="srs-loading-screen" style="display:flex">
+    <div class="srs-loading-icon">🧠</div>
+    <div class="srs-loading-text">Building your personalised review queue…</div>
+    <div class="srs-loading-dots"><span>.</span><span>.</span><span>.</span></div>
+  </div>
+
+  <!-- Card screen -->
+  <div id="srsCardScreen" class="srs-card-screen" style="display:none">
+    <div class="srs-card" id="srsCard">
+      <div class="srs-card-meta">
+        <div class="cat-badge" id="srsCatBadge"></div>
+        <div class="srs-stability" id="srsStabilityInfo"></div>
+      </div>
+
+      <!-- Front: English prompt -->
+      <div id="srsFront" class="srs-face">
+        <div class="srs-face-label">What is this in the target language?</div>
+        <div class="srs-front-word" id="srsFrontWord"></div>
+        <div class="srs-front-sentence" id="srsFrontSentence"></div>
+      </div>
+
+      <!-- Back: target word revealed -->
+      <div id="srsBack" class="srs-face" style="display:none">
+        <div class="srs-back-word" id="srsBackWord"></div>
+        <div class="srs-back-sentence" id="srsBackSentence"></div>
+        <div class="srs-back-hint" id="srsBackHint" style="display:none"></div>
+      </div>
+    </div>
+
+    <button class="srs-flip-btn" id="srsFlipBtn">Show answer 👁</button>
+
+    <div class="srs-ratings" id="srsRatings" style="display:none">
+      <div class="srs-rate-label">How well did you remember?</div>
+      <div class="srs-rate-btns">
+        <button class="srs-rate-btn srs-again" id="srsAgain">Again<br><span>forgot</span></button>
+        <button class="srs-rate-btn srs-hard"  id="srsHard">Hard<br><span>recalled</span></button>
+        <button class="srs-rate-btn srs-good"  id="srsGood">Good<br><span>correct</span></button>
+        <button class="srs-rate-btn srs-easy"  id="srsEasy">Easy<br><span>perfect</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete screen -->
+  <div id="srsCompleteScreen" class="srs-complete-screen" style="display:none">
+    <div class="srs-complete-icon">✅</div>
+    <div class="srs-complete-title" id="srsCompleteTitle">Session complete!</div>
+    <div class="srs-complete-sub" id="srsCompleteSub"></div>
+    <div class="srs-complete-count" id="srsCompleteCount"></div>
+    <button class="big-btn" id="srsCompleteBackBtn">Back to Menu →</button>
+  </div>
+</div>
+
+<!-- ── Speak mode ────────────────────────────────────────────────────── -->
+<div id="speakApp" class="mode-app">
+  <div class="mode-topbar">
+    <button type="button" class="sw-back-btn" id="speakBackBtn">← Menu</button>
+    <div class="mode-topbar-title">Speak</div>
+    <div class="mode-topbar-right speak-stats">
+      <span id="speakScoreEl">0</span> / <span id="speakAnsweredEl">0</span>
+    </div>
+  </div>
+
+  <div class="speak-card word-card" id="speakCard">
+    <div class="speak-prompt-label">Say this in the target language:</div>
+    <div class="speak-english" id="speakEnglish"></div>
+    <div class="speak-sentence-en" id="speakSentenceEn"></div>
+    <div class="speak-target" id="speakTarget">?</div>
+  </div>
+
+  <div id="speakFeedback" class="speak-feedback"></div>
+
+  <div id="speakMicArea" class="speak-mic-area">
+    <button class="speak-mic-btn" id="speakMicBtn">🎤 Speak it</button>
+  </div>
+
+  <div id="speakTypeArea" class="speak-type-area" style="display:none">
+    <div class="speak-no-sr" id="speakNoSR">
+      Voice recognition unavailable — type instead:
+    </div>
+    <input type="text" id="speakTypeInp" class="speak-type-inp"
+      placeholder="Type the target word…" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+</div>
+
+<!-- ── Chunks mode ───────────────────────────────────────────────────── -->
+<div id="chunksApp" class="mode-app">
+  <div class="mode-topbar">
+    <button type="button" class="sw-back-btn" id="chunksBackBtn">← Menu</button>
+    <div class="mode-topbar-title">Chunks</div>
+    <div class="mode-topbar-right" id="chunkStats">0 / 0 correct</div>
+  </div>
+
+  <div class="word-card" id="chunkCard">
+    <div class="word-card-inner" id="chunkCardInner">
+      <div class="cat-badge" id="chunkCatBadge"></div>
+      <div class="q-instruction" id="chunkInstruction">What expression fills the blank?</div>
+      <div class="sentence-display" id="chunkSentence"></div>
+      <div class="sentence-en" id="chunkSentenceEn"></div>
+      <div class="word-hint chunk-feedback" id="chunkFeedback" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="tiles" id="chunkTilesEl"></div>
+</div>
+
+<!-- ── Shared overlays ───────────────────────────────────────────────── -->
 
 <!-- Feedback bubble -->
 <div class="feedback-overlay" id="fbOverlay">
@@ -112,15 +288,24 @@
   <button class="big-btn" id="bigBtn">Play Again</button>
 </div>
 
+<!-- ── Scripts ───────────────────────────────────────────────────────── -->
 <script>
   const selectedLang = localStorage.getItem('parole_lang') || 'it';
   window.paroleLanguage = selectedLang;
   document.write(`<script defer src="js/${selectedLang === 'nl' ? 'words-nl' : 'words'}.js"><\/script>`);
+  document.write(`<script defer src="js/${selectedLang === 'nl' ? 'chunks-nl' : 'chunks-it'}.js"><\/script>`);
 </script>
 <script defer src="js/state.js"></script>
+<script defer src="js/fsrs.js"></script>
+<script defer src="js/streak.js"></script>
+<script defer src="js/rewards.js"></script>
+<script defer src="js/leech.js"></script>
 <script defer src="js/confetti.js"></script>
 <script defer src="js/ui.js"></script>
 <script defer src="js/game.js"></script>
+<script defer src="js/srs-mode.js"></script>
+<script defer src="js/speak-mode.js"></script>
+<script defer src="js/chunks-mode.js"></script>
 <script defer src="js/swipe.js"></script>
 <script defer src="js/main.js"></script>
 </body>

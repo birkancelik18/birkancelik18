@@ -1,3 +1,29 @@
+// ── Word picking ──────────────────────────────────────────────────────
+
+// Interleaved queue for Sprint mode: round-robin across categories so no
+// two consecutive words share the same grammatical category.
+let _interleavedQueue = [];
+let _interleavedPos   = 0;
+
+function _buildInterleavedQueue() {
+  const catGroups = {};
+  WORDS.forEach(w => {
+    const cat = w[3] || 'other';
+    if (!catGroups[cat]) catGroups[cat] = [];
+    catGroups[cat].push(w);
+  });
+  const cats   = Object.keys(catGroups);
+  const result = [];
+  const maxLen = Math.max(...cats.map(c => catGroups[c].length));
+  for (let i = 0; i < maxLen; i++) {
+    for (const cat of cats) {
+      if (i < catGroups[cat].length) result.push(catGroups[cat][i]);
+    }
+  }
+  return result;
+}
+
+// state.sprintMode is set by enterSprintMode(); false = classic random quiz.
 function pickWord() {
   // Serve a repeat if one is due (scheduled 2 questions after the mistake)
   const due = state.repeatQueue.find(e => state.answered >= e.after);
@@ -5,6 +31,18 @@ function pickWord() {
     state.repeatQueue.splice(state.repeatQueue.indexOf(due), 1);
     return due.word;
   }
+
+  if (state.sprintMode) {
+    // Build queue on first use or when exhausted
+    if (_interleavedQueue.length === 0 || _interleavedPos >= _interleavedQueue.length) {
+      _interleavedQueue = _buildInterleavedQueue();
+      _interleavedPos   = 0;
+    }
+    const word = _interleavedQueue[_interleavedPos++];
+    return word;
+  }
+
+  // Classic random pick
   if (state.usedIndices.length >= WORDS.length - 4) state.usedIndices = [];
   let idx;
   do { idx = ~~(Math.random() * WORDS.length); }
@@ -18,7 +56,7 @@ function pickWrongAnswers(correct, count) {
   return shuffle(pool).slice(0, count);
 }
 
-// Bug fix: if the Italian word doesn't appear verbatim in the sentence (e.g.
+// Bug fix: if the target word doesn't appear verbatim in the sentence (e.g.
 // conjugated verbs), show the blank above the sentence as context hint.
 function buildBlankedSentence(italian, sentenceIT) {
   const escaped = italian.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -30,31 +68,38 @@ function buildBlankedSentence(italian, sentenceIT) {
 }
 
 function fillCard(italian, cat) {
-  const word = state.currentWord;
+  const word  = state.currentWord;
   const style = CAT_STYLE[cat] || CAT_STYLE.noun;
 
   const badge = document.getElementById('catBadge');
-  badge.textContent = style.label;
-  badge.style.background = style.bg;
-  badge.style.color = style.color;
+  badge.textContent       = style.label;
+  badge.style.background  = style.bg;
+  badge.style.color       = style.color;
 
   document.getElementById('sentenceDisplay').innerHTML = buildBlankedSentence(italian, word[4]);
-  document.getElementById('sentenceEn').textContent = '🇬🇧 ' + word[5];
+  document.getElementById('sentenceEn').textContent    = '🇬🇧 ' + word[5];
 
   const hintEl = document.getElementById('wordHint');
   if (hintEl) {
     const hint = word[6];
-    hintEl.textContent = hint ? '💡 ' + hint : '';
-    hintEl.style.display = hint ? '' : 'none';
+    hintEl.textContent    = hint ? '💡 ' + hint : '';
+    hintEl.style.display  = hint ? '' : 'none';
+  }
+
+  // Leech indicator
+  const leechEl = document.getElementById('leechIndicator');
+  if (leechEl) {
+    const flagged = (typeof isLeechWord === 'function') && isLeechWord(word);
+    leechEl.style.display = flagged ? '' : 'none';
   }
 }
 
 function renderQuestion(animate) {
   state.locked = false;
-  const word = pickWord();
+  const word   = pickWord();
   state.currentWord = word;
   const italian = word[0];
-  const cat = word[3];
+  const cat     = word[3];
 
   const cardInner = document.getElementById('cardInner');
   if (animate) {
@@ -69,40 +114,54 @@ function renderQuestion(animate) {
     fillCard(italian, cat);
   }
 
-  const wrongs = pickWrongAnswers(word, 3);
+  const wrongs  = pickWrongAnswers(word, 3);
   const options = shuffle([word, ...wrongs]);
 
   const tilesEl = document.getElementById('tilesEl');
   tilesEl.innerHTML = '';
-  const colors = shuffle([...TILE_COLORS]);
+  const colors  = shuffle([...TILE_COLORS]);
   options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = `tile c${colors[i]}`;
-    btn.textContent = opt[0];
-    btn.dataset.correct = opt[0] === italian ? '1' : '0';
-    btn.onclick = () => handleAnswer(btn, opt[0] === italian, word);
+    const btn             = document.createElement('button');
+    btn.className         = `tile c${colors[i]}`;
+    btn.textContent       = opt[0];
+    btn.dataset.correct   = opt[0] === italian ? '1' : '0';
+    btn.onclick           = () => handleAnswer(btn, opt[0] === italian, word, opt);
     tilesEl.appendChild(btn);
   });
 }
 
+// ── Answer handling ───────────────────────────────────────────────────
+
 let fbTimer = null;
-function showFeedback(correct, word) {
+
+function showFeedback(correct, word, disambiguationHint) {
   const overlay = document.getElementById('fbOverlay');
   const correctMsgs = ['Perfetto! 🎉', 'Bravissimo! ⭐', 'Magnifico! 🏆', 'Ottimo! 🔥', 'Esatto! ✨'];
-  const wrongMsgs = ['Non mollare! 💪', 'Riprova! 😤', 'Quasi! 🤏', 'Forza! ⚡'];
+  const wrongMsgs   = ['Non mollare! 💪', 'Riprova! 😤', 'Quasi! 🤏', 'Forza! ⚡'];
+
   document.getElementById('fbEmoji').textContent = correct
     ? (state.streak >= 5 ? '🔥' : state.streak >= 3 ? '⭐' : '✅')
     : '❌';
   document.getElementById('fbWord').textContent = correct
     ? correctMsgs[~~(Math.random() * correctMsgs.length)]
     : wrongMsgs[~~(Math.random() * wrongMsgs.length)];
-  document.getElementById('fbExample').textContent = `"${word[4]}" — ${word[5]}`;
+
+  const fbExampleEl = document.getElementById('fbExample');
+  if (!correct && disambiguationHint) {
+    fbExampleEl.textContent = disambiguationHint;
+    fbExampleEl.classList.add('disambiguation');
+  } else {
+    fbExampleEl.textContent = '"' + word[4] + '" — ' + word[5];
+    fbExampleEl.classList.remove('disambiguation');
+  }
+
   overlay.classList.add('show');
   clearTimeout(fbTimer);
-  fbTimer = setTimeout(() => overlay.classList.remove('show'), correct ? 1000 : 1400);
+  fbTimer = setTimeout(() => overlay.classList.remove('show'), correct ? 1000 : 1600);
 }
 
-function handleAnswer(btn, isCorrect, word) {
+// opt = the word object the user actually clicked (may differ from word)
+function handleAnswer(btn, isCorrect, word, opt) {
   if (state.locked) return;
   state.locked = true;
   state.answered++;
@@ -119,9 +178,18 @@ function handleAnswer(btn, isCorrect, word) {
     state.wordsThisLevel++;
     if (state.streak > state.bestStreak) { state.bestStreak = state.streak; saveHS(); }
 
-    const streakBonus = Math.min(state.streak - 1, 9) * 20;
-    const pts = 100 + streakBonus;
-    state.score += pts;
+    btn.classList.add('correct');
+    allTiles.forEach(t => { if (t !== btn) t.classList.add('dimmed'); });
+
+    const r = btn.getBoundingClientRect();
+    spawnConfetti(r.left + r.width / 2, r.top + r.height / 2, 22);
+
+    // Leech tracking
+    let leechCleared = false;
+    if (typeof recordLeechCorrect === 'function') {
+      ({ leechCleared } = recordLeechCorrect(word));
+    }
+    if (leechCleared) setTimeout(() => showRPEBadge('🧠', 'Leech Cleared!', '"' + word[0] + '" is conquered!'), 500);
 
     if (!masteredMap[word[0]]) {
       masteredMap[word[0]] = true;
@@ -130,12 +198,18 @@ function handleAnswer(btn, isCorrect, word) {
       updateGoal();
     }
 
-    btn.classList.add('correct');
-    allTiles.forEach(t => { if (t !== btn) t.classList.add('dimmed'); });
+    // XP + streak system (Sprint keeps its own score too)
+    if (typeof handleCorrectReward === 'function') {
+      const { xpResult } = handleCorrectReward(state.streak);
+      showXPFloat(xpResult.xp, r.left + r.width / 2 - 20, r.top, xpResult.bonusActive);
+    } else {
+      const streakBonus = Math.min(state.streak - 1, 9) * 20;
+      floatPoints(100 + streakBonus, r.left + r.width / 2 - 20, r.top, '#ffd93d');
+    }
 
-    const r = btn.getBoundingClientRect();
-    spawnConfetti(r.left + r.width / 2, r.top + r.height / 2, 22);
-    floatPoints(pts, r.left + r.width / 2 - 20, r.top, '#ffd93d');
+    // Sprint score kept separately
+    const streakBonus = Math.min(state.streak - 1, 9) * 20;
+    state.score += 100 + streakBonus;
 
     if (state.streak >= 3) showComboBurst(state.streak);
 
@@ -143,7 +217,7 @@ function handleAnswer(btn, isCorrect, word) {
     updateStreak();
     updateLevel();
     saveSession();
-    showFeedback(true, word);
+    showFeedback(true, word, null);
     speak(word[4]);
 
     if (state.wordsThisLevel >= WORDS_PER_LEVEL) {
@@ -153,6 +227,7 @@ function handleAnswer(btn, isCorrect, word) {
     }
 
   } else {
+    // Sprint mode keeps lives; SRS/Speak/Chunks don't (but this file is Sprint only)
     state.lives--;
     state.streak = 0;
 
@@ -164,7 +239,20 @@ function handleAnswer(btn, isCorrect, word) {
       else if (t !== btn) t.classList.add('dimmed');
     });
 
-    // Schedule this word to reappear 2 questions from now
+    // Track leech + confusion
+    const chosenWord = opt && opt[0] !== word[0] ? opt : null;
+    let disambiguationHint = null;
+    if (typeof recordWrongAnswer === 'function') {
+      const { isNewLeech } = recordWrongAnswer(word, chosenWord);
+      if (isNewLeech && typeof buildDisambiguationHint === 'function') {
+        disambiguationHint = buildDisambiguationHint(word);
+      }
+    }
+    if (!disambiguationHint && typeof buildDisambiguationHint === 'function') {
+      disambiguationHint = buildDisambiguationHint(word);
+    }
+
+    // Schedule word to reappear
     state.repeatQueue.push({ word, after: state.answered + 2 });
 
     renderHearts();
@@ -175,24 +263,28 @@ function handleAnswer(btn, isCorrect, word) {
     card.classList.add('shake');
     setTimeout(() => card.classList.remove('shake'), 500);
 
-    showFeedback(false, word);
+    showFeedback(false, word, disambiguationHint);
 
     if (state.lives <= 0) {
       setTimeout(showGameOver, 1400);
     } else {
-      setTimeout(() => renderQuestion(true), 1600);
+      setTimeout(() => renderQuestion(true), 1800);
     }
   }
 }
+
+// ── Level up / Game over ──────────────────────────────────────────────
 
 function showLevelUp() {
   state.level++;
   state.wordsThisLevel = 0;
   updateLevel();
   const overlay = document.getElementById('bigOverlay');
-  document.getElementById('bigIcon').textContent = '🏆';
+  const lang    = window.paroleLanguage === 'nl' ? 'Dutch' : 'Italian';
+  document.getElementById('bigIcon').textContent  = '🏆';
   document.getElementById('bigTitle').textContent = 'Level ' + state.level + '!';
-  document.getElementById('bigSub').textContent = 'Fantastico! Keep going — you\'re getting incredible at Italian! 🇮🇹';
+  document.getElementById('bigSub').textContent   = 'Fantastico! Keep going 🇮🇹';
+  if (window.paroleLanguage === 'nl') document.getElementById('bigSub').textContent = 'Geweldig! Keep going 🇳🇱';
   document.getElementById('bigStats').innerHTML = `
     <div class="big-stat"><div class="big-stat-val">${state.score.toLocaleString()}</div><div class="big-stat-lbl">Score</div></div>
     <div class="big-stat"><div class="big-stat-val">${state.streak}</div><div class="big-stat-lbl">Streak</div></div>
@@ -208,14 +300,12 @@ function showLevelUp() {
 
 function showGameOver() {
   const accuracy = state.answered > 0 ? Math.round(state.correct / state.answered * 100) : 0;
-  const overlay = document.getElementById('bigOverlay');
-  document.getElementById('bigIcon').textContent = accuracy >= 80 ? '😎' : accuracy >= 50 ? '😅' : '😢';
+  const overlay  = document.getElementById('bigOverlay');
+  document.getElementById('bigIcon').textContent  = accuracy >= 80 ? '😎' : accuracy >= 50 ? '😅' : '😢';
   document.getElementById('bigTitle').textContent = 'Game Over!';
-  document.getElementById('bigSub').textContent = accuracy >= 80
+  document.getElementById('bigSub').textContent   = accuracy >= 80
     ? 'Molto bene! You did great!'
-    : accuracy >= 50
-    ? 'Bel tentativo! Keep practising!'
-    : 'Non arrenderti — practice makes perfect!';
+    : accuracy >= 50 ? 'Bel tentativo! Keep practising!' : 'Non arrenderti — practice makes perfect!';
   document.getElementById('bigStats').innerHTML = `
     <div class="big-stat"><div class="big-stat-val">${state.score.toLocaleString()}</div><div class="big-stat-lbl">Score</div></div>
     <div class="big-stat"><div class="big-stat-val">${state.bestStreak}</div><div class="big-stat-lbl">Best Streak</div></div>
@@ -227,15 +317,15 @@ function showGameOver() {
 }
 
 function resetGame() {
-  state.lives = LIVES;
-  state.score = 0;
-  state.streak = 0;
-  state.level = 1;
+  state.lives         = LIVES;
+  state.score         = 0;
+  state.streak        = 0;
+  state.level         = 1;
   state.wordsThisLevel = 0;
-  state.answered = 0;
-  state.correct = 0;
-  state.usedIndices = [];
-  state.repeatQueue = [];
+  state.answered      = 0;
+  state.correct       = 0;
+  state.usedIndices   = [];
+  state.repeatQueue   = [];
   clearSession();
   renderHearts();
   updateScore();
