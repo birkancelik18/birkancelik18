@@ -1259,7 +1259,101 @@ const WORDS = [
 ["accanto","next to","ak-KAHN-toh","adv","Siediti accanto a me.","Sit next to me.","Think at side."],
 ["ognuno","everyone","on-YOO-noh","adv","Ognuno ha i suoi gusti.","To each his own.","Ogni + uno."],
 ["eppure","and yet","ep-POO-reh","adv","È strano, eppure è vero.","It's strange, yet it's true.","E + pure."],
-["entro","within","EN-troh","adv","Rientro entro mezzanotte.","I'll be back by midnight.","Think enter/inside."]
+["entro","within","EN-troh","adv","Rientro entro mezzanotte.","I'll be back by midnight.","Think enter/inside."],
+
+// ── TRANSPORT ────────────────────────────────────────────────────────────────
+["autobus","bus","OW-toh-boos","noun","L'autobus arriva tra cinque minuti.","The bus arrives in five minutes.","Auto + bus — same as English."],
+["metropolitana","subway","meh-troh-poh-lee-TAH-nah","noun","Prendo la metropolitana ogni mattina.","I take the subway every morning.","Think metropolitan — the city rail."],
+["aeroporto","airport","ah-eh-roh-POR-toh","noun","L'aeroporto è fuori città.","The airport is outside the city.","Aero (air) + porto (port)."],
+["aereo","airplane","ah-EH-reh-oh","noun","L'aereo decolla alle dieci.","The plane takes off at ten.","Think aerial."],
+["volo","flight","VOH-loh","noun","Il mio volo è in ritardo.","My flight is delayed.","Think volatile — things that fly."],
+["taxi","taxi","TAHK-see","noun","Chiamo un taxi.","I'm calling a taxi.","Same as English."],
+["biglietto","ticket","beel-YET-toh","noun","Compra il biglietto in anticipo.","Buy the ticket in advance.","Think billet — an old word for a slip of paper."],
+["fermata","stop","fer-MAH-tah","noun","La prossima fermata è il Duomo.","The next stop is the Duomo.","Think firm — where the vehicle stops firmly."],
+["binario","platform","bee-NAH-ryoh","noun","Il treno parte dal binario tre.","The train leaves from platform three.","Think binary/rail-line."],
+["ritardo","delay","ree-TAR-doh","noun","Il volo ha un ritardo di due ore.","The flight has a two-hour delay.","Think retard — to slow something down."],
+["orario","timetable","oh-RAH-ryoh","noun","Controlla l'orario dei treni.","Check the train timetable.","Think horary — relating to hours."],
+["passaporto","passport","pahs-sah-POR-toh","noun","Non dimenticare il passaporto.","Don't forget your passport.","Cognate to passport."],
+["valigia","suitcase","vah-LEE-jah","noun","Ho fatto la valigia.","I've packed my suitcase.","Think valise — the French/English borrowing."],
+["patente","driving licence","pah-TEN-teh","noun","Ho dimenticato la patente a casa.","I left my driving licence at home.","Think patent — an official authorisation."],
+
+// ── SHOPPING & MONEY ─────────────────────────────────────────────────────────
+["supermercato","supermarket","soo-per-mer-KAH-toh","noun","Vado al supermercato.","I'm going to the supermarket.","Same as English supermarket."],
+["negozio","shop","neh-GOH-tsyoh","noun","Questo negozio è aperto la domenica.","This shop is open on Sundays.","Think negotiate — where trading happens."],
+["bancomat","ATM","BAN-koh-maht","noun","C'è un bancomat qui vicino?","Is there an ATM nearby?","Banco (bank) + mat (automated)."],
+["carta di credito","credit card","KAR-tah dee KREH-dee-toh","phrase","Posso pagare con la carta di credito?","Can I pay with a credit card?","Carta = card, credito = credit."],
+["scontrino","receipt","skon-TREE-noh","noun","Vuoi lo scontrino?","Would you like the receipt?","From scontro — a settling of accounts."],
+["cassa","checkout","KAHS-sah","noun","Vai alla cassa per pagare.","Go to the checkout to pay.","Think cash register."],
+["sconto","discount","SKON-toh","noun","C'è uno sconto del venti per cento.","There's a twenty percent discount.","Think discount."],
+["taglia","clothing size","TAHL-yah","noun","Che taglia porti?","What size do you wear?","Think tailor — who measures you."],
+["offerta","deal","of-FER-tah","noun","È in offerta speciale.","It's on special offer.","Think offer."],
+["contanti","cash","kon-TAHN-tee","noun","Pago in contanti.","I'll pay in cash.","Think contained coins — physical money."],
+
+// ── HEALTH ───────────────────────────────────────────────────────────────────
+["ambulanza","ambulance","am-boo-LAHN-tsah","noun","Chiama l'ambulanza!","Call an ambulance!","Cognate to ambulance."],
+["febbre","fever","FEB-breh","noun","Ho la febbre alta.","I have a high fever.","Think febrile — relating to fever."],
+["raffreddore","cold","raf-fred-DOH-reh","noun","Ho preso un raffreddore.","I've caught a cold.","Freddo = cold — an illness caught from the cold."],
+["mal di testa","headache","mal dee TES-tah","phrase","Ho un forte mal di testa.","I have a bad headache.","Mal (ache) + di (of) + testa (head)."],
+["allergia","allergy","al-ler-JEE-ah","noun","Ho un'allergia al gatto.","I have a cat allergy.","Cognate to allergy."],
+["allergico","allergic","al-LER-jee-koh","adj","Sono allergico alle noci.","I'm allergic to nuts.","Cognate to allergic."],
+["appuntamento","appointment","ap-poon-tah-MEN-toh","noun","Ho un appuntamento dal medico.","I have a doctor's appointment.","From punto — a fixed point in time."],
+["pronto soccorso","emergency room","PRON-toh sok-KOR-soh","phrase","Portami al pronto soccorso!","Take me to the emergency room!","Pronto (ready) + soccorso (help)."],
+["ricetta","prescription","ree-CHET-tah","noun","Ho bisogno di una ricetta.","I need a prescription.","Think recipe — also a written instruction."],
+["influenza","flu","een-floo-EN-tsah","noun","Ho preso l'influenza.","I've got the flu.","The English word influenza comes directly from Italian."],
+["tosse","cough","TOS-seh","noun","Ho una tosse persistente.","I have a persistent cough.","Think tussis — the Latin word for cough."],
+["visita","check-up","VEE-zee-tah","noun","Ho una visita medica domani.","I have a medical check-up tomorrow.","Think visit — a visit to the doctor."],
+
+// ── WORK & DIGITAL ───────────────────────────────────────────────────────────
+["collega","colleague","kol-LEH-gah","noun","Pranzo con i miei colleghi.","I'm having lunch with my colleagues.","Cognate to colleague."],
+["stipendio","salary","stee-PEN-dyoh","noun","Il mio stipendio è mensile.","My salary is paid monthly.","Think stipend — a fixed periodic payment."],
+["riunione","meeting","ryoo-NYOH-neh","noun","Ho una riunione alle tre.","I have a meeting at three.","Think reunion — people coming together."],
+["computer","computer","kom-PYOO-ter","noun","Il mio computer è lento.","My computer is slow.","Same as English."],
+["smartphone","smartphone","SMART-fohn","noun","Ho dimenticato lo smartphone.","I forgot my smartphone.","Same as English."],
+["wifi","wifi","WEE-fee","noun","Qual è la password del wifi?","What is the wifi password?","Same as English."],
+["password","password","PAHS-vord","noun","Ho cambiato la mia password.","I changed my password.","Same as English."],
+["messaggio","message","mes-SAHD-joh","noun","Ti mando un messaggio.","I'll send you a message.","Think message."],
+["email","email","EE-mayl","noun","Ti mando tutto per email.","I'll send you everything by email.","Same as English."],
+["stampante","printer","stam-PAN-teh","noun","La stampante è esaurita.","The printer has run out of ink.","Think stamp — it stamps ink onto paper."],
+["contratto","contract","kon-TRAT-toh","noun","Ho firmato il contratto.","I signed the contract.","Cognate to contract."],
+["scadenza","deadline","skah-DEN-tsah","noun","La scadenza è venerdì.","The deadline is Friday.","Think expire — scaduto means expired."],
+["curriculum","CV","koo-REE-koo-lum","noun","Manda il tuo curriculum.","Send your CV.","Same as English curriculum vitae."],
+
+// ── EMOTIONS ─────────────────────────────────────────────────────────────────
+["arrabbiato","angry","ar-rab-BYAH-toh","adj","Perché sei così arrabbiato?","Why are you so angry?","From rabbia (rage) — literally full of rage."],
+["preoccupato","worried","preh-ok-koo-PAH-toh","adj","Sono preoccupato per l'esame.","I'm worried about the exam.","Think preoccupied — your mind is taken over by worry."],
+["sorpreso","surprised","sor-PREH-zoh","adj","Sono rimasto sorpreso.","I was really surprised.","Think surprise."],
+["annoiato","bored","an-noy-AH-toh","adj","Mi annoio tantissimo.","I am so bored.","Think annoyed — both share the same Latin root."],
+["emozionato","excited","eh-moht-syoh-NAH-toh","adj","Sono molto emozionato per il viaggio.","I am very excited about the trip.","Think emotional — moved by strong feelings."],
+["nervoso","nervous","ner-VOH-soh","adj","Sono nervoso prima dell'esame.","I'm nervous before the exam.","Cognate to nervous."],
+["deluso","disappointed","deh-LOO-zoh","adj","Sono deluso dai risultati.","I'm disappointed by the results.","Think deluded — your expectations weren't met."],
+["calmo","calm","KAL-moh","adj","Rimani calmo!","Stay calm!","Cognate to calm."],
+["geloso","jealous","jeh-LOH-zoh","adj","Non essere geloso.","Don't be jealous.","Think zealous — overly keen to keep something."],
+["orgoglioso","proud","or-gohl-YOH-zoh","adj","Sono orgoglioso di te.","I'm proud of you.","Think orgueil — the French word for pride."],
+["innamorato","in love","een-nah-moh-RAH-toh","adj","Sono innamorato di te.","I'm in love with you.","In + amore (love) — in a state of love."],
+
+// ── HOME & DAILY LIFE ────────────────────────────────────────────────────────
+["affitto","rent","af-FEE-toh","noun","Pago l'affitto ogni mese.","I pay rent every month.","Think 'a fee' — a regular payment for lodging."],
+["bolletta","utility bill","bol-LET-tah","noun","La bolletta della luce è alta.","The electricity bill is high.","Think bulletin — a document that arrives monthly."],
+["ascensore","elevator","ah-shen-SOH-reh","noun","L'ascensore è rotto.","The elevator is broken.","Think ascend — it goes up."],
+["indirizzo","address","een-dee-REET-tsoh","noun","Qual è il tuo indirizzo?","What is your address?","Think direction — where to direct mail."],
+["quartiere","neighbourhood","kwahr-TYEH-reh","noun","Abito in un bel quartiere.","I live in a nice neighbourhood.","Think quarter — a quarter of the city."],
+["piano","floor","PYAH-noh","noun","Abito al terzo piano.","I live on the third floor.","Piano also means flat/level in Italian."],
+["condominio","apartment building","kon-doh-MEE-nyoh","noun","Abito in un condominio.","I live in an apartment building.","Think condominium."],
+["inquilino","tenant","een-kwee-LEE-noh","noun","Sono il nuovo inquilino.","I'm the new tenant.","Think inquire — the one who asks to rent."],
+
+// ── DINING OUT ───────────────────────────────────────────────────────────────
+["cameriere","waiter","kah-mer-YEH-reh","noun","Chiama il cameriere.","Call the waiter.","Think chamber servant — someone who serves."],
+["menù","menu","meh-NOO","noun","Posso avere il menù?","Can I have the menu?","Cognate to menu."],
+["antipasto","starter","an-tee-PAHS-toh","noun","Come antipasto prendo le bruschette.","For starter I'll have bruschetta.","Anti (before) + pasto (meal)."],
+["dolce","dessert","DOL-cheh","noun","Per dolce vorrei un tiramisù.","For dessert I'd like a tiramisu.","Think dolce vita — the sweet life."],
+["coperto","cover charge","koh-PER-toh","noun","Il coperto è di due euro.","The cover charge is two euros.","Think covered — the table setting included."],
+["prenotare","to book","preh-noh-TAH-reh","verb","Vorrei prenotare un tavolo.","I'd like to book a table.","Pre + nota — to note something in advance."],
+["prenotazione","reservation","preh-noh-tah-TSYOH-neh","noun","Ho una prenotazione per le otto.","I have a reservation for eight o'clock.","Think pre-notation — a note made in advance."],
+
+// ── EMERGENCY ────────────────────────────────────────────────────────────────
+["incidente","accident","een-chee-DEN-teh","noun","C'è stato un incidente.","There has been an accident.","Cognate to incident."],
+["emergenza","emergency","eh-mer-JEN-tsah","noun","È un'emergenza!","It's an emergency!","Cognate to emergency."],
+["vigile del fuoco","firefighter","VEE-jee-leh del FWOH-koh","phrase","I vigili del fuoco sono arrivati.","The firefighters have arrived.","Vigile (watchman) + del fuoco (of fire)."]
 ];
 
 const CAT_STYLE = {
