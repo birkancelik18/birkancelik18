@@ -1172,7 +1172,7 @@ body::before {
     .project-card {
         flex: 0 0 calc(100% - var(--spacing-sm));
         flex-direction: column;
-        min-height: auto;
+        height: auto;
     }
     
     .project-image-container {

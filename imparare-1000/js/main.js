@@ -1,0 +1,64 @@
+function enterQuizMode() {
+  document.getElementById('modeSelect').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  loadProgress();
+  loadSession();
+  renderHearts();
+  updateScore();
+  updateStreak();
+  updateLevel();
+  updateGoal();
+  renderQuestion(false);
+}
+
+function enterSwipeMode() {
+  document.getElementById('modeSelect').classList.add('hidden');
+  document.getElementById('swipeApp').classList.add('active');
+  startSwipeSession();
+}
+
+function handleBigBtn() {
+  const overlay = document.getElementById('bigOverlay');
+  const mode = overlay.dataset.mode;
+  overlay.classList.remove('show');
+  if (mode === 'gameover') {
+    resetGame();
+  } else if (mode === 'swipe') {
+    startSwipeSession(true);
+  } else {
+    renderQuestion(true);
+  }
+}
+
+document.getElementById('btnQuiz').addEventListener('click', enterQuizMode);
+document.getElementById('btnSwipe').addEventListener('click', enterSwipeMode);
+document.getElementById('hearBtn').addEventListener('click', () => {
+  speak(state.currentWord?.[4] || state.currentWord?.[0] || '');
+});
+document.getElementById('bigBtn').addEventListener('click', handleBigBtn);
+document.getElementById('quizBackBtn').addEventListener('click', () => {
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('modeSelect').classList.remove('hidden');
+});
+document.getElementById('swBackBtn').addEventListener('click', () => {
+  document.getElementById('swipeApp').classList.remove('active');
+  document.getElementById('modeSelect').classList.remove('hidden');
+});
+
+
+const languageSelect = document.getElementById('languageSelect');
+const modeTitle = document.querySelector('.ms-title');
+const currentLang = localStorage.getItem('parole_lang') || 'it';
+if (modeTitle) {
+  modeTitle.textContent = `Parole! ${currentLang === 'nl' ? '🇳🇱' : '🇮🇹'}`;
+}
+if (languageSelect) {
+  languageSelect.value = currentLang;
+  languageSelect.addEventListener('change', e => {
+    localStorage.setItem('parole_lang', e.target.value);
+    window.location.reload();
+  });
+}
+
+loadState();
+loadProgress();

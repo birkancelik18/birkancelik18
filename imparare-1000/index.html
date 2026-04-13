@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Parole!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Mode select -->
+<div id="modeSelect" class="mode-select">
+  <div class="ms-title">Parole!</div>
+  <div class="ms-sub">How do you want to study?</div>
+  <div class="ms-lang">
+    <label for="languageSelect">Language</label>
+    <select id="languageSelect">
+      <option value="it">Italiano 🇮🇹</option>
+      <option value="nl">Nederlands 🇳🇱</option>
+    </select>
+  </div>
+  <div class="ms-cards">
+    <button type="button" class="ms-card" id="btnQuiz">
+      <div class="ms-card-icon">🧩</div>
+      <div class="ms-card-name">Quiz</div>
+      <div class="ms-card-desc">Fill in the blank<br>Multiple choice</div>
+    </button>
+    <button type="button" class="ms-card" id="btnSwipe">
+      <div class="ms-card-icon">👆</div>
+      <div class="ms-card-name">Reels</div>
+      <div class="ms-card-desc">Reels feed<br>Random words</div>
+    </button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<div id="app">
+  <div class="topbar">
+    <button type="button" class="sw-back-btn" id="quizBackBtn">← Menu</button>
+    <div class="hearts" id="heartsEl"></div>
+    <div class="score-wrap">
+      <div class="score-num" id="scoreEl">0</div>
+      <div class="score-lbl">score</div>
+    </div>
+    <div class="streak-badge" id="streakEl">
+      <span class="streak-fire">🔥</span>
+      <span id="streakNum">0</span>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="lv-label">Lv.<span id="lvNum">1</span></div>
+    <div class="lv-bar"><div class="lv-fill" id="lvBar" style="width:0%"></div></div>
+    <div class="lv-num"><span id="lvProgress">0</span>/10</div>
+  </div>
+
+  <div class="goal-row">
+    <div class="goal-label">Words unlocked</div>
+    <div class="goal-num" id="goalNum">0 / 1266</div>
+  </div>
+
+  <div class="word-card" id="wordCard">
+    <div class="word-card-inner" id="cardInner">
+      <div class="cat-badge" id="catBadge"></div>
+      <div class="q-instruction">Fill in the blank 👇</div>
+      <div class="sentence-display" id="sentenceDisplay"></div>
+      <div class="sentence-en" id="sentenceEn"></div>
+      <div class="word-hint" id="wordHint"></div>
+      <button class="hear-btn" id="hearBtn">🔊 <span>Hear sentence</span></button>
+    </div>
+  </div>
+
+  <div class="tiles" id="tilesEl"></div>
+</div>
+
+<!-- Reels mode -->
+<div id="swipeApp" class="swipe-app">
+  <div class="sw-topbar">
+    <button type="button" class="sw-back-btn" id="swBackBtn">← Back</button>
+    <div class="sw-progress" id="swProgress">0 known</div>
+  </div>
+
+  <div class="sw-deck" id="swDeck">
+    <!-- Cards injected by swipe.js -->
+  </div>
+
+  <div class="sw-hint-row">
+    <span class="sw-hint-up">⬆ Next word</span>
+    <span class="sw-hint-down">⬇ Next random word</span>
+  </div>
+</div>
+
+<!-- Feedback bubble -->
+<div class="feedback-overlay" id="fbOverlay">
+  <div class="fb-bubble">
+    <div class="fb-emoji" id="fbEmoji"></div>
+    <div class="fb-word" id="fbWord"></div>
+    <div class="fb-example" id="fbExample"></div>
+  </div>
+</div>
+
+<!-- Combo burst -->
+<div class="combo-burst" id="comboBurst"></div>
+
+<!-- Level-up / game-over overlay -->
+<div class="big-overlay" id="bigOverlay">
+  <div class="big-icon" id="bigIcon"></div>
+  <div class="big-title" id="bigTitle"></div>
+  <div class="big-sub" id="bigSub"></div>
+  <div class="big-stats" id="bigStats"></div>
+  <button class="big-btn" id="bigBtn">Play Again</button>
+</div>
+
+<script>
+  const selectedLang = localStorage.getItem('parole_lang') || 'it';
+  window.paroleLanguage = selectedLang;
+  document.write(`<script defer src="js/${selectedLang === 'nl' ? 'words-nl' : 'words'}.js"><\/script>`);
+</script>
+<script defer src="js/state.js"></script>
+<script defer src="js/confetti.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/game.js"></script>
+<script defer src="js/swipe.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>

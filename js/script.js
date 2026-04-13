@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initDynamicContent();
     initScrollAnimations();
-    initProjectFiltering();
-    initProjectsSlider();
     // initContactForm() is now called from renderContact()
     initRouting();
     setCurrentYear();
