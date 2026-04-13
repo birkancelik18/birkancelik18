@@ -72,6 +72,8 @@ function initDynamicContent() {
     renderAbout();
     renderDimensions();
     renderProjects();
+    initProjectsSlider();
+    initProjectFiltering();
     renderExperience();
     renderContact();
 }
