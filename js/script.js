@@ -993,7 +993,7 @@ function navigateToProject(projectId, updateHistory = true) {
                             </li>`).join('')}
                         </ul>
                     </div>` : ''}
-                    ${subpagesHTML ? `<div id="section-explore">${subpagesHTML}</div>` : ''}
+                    ${subpagesHTML ? `<div id="section-explore" class="project-detail-section">${subpagesHTML}</div>` : ''}
                 </div>
             </div>
         </div>
