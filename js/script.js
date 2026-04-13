@@ -1225,8 +1225,8 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
             <div class="subpage-content">
                 ${leadHTML}
                 ${externalQuoteHTML}
-                ${valuePropHTML}
-                ${pullQuoteHTML}
+                ${subpage.plain ? '' : valuePropHTML}
+                ${subpage.plain ? '' : pullQuoteHTML}
                 ${sectionsHTML}
                 ${videosHTML}
                 ${ctaHTML}

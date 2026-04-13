@@ -548,6 +548,13 @@ const projectsData = [
                     title: "Visit Simulation: Practice Before the Real Thing",
                     image: "images/socrates_as_case_simulation_tool.png",
                     content: "Beyond real-time mentorship, Socrates offers an entirely different kind of experience: a visit simulation.\n\nThis is not an AI agent offering hints from the sidelines. It is a full, immersive clinical encounter - a resident sits down with a simulated patient, asks questions, gathers history, and works toward a diagnosis, exactly as they would in a real consultation room. The patient responds naturally, describes symptoms, expresses concerns, and reacts to how the conversation unfolds.\n\nThe resident must drive the entire interaction: deciding which questions to ask, in what order, and how to interpret the answers. Nothing is handed to them. Every diagnostic hypothesis has to be earned through the quality of the clinical encounter itself.\n\nAt the end of the simulation, Socrates provides a structured debrief - what was asked, what was missed, which red flags were explored and which were overlooked, and how the diagnostic reasoning compares to the expected clinical pathway for that case.\n\nThis is deliberate practice at its most realistic. Residents can face rare presentations, high-stakes scenarios, or simply repeat common cases until the pattern recognition becomes instinct - all without any risk to a real patient.\n\nThe simulation is not a feature. It is a completely different experience built on the same belief: that the best way to prepare a physician is to make them think, not to think for them."
+                },
+                {
+                    id: "aperetivo",
+                    title: "L'Aperitivo",
+                    image: "images/aperetivo.jpg",
+                    plain: true,
+                    content: "At the end of the first day, we didn't go back to our laptops. We went to aperetivo.\n\nIf this hackathon had been in another country, we would probably have been coding nonstop for 48 hours. But this is Italy. And that made all the difference.\n\nWe sat together - participants, organizers, people from all kinds of backgrounds - and just talked. I met great people, heard so many different stories, and shared ideas I wouldn't have found time for otherwise. That was the moment I said to myself: I already won this hackathon. I felt I had to write this down, so these moments could live somewhere beyond memory.\n\nI am so glad I got to meet every single person at that table."
                 }
             ]
         }
