@@ -45,13 +45,13 @@ const dimensionsData = {
     },
     startup: {
         id: "startup",
-        title: "Side Projects",
+        title: "Startup Ideas",
         subtitle: "Personal Projects & Innovation",
         description: "Projects I work on in my free time alongside my studies and research. These include intelligent web applications and other innovative solutions that combine technical expertise with practical applications.",
         icon: "", // Removed emoji for elegant design
         color: "#50C878",
         pageContent: {
-            overview: "My side projects represent a space for experimentation and innovation. These personal initiatives allow me to explore new technologies, solve interesting problems, and build solutions that combine my technical skills with creative thinking.",
+            overview: "My startup ideas represent a space for experimentation and innovation. These initiatives allow me to explore new technologies, solve interesting problems, and build solutions that combine my technical skills with creative thinking.",
             highlights: [
                 "AI-powered applications",
                 "Innovative problem-solving approaches",
@@ -67,7 +67,7 @@ const dimensionsData = {
     },
     biomedical: {
         id: "biomedical",
-        title: "Biomedical Signals",
+        title: "Healthcare & AI",
         subtitle: "Healthcare Technology",
         description: "Researching brain-computer interfaces and neural engineering at University of Essex. Preprocessing EEG data through spectral analysis and engineering deep learning models for mental state classification to improve healthcare outcomes.",
         icon: "", // Removed emoji for elegant design
@@ -97,15 +97,92 @@ const dimensionsData = {
 // Add detailed content in the 'details' field for the project page
 const projectsData = [
     {
+        id: 10,
+        title: "PAIR LEGAL: AI-Powered Contract Copilot",
+        description: "An AI-powered Microsoft Word add-in that transforms contract review from hours of manual work into minutes of intelligent analysis. PAIR LEGAL helps legal teams catch risks, ensure consistency, and review contracts 70% faster—all without leaving Word.",
+        image: "images/Pair/how_pair_legal_initiates.png",
+        techStack: ["React", "Office.js", "Fluent UI", "Azure Functions", "Node.js", "OpenAI", "RAG"],
+        dimensions: ["startup"],
+        links: {},
+        date: "2024-2025",
+        details: {
+            overview: "PAIR LEGAL is an AI-powered contract review assistant built directly into Microsoft Word. It solves the biggest pain points in contract review: time-consuming manual analysis, missed risks, inconsistent language, and fragmented workflows. The tool provides automatic document review, instant clause analysis, similarity search across your contract library, and natural language document Q&A—all while preserving Word's formatting and track changes. Every feature understands your contract context (type, parties, your position) to deliver relevant, actionable insights.",
+            problem: "Legal professionals waste hours on manual contract review, switching between Word, external AI tools, and email threads. Critical risks get missed, important clauses are overlooked, and teams struggle with inconsistent language across contracts. Existing tools break formatting, ignore track changes, or don't support multilingual teams. The result? Slower reviews, higher risk, and frustrated legal teams who can't leverage their own contract knowledge.",
+            solution: "PAIR LEGAL brings everything into Word: automatic AI-powered document review that catches risks and missing clauses, instant clause analysis when you select text, similarity search across your contract library to ensure consistency, and natural language Q&A to find information instantly. All features work together seamlessly, understand your contract context, and respect Word's native formatting and track changes. No context switching, no broken formatting, no lost time.",
+            methodology: [
+                "Designed an intuitive onboarding flow that captures contract context (type, parties, position) to personalize all AI suggestions and recommendations.",
+                "Built automatic document review that analyzes entire contracts in seconds, providing categorized suggestions, risk flags, and missing clause alerts with clear visual comparisons.",
+                "Created an interactive suggestion management system where users can review, accept, or reject recommendations with one click, with all changes tracked transparently in Word.",
+                "Developed real-time clause analysis that activates when users select text, providing instant risk assessments, summaries, and improvement suggestions through a conversational interface.",
+                "Engineered similarity search across private contract libraries, allowing teams to find and reuse proven language from past contracts to ensure consistency.",
+                "Built natural language document Q&A that lets lawyers ask questions about contracts in plain English, supporting multi-document queries and complex comparisons.",
+                "Implemented full bilingual support (Turkish/English) with persistent preferences, making the tool accessible for international legal teams."
+            ],
+            results: [
+                "Eliminated context switching by unifying the entire contract workflow inside Word, saving time and reducing errors from tool fragmentation.",
+                "Reduced contract review time by up to 70% through automatic AI analysis that identifies risks, missing clauses, and improvement opportunities in minutes.",
+                "Enabled instant clause analysis with real-time risk assessments and suggestions when lawyers select any text, speeding up decision-making.",
+                "Ensured consistency across contracts by making precedent language searchable and accessible, helping teams maintain firm standards.",
+                "Empowered natural language queries about contracts, allowing lawyers to find information instantly instead of manually searching through documents.",
+                "Protected document integrity with native Word track changes integration, ensuring all modifications are transparent and reviewable.",
+                "Supported multilingual teams with full Turkish/English interface, removing language barriers for international legal operations."
+            ],
+            collaborators: [
+                { name: "Erge Çevik", role: "Legal Advisor", linkedin: "https://www.linkedin.com/in/erge-%C3%A7evik/" }
+            ],
+            gallery: [
+                { src: "images/Pair/contract_pair_start_screen.png", caption: "PAIR LEGAL's main interface provides easy access to all contract review features directly in Word." },
+                { src: "images/Pair/starting_form_before_initializing_the_analysis.png", caption: "Quick onboarding captures contract context to personalize AI suggestions and recommendations." },
+                { src: "images/Pair/autosuggest_feature_after_listing_suggestions.png", caption: "Automatic review provides organized suggestions grouped by category for easy navigation." },
+                { src: "images/Pair/autosuggest_feature_during_review.png", caption: "Review suggestions with clear before/after comparisons and one-click accept/reject controls." },
+                { src: "images/Pair/select_text_and_start_chatting_with_it.png", caption: "Select any clause to get instant AI-powered analysis, risk assessment, and improvement suggestions." },
+                { src: "images/Pair/find_similars_feature.png", caption: "Search your contract library to find similar clauses and ensure consistency with precedent documents." },
+                { src: "images/Pair/ask_to_document.png", caption: "Ask questions about contracts in natural language and get intelligent answers from your document library." }
+            ],
+            subpages: [
+                {
+                    id: "auto-review",
+                    title: "Automatic Document Review",
+                    content: "The biggest time drain in contract review is manual analysis. PAIR LEGAL's Automatic Document Review solves this by analyzing entire contracts in seconds, not hours.\n\nSimply fill in your contract information (type, parties, your position) and click Start Review. The AI examines every clause, identifies potential risks, suggests improvements, and flags missing clauses that should be included. All suggestions are organized in clear categories with visual comparisons showing original vs. suggested text.\n\nYou maintain complete control: review each suggestion, see exactly what would change, and accept or reject with one click. Every change is applied with Word's track changes enabled, so nothing is hidden and everything is reviewable. Missing clauses come with sample text ready to copy, helping you patch gaps quickly while maintaining your firm's approved language.",
+                    videos: [
+                        { url: "https://youtu.be/SgipTgVORs0", title: "Auto Suggest Demo" },
+                        { url: "https://youtu.be/z0qE0xZ5os8", title: "Auto Review Demo" }
+                    ]
+                },
+                {
+                    id: "select-and-suggest",
+                    title: "Select & Suggest: Instant Clause Analysis",
+                    content: "When reviewing contracts, you often need to understand specific clauses quickly—their risks, obligations, or implications. Instead of researching externally or waiting for full document review, PAIR LEGAL's Select & Suggest gives you instant answers.\n\nJust select any text in your document, and the AI immediately provides analysis. Ask questions like 'What are the risks in this clause?' or 'Summarize the payment obligations.' The system understands context and provides relevant insights based on the selected text and your contract information.\n\nSample prompts help you get started quickly: summarize clauses, identify risks, assess payment obligations, or generate risk assessment emails. The conversation history is maintained per selection, so you can dive deep into any clause. When you select different text, a new conversation starts, keeping your analysis organized and focused.",
+                    videos: [
+                        { url: "https://youtu.be/6M5UQpYsKBE", title: "Select & Get Suggestion Demo" }
+                    ]
+                },
+                {
+                    id: "find-similars",
+                    title: "Find Similar Clauses: Ensure Consistency",
+                    content: "One of the biggest challenges in contract management is maintaining consistency. Similar contracts should use similar language, but without a way to search your contract library, you're starting from scratch each time.\n\nPAIR LEGAL's Find Similar Clauses feature solves this by making your entire contract library searchable. Upload your precedent documents, select any clause in your current contract, and the system finds similar language from your past contracts.\n\nThis helps you in two ways: first, you can ensure consistency by reusing proven language from successful contracts. Second, you can leverage your organization's knowledge—if a similar clause worked well in the past, you can use it with confidence. The feature supports multiple document formats and lets you choose which documents to search, so you can focus on the most relevant precedents."
+                },
+                {
+                    id: "ask-document",
+                    title: "Ask Document: Natural Language Q&A",
+                    content: "During contract review, you need to find specific information quickly—payment terms, termination clauses, obligations, deadlines. Instead of manually searching through lengthy documents, PAIR LEGAL lets you ask questions in plain English.\n\nUpload your contracts (Word, PDF, or text files), select which documents to query, and ask anything: 'What are the payment obligations?' 'Compare termination clauses across these contracts.' 'Summarize the key risks in these agreements.' The AI understands your questions and provides accurate answers based on the actual document content.\n\nThis is especially powerful for diligence work, comparing multiple contracts, or extracting specific information from complex agreements. You can query across multiple documents simultaneously, making it easy to compare terms or find patterns across your contract portfolio. Sample prompts help you get started, and conversation history lets you ask follow-up questions to dive deeper."
+                },
+                {
+                    id: "supporting-features",
+                    title: "Seamless Integration & User Experience",
+                    content: "PAIR LEGAL is designed to work the way you work, without disrupting your existing workflow.\n\nThe contract information you provide at the start flows through every feature, so the AI understands your context and provides relevant suggestions. Missing clause detection identifies gaps in your contracts and provides sample text ready to copy, helping you patch issues quickly.\n\nEverything respects Word's native functionality: formatting stays intact, track changes work perfectly, and you can navigate directly to relevant sections. The interface is fully bilingual (Turkish/English) with persistent preferences, making it accessible for international teams.\n\nYour work is preserved as you switch between features: accepted suggestions, uploaded document libraries, and chat histories all remain available. This means you can start a review, switch to analyze a specific clause, search for similar language, and come back to your review without losing any context or progress."
+                }
+            ]
+        }
+    },
+    {
         id: 3,
         title: "Sketch Recognition Models",
         description: "Developed sketch recognition models by integrating human perception principles at Koc University Intelligent User Interfaces Laboratory (Nov 2018 - June 2024). Utilized deep learning, real-time databases, and extensive data collection from web scraping, crowdsourcing (Amazon MTurk), and face-to-face experiments.",
         image: "images/sketch_recognition.png",
         techStack: ["Python", "Deep Learning", "TensorFlow", "PyTorch"],
         dimensions: ["hci"],
-        links: {
-            github: "https://github.com/birkancelik18"
-        },
+        links: {},
         date: "2018 - 2024",
         details: {
             overview: "This project focuses on developing sketch recognition models that integrate principles of human perception. By understanding how humans interpret sketches, we can create more accurate and intuitive recognition systems.",
@@ -146,7 +223,6 @@ const projectsData = [
         techStack: ["MATLAB", "Python", "Deep Learning", "PyTorch", "TensorFlow", "EEG", "Signal Processing", "Spectral Analysis", "EEGLAB", "Independent Component Analysis"],
         dimensions: ["biomedical"],
         links: {
-            github: "https://github.com/birkancelik18",
             pdf: "data/Maths_Anxiety_and_cognitive_state_monitoring_for_neuroadaptive_learning_systems_using_electroencephalography.pdf"
         },
         date: "2023",
@@ -220,9 +296,7 @@ const projectsData = [
         image: "images/karton.png",
         techStack: ["JavaScript", "p5.js", "Teachable Machine", "Computer Vision", "Mobile Development", "Tangible Interfaces"],
         dimensions: ["hci"],
-        links: {
-            github: "https://github.com/birkancelik18"
-        },
+        links: {},
         date: "Jan - July 2021",
         details: {
             overview: "KART-ON Kodlama Oyunları (KART-ON Coding Games) is an innovative platform that enables children to learn programming concepts by coding games using physical programming cards. The platform uses computer vision to recognize cards through a camera, eliminating the need for computers and making programming education accessible with just smartphones or tablets. I developed this platform as part of the TUBITAK 2247-C Stajyer Araştırmacı Burs Programı (Research Intern Scholarship Program) at Koç University under the supervision of Prof. Dr. Tevfik Metin Sezgin. The project focuses on early programming education, supporting disadvantaged groups and promoting equal opportunities in education through low-cost, accessible solutions.",
@@ -285,7 +359,6 @@ const projectsData = [
         techStack: ["Python", "FastAPI", "SQLite", "Pandas", "SciPy", "OMOP CDM", "Data Integration", "Signal Processing", "Data Cleaning", "API Development", "Web Interface"],
         dimensions: ["biomedical"],
         links: {
-            github: "https://github.com/birkancelik18",
             pdf: "data/Politecnico_di_Milano___HBD___Report.pdf"
         },
         date: "2024-2025",
@@ -351,7 +424,6 @@ const projectsData = [
         techStack: ["Python", "MATLAB", "EEG", "Signal Processing", "Machine Learning", "BCI", "LDA", "XDAWN", "MNE-Python", "Lab Streaming Layer"],
         dimensions: ["biomedical"],
         links: {
-            github: "https://github.com/birkancelik18",
             pdf: "data/thought2text.pdf"
         },
         date: "2024",
@@ -420,6 +492,66 @@ const projectsData = [
         }
     },
     {
+        id: 11,
+        title: "Socrates AI: Real-Time Clinical Mentorship",
+        description: "Participated in the HSIL Hackathon (Harvard Health Systems Innovation Lab) — a global 2-day event held simultaneously in 30+ countries under the theme 'Building High-Value Health Systems: Leveraging AI'. The Milan edition took place on April 10–11, 2026, at MIND – Milano Innovation District, making it the first time Italy hosted this event.",
+        image: "images/socrates_demo.png",
+        techStack: ["Healthcare AI", "Clinical Decision Support", "Real-time NLP", "Mentorship Design", "LLM"],
+        dimensions: ["hci", "biomedical"],
+        links: {},
+        date: "2026",
+        details: {
+            overview: "The HSIL Hackathon, organized by Harvard's Health Systems Innovation Lab, is one of the world's largest healthcare innovation events — held simultaneously across 30+ countries with 500+ teams competing globally. The 2026 edition centered on the theme 'Building High-Value Health Systems: Leveraging AI', challenging participants to go from idea to working prototype in just two days.\n\nThe Milan edition (April 10–11, 2026) was historic: the first time Italy hosted this event. It took place at MIND – Milano Innovation District (Fondazione Triulza), with interdisciplinary teams drawn from across the city's top institutions — University of Milan, Politecnico di Milano, and Human Technopole — alongside partners including Federated Innovation @MIND and the Italian Society for AI in Medicine.\n\nParticipating in this environment was genuinely inspiring. It brought together engineers, clinicians, designers, and entrepreneurs around a single urgent question: how can AI be used to improve patient care, healthcare efficiency, and system sustainability without compromising the people at its core?\n\nAI will inevitably become part of the daily workflows of healthcare professionals — but it will also introduce new problems. Over time, we may find ourselves training a generation of physicians who struggle to diagnose even simple cases because they have become overly dependent on AI systems. Learning is inherently an active process — it requires practice, repetition, and critical thinking. If AI removes these opportunities, particularly for residents, it may weaken the development of essential clinical skills.\n\nThis creates a long-term risk. If residents are not given the opportunity to develop their skills through experience, then in the future we may face a shortage of deeply knowledgeable and capable physicians.\n\nThis is where our concept, Socrates AI, comes in.",
+            problem: "AI will inevitably become part of the daily workflows of healthcare professionals — but it will also introduce new problems. Over time, we may find ourselves training a generation of physicians who struggle to diagnose even simple cases because they have become overly dependent on AI systems. Learning is inherently an active process — it requires practice, repetition, and critical thinking. If AI removes these opportunities, particularly for residents, it may weaken the development of essential clinical skills. This creates a long-term risk: if residents are not given the opportunity to develop their skills through experience, we may face a future shortage of deeply knowledgeable and capable physicians.",
+            solution: "Rather than replacing clinicians, Socrates AI is designed to enhance their thinking. It listens to the conversation between a patient and a physician during a consultation and, instead of providing direct diagnoses, it supports the physician by suggesting better, more insightful questions. By prompting clinicians to think more deeply and broadly, Socrates introduces perspectives they may not have initially considered — the kinds of questions an experienced physician or consultant might typically raise during a later review. In this way, Socrates brings expert-level guidance into the consultation in real time, effectively embedding continuous mentorship into everyday practice.",
+            methodology: [
+                "Identified the core tension at the HSIL hackathon: most healthcare AI tools optimize for output speed, not for the quality of the clinician's reasoning process.",
+                "Defined a Socratic interaction model: the system guides clinical thought through targeted questions rather than delivering diagnoses directly.",
+                "Designed passive real-time listening so Socrates AI integrates into the resident's screen without interrupting or taking control of the patient consultation.",
+                "Built a continuous dialogue analysis loop that detects gaps — unexplored symptoms, unasked differentials, missing red flags — and surfaces them as prompts.",
+                "Framed each prompt as a mentor-level question: the kind an experienced consultant would raise in a ward review, now available in every consultation.",
+                "Designed an adaptive difficulty model: as the resident's competence grows, Socrates introduces increasingly sophisticated clinical cues.",
+                "Validated the concept with the HSIL hackathon panel, demonstrating that the approach addresses a genuine long-term risk in medical education under AI adoption."
+            ],
+            results: [
+                "Established a human-centered AI framework that strengthens clinical judgment rather than bypassing it.",
+                "Demonstrated real-time mentorship at scale: every resident in every consultation has access to expert-level guidance.",
+                "Designed an adaptive learning loop that personalizes prompt sophistication to the clinician's current skill level.",
+                "Proposed a responsible AI adoption principle for healthcare: AI will not replace us — it will enhance us.",
+                "Outlined a precedent for AI integration in other high-stakes domains where professional skill development must be preserved.",
+                "While this challenge will emerge across many fields adopting AI, healthcare is where this transformation begins — and the way we choose to implement AI here will set the precedent for its adoption in other domains."
+            ],
+            subpages: [
+                {
+                    id: "the-problem-with-ai-in-medicine",
+                    title: "The Risk Nobody Is Talking About",
+                    content: "AI will inevitably become part of the daily workflows of healthcare professionals — but it will also introduce new problems.\n\nOver time, we may find ourselves training a generation of physicians who struggle to diagnose even simple cases because they have become overly dependent on AI systems. Learning is inherently an active process — it requires practice, repetition, and critical thinking. If AI removes these opportunities, particularly for residents, it may weaken the development of essential clinical skills.\n\nThis creates a long-term risk. If residents are not given the opportunity to develop their skills through experience, then in the future we may face a shortage of deeply knowledgeable and capable physicians.\n\nWhile this challenge will emerge across many fields adopting AI, healthcare is where this transformation begins. The way we choose to implement AI here will set the precedent for its adoption in other domains."
+                },
+                {
+                    id: "how-socrates-works",
+                    title: "How Socrates AI Works",
+                    content: "Imagine a real clinical consultation. A patient sits with a resident physician, who begins asking questions to understand the symptoms and work toward a diagnosis.\n\nIn the background, Socrates AI is present — quietly listening to the conversation in real time. It is integrated into the resident's system and connected to their screen, but it does not interrupt or take control of the interaction.\n\nAs the consultation progresses, Socrates continuously analyzes the dialogue. When it detects gaps — important areas not yet explored or questions that could lead to a more accurate diagnosis — it provides subtle, real-time prompts on the resident's monitor. These prompts are not answers, but carefully crafted questions designed to guide the resident's thinking.\n\nThis approach challenges the practitioner to think more critically and broadly. Instead of passively receiving conclusions, the resident actively engages in the diagnostic process, supported by targeted guidance.\n\nOver time, this creates a powerful learning loop. With each patient interaction, the resident improves — learning how to ask better questions, recognize patterns, and approach cases with greater depth. At the same time, Socrates adapts, introducing increasingly sophisticated prompts as the resident's competence grows.",
+                    videos: [
+                        { url: "https://youtu.be/vjRRTCLOyP8", title: "Socrates AI Demo" }
+                    ]
+                },
+                {
+                    id: "mentorship-at-scale",
+                    title: "Mentorship at Scale",
+                    quote: "Once men turned their thinking over to machines in the hope that this would set them free. But that only permitted other men with machines to enslave them.",
+                    quoteAttribution: "Frank Herbert, Dune (1965)",
+                    content: "In essence, Socrates delivers a personalized mentorship experience. It brings the perspective of an experienced physician into every consultation, ensuring that each resident has access to high-quality guidance at all times.\n\nThis is not about replacing clinical judgment — it is about strengthening it. By embedding continuous, context-aware learning into daily practice, Socrates helps transform every patient interaction into an opportunity for growth.\n\nWe believe this is how AI should be integrated into healthcare — not as a replacement for human expertise, but as a tool to strengthen and elevate it.\n\nAI will not replace us; it will enhance us."
+                },
+                {
+                    id: "visit-simulation",
+                    title: "Visit Simulation: Practice Before the Real Thing",
+                    image: "images/socrates_as_case_simulation_tool.png",
+                    content: "Beyond real-time mentorship, Socrates offers an entirely different kind of experience: a visit simulation.\n\nThis is not an AI agent offering hints from the sidelines. It is a full, immersive clinical encounter — a resident sits down with a simulated patient, asks questions, gathers history, and works toward a diagnosis, exactly as they would in a real consultation room. The patient responds naturally, describes symptoms, expresses concerns, and reacts to how the conversation unfolds.\n\nThe resident must drive the entire interaction: deciding which questions to ask, in what order, and how to interpret the answers. Nothing is handed to them. Every diagnostic hypothesis has to be earned through the quality of the clinical encounter itself.\n\nAt the end of the simulation, Socrates provides a structured debrief — what was asked, what was missed, which red flags were explored and which were overlooked, and how the diagnostic reasoning compares to the expected clinical pathway for that case.\n\nThis is deliberate practice at its most realistic. Residents can face rare presentations, high-stakes scenarios, or simply repeat common cases until the pattern recognition becomes instinct — all without any risk to a real patient.\n\nThe simulation is not a feature. It is a completely different experience built on the same belief: that the best way to prepare a physician is to make them think, not to think for them."
+                }
+            ]
+        }
+    },
+    {
         id: 9,
         title: "ATLAS: Your Intelligent Travel Assistant",
         description: "Developed an intelligent mobile travel assistant that personalizes flight recommendations using AI and real-time flight data. Built with Flutter, Python FastAPI, Firebase, and integrated LLM agent powered by OpenAI GPT-4 Turbo. Features include personalized flight search, route tracking, push notifications, and conversational AI interface.",
@@ -427,7 +559,6 @@ const projectsData = [
         techStack: ["Flutter", "Python", "FastAPI", "Firebase", "LangChain", "OpenAI GPT-4", "Kiwi Tequila API", "Dart", "Cloud Functions"],
         dimensions: ["startup"],
         links: {
-            github: "https://github.com/birkancelik18",
             pdf: "data/Atlas - FinalReport.pdf"
         },
         date: "Spring 2024",
