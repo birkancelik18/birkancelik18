@@ -22,20 +22,22 @@ function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const navbar = document.getElementById('navbar');
 
-    // Mobile menu toggle
+    const setNavOpen = (open) => {
+        navMenu.classList.toggle('active', open);
+        navToggle.classList.toggle('active', open);
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.classList.toggle('nav-open', open);
+    };
+
     if (navToggle) {
         navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            navToggle.classList.toggle('active');
+            const isOpen = navMenu.classList.contains('active');
+            setNavOpen(!isOpen);
         });
     }
 
-    // Close mobile menu when clicking a link
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            navToggle.classList.remove('active');
-        });
+        link.addEventListener('click', () => setNavOpen(false));
     });
 
     // Smooth scrolling for navigation links
@@ -82,12 +84,18 @@ function renderAbout() {
     const aboutContent = document.getElementById('aboutContent');
     if (!aboutContent || !aboutData) return;
 
+    const metaParts = [aboutData.title, aboutData.location].filter(Boolean);
+
     aboutContent.innerHTML = `
         <div class="about-image-container">
-            <img src="${aboutData.profileImage}" alt="${aboutData.name}" class="about-image" onerror="this.style.display='none'">
+            <img src="${aboutData.profileImage}" alt="${aboutData.name}" class="about-image"
+                 loading="eager" decoding="async" fetchpriority="high"
+                 onerror="this.style.display='none'">
         </div>
         <div class="about-text">
-            <h2 class="about-title">${aboutData.title}</h2>
+            <h1 class="about-name">${aboutData.name}</h1>
+            ${aboutData.tagline ? `<p class="about-tagline">${aboutData.tagline}</p>` : ''}
+            ${metaParts.length ? `<p class="about-meta">${metaParts.join(' · ')}</p>` : ''}
             <p class="about-bio">${aboutData.bio}</p>
         </div>
     `;
@@ -97,14 +105,13 @@ function renderDimensions() {
     const dimensionsGrid = document.getElementById('dimensionsGrid');
     if (!dimensionsGrid || !dimensionsData) return;
 
-    const dimensions = [dimensionsData.hci, dimensionsData.startup, dimensionsData.biomedical];
+    const dimensions = Object.values(dimensionsData);
     
-    dimensionsGrid.innerHTML = dimensions.map(dim => {
-        // Get first highlight for quick preview
+    dimensionsGrid.innerHTML = dimensions.map((dim, idx) => {
         const quickHighlight = dim.pageContent?.highlights?.[0] || dim.description.substring(0, 80) + '...';
-        
+
         return `
-        <div class="dimension-card" data-dimension="${dim.id}">
+        <div class="dimension-card" data-dimension="${dim.id}" style="--reveal-index: ${idx};">
             <div class="dimension-card-header">
                 <div class="dimension-accent" style="background-color: ${dim.color}"></div>
             </div>
@@ -135,7 +142,7 @@ function renderProjects() {
     // Clear existing content
     projectsGrid.innerHTML = '';
 
-    projectsGrid.innerHTML = projectsData.map(project => {
+    projectsGrid.innerHTML = projectsData.map((project, pIdx) => {
         const dimensionsHTML = project.dimensions.map(dim => 
             `<span class="project-dimension" data-dimension="${dim}">${dimensionsData[dim]?.title || dim}</span>`
         ).join('');
@@ -164,9 +171,9 @@ function renderProjects() {
             : project.description;
         
         return `
-            <div class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}">
+            <div class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}" style="--reveal-index: ${pIdx};">
                 <div class="project-image-container">
-                    <img src="${project.image}" alt="${project.title}" class="project-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
+                    <img src="${project.image}" alt="${project.title}" class="project-image" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
                     <div class="project-overlay">
                         ${linksHTML}
                     </div>
@@ -188,27 +195,21 @@ function renderProjects() {
         `;
     }).join('');
 
-    // Add click handlers to project cards
-    setTimeout(() => {
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Don't navigate if clicking on links
-                if (e.target.closest('.project-link')) return;
-                
-                const projectId = parseInt(this.dataset.projectId);
-                navigateToProject(projectId);
-            });
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('.project-link')) return;
+            const projectId = parseInt(this.dataset.projectId);
+            navigateToProject(projectId);
         });
-        
-    }, 100);
+    });
 }
 
 function renderExperience() {
     const timeline = document.getElementById('timeline');
     if (!timeline || !experienceData) return;
 
-    timeline.innerHTML = experienceData.map(exp => `
-        <div class="timeline-item ${exp.type}">
+    timeline.innerHTML = experienceData.map((exp, idx) => `
+        <div class="timeline-item ${exp.type}" style="--reveal-index: ${idx};">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
                 <div class="timeline-date">${exp.date}</div>
@@ -226,11 +227,12 @@ function renderContact() {
 
     const socialLinksHTML = Object.entries(contactData.socialLinks)
         .filter(([key, value]) => value) // Only show if link exists
-        .map(([platform, url]) => 
-            `<a href="${url}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="${platform}">
-                ${platform.charAt(0).toUpperCase() + platform.slice(1)}
-            </a>`
-        ).join('');
+        .map(([platform, url]) => {
+            const label = platform.charAt(0).toUpperCase() + platform.slice(1);
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="${label}">
+                ${label}
+            </a>`;
+        }).join('');
 
     const phoneHTML = contactData.phone ? `<p class="contact-phone"><strong>Phone:</strong> ${contactData.phone}</p>` : '';
     const locationHTML = contactData.location ? `<p class="contact-location"><strong>Location:</strong> ${contactData.location}</p>` : '';
@@ -274,7 +276,6 @@ function renderContact() {
 // ============================================
 let sliderState = {
     currentIndex: 0,
-    visibleProjects: [],
     filteredProjects: []
 };
 
@@ -293,21 +294,12 @@ function initProjectFiltering() {
 
             const filter = this.dataset.filter;
 
-            // Filter projects
             const visibleCards = [];
             projectCards.forEach((card, index) => {
-                if (filter === 'all') {
-                    card.style.display = 'flex';
-                    visibleCards.push(index);
-                } else {
-                    const dimensions = card.dataset.dimensions.split(',');
-                    if (dimensions.includes(filter)) {
-                        card.style.display = 'flex';
-                        visibleCards.push(index);
-                    } else {
-                        card.style.display = 'none';
-                    }
-                }
+                const matches = filter === 'all'
+                    || card.dataset.dimensions.split(',').includes(filter);
+                card.classList.toggle('is-hidden', !matches);
+                if (matches) visibleCards.push(index);
             });
 
             // Update slider state
@@ -336,9 +328,7 @@ function initProjectsSlider() {
 
     if (!slider || !prevBtn || !nextBtn) return;
 
-    // Initialize visible projects (all projects initially)
     sliderState.filteredProjects = Array.from({ length: projectCards.length }, (_, i) => i);
-    sliderState.visibleProjects = projectCards;
 
     // Calculate items per view based on screen size
     // Since cards are now horizontal (image left, content right), show 1 at a time
@@ -397,17 +387,17 @@ function initProjectsSlider() {
     nextBtn.addEventListener('click', slideNext);
     prevBtn.addEventListener('click', slidePrev);
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
+        if (e.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+        if (e.target.closest('.project-feature-slider')) return;
         const projectsSection = document.getElementById('projects');
-        if (projectsSection && isElementInViewport(projectsSection)) {
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                slidePrev();
-            } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                slideNext();
-            }
+        if (!projectsSection || !isElementInViewport(projectsSection)) return;
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            slidePrev();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            slideNext();
         }
     });
 
@@ -471,23 +461,73 @@ function isElementInViewport(el) {
 // SCROLL ANIMATIONS
 // ============================================
 function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('fade-in-visible');
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    // Observe all sections
-    document.querySelectorAll('.section').forEach(section => {
-        observer.observe(section);
+    document.querySelectorAll('.section').forEach(section => observer.observe(section));
+
+    initScrollSpy();
+    initScrollProgress();
+}
+
+function initScrollSpy() {
+    const navLinks = Array.from(document.querySelectorAll('.nav-link[href^="#"]'));
+    if (!navLinks.length) return;
+
+    const linkBySection = new Map();
+    navLinks.forEach(link => {
+        const id = link.getAttribute('href').slice(1);
+        const section = document.getElementById(id);
+        if (section) linkBySection.set(section, link);
     });
+    if (!linkBySection.size) return;
+
+    const setActive = (link) => {
+        navLinks.forEach(l => {
+            if (l === link) {
+                l.setAttribute('aria-current', 'page');
+                l.classList.add('active');
+            } else {
+                l.removeAttribute('aria-current');
+                l.classList.remove('active');
+            }
+        });
+    };
+
+    const spy = new IntersectionObserver((entries) => {
+        const visible = entries
+            .filter(e => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const link = linkBySection.get(visible.target);
+        if (link) setActive(link);
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+
+    linkBySection.forEach((_, section) => spy.observe(section));
+}
+
+function initScrollProgress() {
+    let bar = document.getElementById('scrollProgress');
+    if (!bar) {
+        bar = document.createElement('div');
+        bar.id = 'scrollProgress';
+        bar.className = 'scroll-progress';
+        document.body.appendChild(bar);
+    }
+    const update = () => {
+        const doc = document.documentElement;
+        const scrollable = doc.scrollHeight - doc.clientHeight;
+        const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+        bar.style.transform = `scaleX(${pct / 100})`;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
 }
 
 // ============================================
@@ -652,7 +692,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
         return `
         <div class="dimension-project-card ${hasDetails}" data-project-id="${project.id}">
             <div class="dimension-project-image">
-                <img src="${project.image}" alt="${project.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
+                <img src="${project.image}" alt="${project.title}" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="dimension-project-content">
                 <div class="dimension-project-header">
@@ -705,27 +745,23 @@ function navigateToDimension(dimensionId, updateHistory = true) {
         </div>
     `;
 
-    // Add click handlers to project cards
-    setTimeout(() => {
-        document.querySelectorAll('.dimension-project-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const projectId = parseInt(this.dataset.projectId);
-                const project = projectsData.find(p => p.id === projectId);
-                if (project && project.details) {
-                    navigateToProject(projectId);
-                }
-            });
+    document.querySelectorAll('.dimension-project-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const projectId = parseInt(this.dataset.projectId);
+            const project = projectsData.find(p => p.id === projectId);
+            if (project && project.details) {
+                navigateToProject(projectId);
+            }
         });
-        
-        // Add breadcrumb home link
-        const breadcrumbLink = document.querySelector('.dimension-breadcrumb .breadcrumb-link');
-        if (breadcrumbLink) {
-            breadcrumbLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                navigateToHome();
-            });
-        }
-    }, 50);
+    });
+
+    const breadcrumbLink = document.querySelector('.dimension-breadcrumb .breadcrumb-link');
+    if (breadcrumbLink) {
+        breadcrumbLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateToHome();
+        });
+    }
 
     if (updateHistory) {
         window.history.pushState({ type: 'dimension', id: dimensionId }, '', `#dimension/${dimensionId}`);
@@ -816,12 +852,11 @@ function navigateToProject(projectId, updateHistory = true) {
                     ${project.details.gallery.map((item, index) => `
                         <article class="project-feature-card" data-index="${index}">
                             <div class="feature-card-media">
-                                <img src="${item.src}" alt="${item.caption || `PAIR LEGAL feature ${index + 1}`}" loading="lazy" onerror="this.style.display='none'">
+                                <img src="${item.src}" alt="${item.caption || `${project.title} feature ${index + 1}`}" loading="lazy" decoding="async" onerror="this.style.display='none'">
                             </div>
                             <div class="feature-card-body">
                                 <span class="feature-card-index">Feature ${index + 1}</span>
-                                <h4>${item.title || 'Workflow highlight'}</h4>
-                                <p>${item.caption || ''}</p>
+                                ${item.caption ? `<p>${item.caption}</p>` : ''}
                             </div>
                         </article>
                     `).join('')}
@@ -832,7 +867,7 @@ function navigateToProject(projectId, updateHistory = true) {
                     </svg>
                 </button>
             </div>
-            <div class="feature-slider-dots" role="tablist" aria-label="Feature slides"></div>
+            <div class="feature-slider-dots" aria-label="Feature slides"></div>
         </section>
     ` : '';
 
@@ -915,7 +950,7 @@ function navigateToProject(projectId, updateHistory = true) {
                     </div>
                 </div>
                 <div class="project-detail-image">
-                    <img src="${project.image}" alt="${project.title}" onerror="this.parentElement.style.display='none'">
+                    <img src="${project.image}" alt="${project.title}" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'">
                 </div>
             </div>
             
@@ -925,28 +960,24 @@ function navigateToProject(projectId, updateHistory = true) {
                 ${tocHTML}
                 <div class="project-detail-content">
                     <div class="project-detail-section" id="section-overview">
-                        <div class="section-anchor-label">Overview</div>
                         <h3>Overview</h3>
                         <p>${project.details.overview}</p>
                         ${project.details.teamPhoto ? `
-                            <div style="margin-top: var(--spacing-md); text-align: center;">
-                                <img src="${project.details.teamPhoto}" alt="${project.title} Team" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(250, 250, 249, 0.2);" onerror="this.style.display='none'">
-                                <p style="margin-top: var(--spacing-xs); color: rgba(255, 255, 255, 0.7); font-size: var(--font-size-sm);">The ${project.title} team</p>
+                            <div class="project-team-photo">
+                                <img src="${project.details.teamPhoto}" alt="${project.title} Team" loading="lazy" decoding="async" onerror="this.style.display='none'">
+                                <p>The ${project.title} team</p>
                             </div>
                         ` : ''}
                     </div>
                     <div class="project-detail-section" id="section-problem">
-                        <div class="section-anchor-label">Problem</div>
                         <h3>The Problem</h3>
                         <p>${project.details.problem}</p>
                     </div>
                     <div class="project-detail-section" id="section-solution">
-                        <div class="section-anchor-label">Solution</div>
                         <h3>The Solution</h3>
                         <p>${project.details.solution}</p>
                     </div>
                     <div class="project-detail-section" id="section-methodology">
-                        <div class="section-anchor-label">Methodology</div>
                         <h3>Methodology</h3>
                         <div class="methodology-steps">
                             ${project.details.methodology.map((item, idx) => `
@@ -963,7 +994,6 @@ function navigateToProject(projectId, updateHistory = true) {
                         </div>
                     </div>
                     <div class="project-detail-section" id="section-results">
-                        <div class="section-anchor-label">Results</div>
                         <h3>Results</h3>
                         <div class="results-grid">
                             ${project.details.results.map(item => {
@@ -982,7 +1012,6 @@ function navigateToProject(projectId, updateHistory = true) {
                     </div>
                     ${project.details.collaborators && project.details.collaborators.length > 0 ? `
                     <div class="project-detail-section" id="section-collaborators">
-                        <div class="section-anchor-label">Collaborators</div>
                         <h3>Collaborators</h3>
                         <ul class="collaborators-list">
                             ${project.details.collaborators.map(c => `
@@ -1007,35 +1036,27 @@ function navigateToProject(projectId, updateHistory = true) {
     // Initialize TOC scroll-spy and click handlers
     initTocScrollSpy();
 
-    // Add click handlers to subpage cards
     if (project.details.subpages && project.details.subpages.length > 0) {
-        setTimeout(() => {
-            document.querySelectorAll('.subpage-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const subpageId = this.dataset.subpageId;
-                    navigateToSubpage(projectId, subpageId);
-                });
-            });
-        }, 50);
-    }
-    
-    // Add breadcrumb navigation
-    setTimeout(() => {
-        const breadcrumbLinks = document.querySelectorAll('.project-breadcrumb .breadcrumb-link');
-        breadcrumbLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const action = this.dataset.action;
-                const dimensionId = this.dataset.dimension;
-                
-                if (action === 'home') {
-                    navigateToHome();
-                } else if (dimensionId) {
-                    navigateToDimension(dimensionId);
-                }
+        document.querySelectorAll('.subpage-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const subpageId = this.dataset.subpageId;
+                navigateToSubpage(projectId, subpageId);
             });
         });
-    }, 50);
+    }
+
+    document.querySelectorAll('.project-breadcrumb .breadcrumb-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const action = this.dataset.action;
+            const dimensionId = this.dataset.dimension;
+            if (action === 'home') {
+                navigateToHome();
+            } else if (dimensionId) {
+                navigateToDimension(dimensionId);
+            }
+        });
+    });
 
     if (updateHistory) {
         window.history.pushState({ type: 'project', id: projectId }, '', `#project/${projectId}`);
@@ -1067,50 +1088,21 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
 
     const dimension = dimensionsData[project.dimensions[0]];
     const primaryDimension = dimension;
-    
-    // Parse content with better structure
+
     const contentParagraphs = subpage.content.split('\n\n').filter(p => p.trim());
-    const allContent = contentParagraphs.join(' ');
-    
-    // Lead paragraph (first paragraph in larger font)
     const leadParagraph = contentParagraphs[0] || '';
-    
-    // Remaining content
     const bodyParagraphs = contentParagraphs.slice(1);
-    
-    // Generate a clear, impactful value proposition
-    const valueProposition = subpage.valueProposition || generateValueProposition(subpage.title, allContent);
 
-    // Extract key sentence for pull quote (find sentence with "enables", "allows", or longest sentence)
-    const pullQuote = extractPullQuote(allContent);
-
-    // Generate key points from content
-    const keyPoints = subpage.keyPoints || extractKeyPoints(subpage.title, allContent);
-    
-    // Featured image if available
     const featuredImageSrc = subpage.image || project.image;
     const featuredImageHTML = featuredImageSrc ? `
         <div class="subpage-featured-image">
-            <img src="${featuredImageSrc}" alt="${subpage.title}" onerror="this.parentElement.style.display='none'">
+            <img src="${featuredImageSrc}" alt="${subpage.title}" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'">
         </div>
     ` : '';
-    
-    const valuePropHTML = `
-        <div class="subpage-value-proposition">
-            <div class="value-prop-label">Key Insight</div>
-            <div class="value-prop-text">${valueProposition}</div>
-        </div>
-    `;
-    
+
     const leadHTML = leadParagraph ? `
         <div class="subpage-lead">
             <p>${leadParagraph}</p>
-        </div>
-    ` : '';
-    
-    const pullQuoteHTML = pullQuote ? `
-        <div class="subpage-pullquote">
-            <div class="subpage-pullquote-text">${pullQuote}</div>
         </div>
     ` : '';
 
@@ -1120,20 +1112,7 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
             ${subpage.quoteAttribution ? `<cite class="subpage-external-quote-attribution">- ${subpage.quoteAttribution}</cite>` : ''}
         </blockquote>
     ` : '';
-    
-    const keyPointsHTML = keyPoints.length > 0 ? `
-        <div class="subpage-key-points">
-            ${keyPoints.map((point, idx) => `
-                <div class="key-point-item">
-                    <span class="key-point-icon">${getKeyPointIcon(idx)}</span>
-                    <div class="key-point-title">${point.title}</div>
-                    <div class="key-point-description">${point.description}</div>
-                </div>
-            `).join('')}
-        </div>
-    ` : '';
-    
-    // Split body into sections for better readability
+
     const sectionsHTML = bodyParagraphs.length > 0 ? `
         <div class="subpage-sections">
             ${bodyParagraphs.map((para, idx) => {
@@ -1168,7 +1147,7 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
                     <a class="subpage-video-item" href="${video.url}" target="_blank" rel="noopener noreferrer">
                         <div class="subpage-video-label">${video.title}</div>
                         <div class="subpage-video-thumb">
-                            ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">` : ''}
+                            ${thumb ? `<img src="${thumb}" alt="${video.title}" loading="lazy" decoding="async" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">` : ''}
                             <div class="subpage-video-play">
                                 <svg viewBox="0 0 68 48" width="68" height="48" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#f00"/>
@@ -1225,8 +1204,6 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
             <div class="subpage-content">
                 ${leadHTML}
                 ${externalQuoteHTML}
-                ${subpage.plain ? '' : valuePropHTML}
-                ${subpage.plain ? '' : pullQuoteHTML}
                 ${sectionsHTML}
                 ${videosHTML}
                 ${ctaHTML}
@@ -1234,19 +1211,15 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
         </div>
     `;
 
-    // Setup breadcrumb navigation
     setupSubpageBreadcrumbs(projectId);
-    
-    // Setup CTA button click
-    setTimeout(() => {
-        const ctaButton = document.querySelector('.subpage-cta-button');
-        if (ctaButton) {
-            ctaButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                navigateToProject(projectId);
-            });
-        }
-    }, 50);
+
+    const ctaButton = document.querySelector('.subpage-cta-button');
+    if (ctaButton) {
+        ctaButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateToProject(projectId);
+        });
+    }
     
     // Setup reading progress indicator
     initReadingProgress();
@@ -1256,98 +1229,6 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Helper function to extract a pull quote
-function extractPullQuote(content) {
-    const sentences = content.split(/\.\s+/).filter(s => s.trim().length > 20);
-    
-    // Look for impactful sentences with keywords
-    const keywords = ['enables', 'allows', 'provides', 'delivers', 'ensures', 'transforms', 'creates'];
-    for (const sentence of sentences) {
-        const lower = sentence.toLowerCase();
-        for (const keyword of keywords) {
-            if (lower.includes(keyword) && sentence.length > 50 && sentence.length < 200) {
-                return sentence.trim() + '.';
-            }
-        }
-    }
-    
-    // Fall back to longest meaningful sentence
-    const meaningfulSentences = sentences.filter(s => s.length > 60 && s.length < 200);
-    if (meaningfulSentences.length > 0) {
-        return meaningfulSentences[0].trim() + '.';
-    }
-    
-    return null;
-}
-
-// Helper function to extract key points
-function extractKeyPoints(title, content) {
-    const keyPoints = [];
-    const lowerContent = content.toLowerCase();
-    const lowerTitle = title.toLowerCase();
-    
-    // Identify what this feature does based on title
-    if (lowerTitle.includes('review') || lowerTitle.includes('analysis')) {
-        keyPoints.push({
-            title: 'Automated Analysis',
-            description: 'Instantly processes and evaluates content'
-        });
-        keyPoints.push({
-            title: 'Smart Insights',
-            description: 'Provides actionable recommendations'
-        });
-    } else if (lowerTitle.includes('chat') || lowerTitle.includes('conversation')) {
-        keyPoints.push({
-            title: 'Interactive Dialog',
-            description: 'Natural conversation interface'
-        });
-        keyPoints.push({
-            title: 'Context Aware',
-            description: 'Understands your specific needs'
-        });
-    } else if (lowerTitle.includes('search') || lowerTitle.includes('find')) {
-        keyPoints.push({
-            title: 'Fast Discovery',
-            description: 'Finds relevant information instantly'
-        });
-        keyPoints.push({
-            title: 'Smart Matching',
-            description: 'Understands context and intent'
-        });
-    } else if (lowerTitle.includes('workflow') || lowerTitle.includes('pipeline')) {
-        keyPoints.push({
-            title: 'Streamlined Process',
-            description: 'Simplifies complex workflows'
-        });
-        keyPoints.push({
-            title: 'Efficient Execution',
-            description: 'Saves time and reduces errors'
-        });
-    }
-    
-    // Add generic benefits
-    if (keyPoints.length < 3) {
-        keyPoints.push({
-            title: 'User Friendly',
-            description: 'Intuitive interface and experience'
-        });
-    }
-    if (keyPoints.length < 3 && lowerContent.includes('ai')) {
-        keyPoints.push({
-            title: 'AI Powered',
-            description: 'Leverages advanced machine learning'
-        });
-    }
-    
-    return keyPoints.slice(0, 3); // Return max 3 key points
-}
-
-// Helper function to get icon for key points
-function getKeyPointIcon(index) {
-    const icons = ['⚡', '🎯', '💡', '🚀', '✨', '🔧'];
-    return icons[index % icons.length];
 }
 
 // Initialize reading progress indicator
@@ -1416,89 +1297,22 @@ function initTocScrollSpy() {
     _tocScrollHandler();
 }
 
-// Helper function to generate a value proposition
-function generateValueProposition(title, content) {
-    // Extract the essence of what this feature/component delivers
-    const lowerTitle = title.toLowerCase();
-    const lowerContent = content.toLowerCase();
-    
-    // Look for key action verbs in the first 2 sentences
-    const firstSentences = content.split(/\.\s+/).slice(0, 2).join('. ');
-    const lowerFirst = firstSentences.toLowerCase();
-    
-    // Extract value from common patterns
-    if (lowerFirst.includes('enables') || lowerFirst.includes('allows')) {
-        const match = firstSentences.match(/(?:enables|allows)[^.]+\./i);
-        if (match) {
-            let value = match[0].trim();
-            // Clean up the sentence to focus on the value
-            value = value.replace(/^(The\s+\w+\s+)?(enables|allows)\s+/i, '');
-            value = value.charAt(0).toUpperCase() + value.slice(1);
-            return value;
-        }
-    }
-    
-    if (lowerFirst.includes('provides')) {
-        const match = firstSentences.match(/provides[^.]+\./i);
-        if (match) {
-            let value = match[0].trim();
-            value = value.replace(/^(The\s+\w+\s+)?provides\s+/i, '');
-            value = value.charAt(0).toUpperCase() + value.slice(1);
-            return value;
-        }
-    }
-    
-    // Extract main action from the content
-    const actionMatch = content.match(/(?:orchestrates|implements|delivers|manages|handles|processes|creates|builds)[^.]+\./i);
-    if (actionMatch) {
-        return actionMatch[0].trim();
-    }
-    
-    // Generate based on title patterns - make it more direct and benefit-focused
-    if (lowerTitle.includes('review') || lowerTitle.includes('analysis')) {
-        return 'Automates review processes to save time and ensure consistency.';
-    } else if (lowerTitle.includes('chat') || lowerTitle.includes('conversation')) {
-        return 'Provides instant, context-aware assistance for faster decision-making.';
-    } else if (lowerTitle.includes('search') || lowerTitle.includes('find')) {
-        return 'Finds relevant information instantly across your entire document library.';
-    } else if (lowerTitle.includes('workflow') || lowerTitle.includes('pipeline')) {
-        return 'Streamlines complex processes into a simple, efficient workflow.';
-    } else if (lowerTitle.includes('processing') || lowerTitle.includes('data')) {
-        return 'Processes data accurately and efficiently with built-in validation.';
-    } else if (lowerTitle.includes('interface') || lowerTitle.includes('ui') || lowerTitle.includes('ux')) {
-        return 'Makes complex tasks simple with an intuitive, user-friendly interface.';
-    }
-    
-    // Default - extract first meaningful sentence
-    const firstSentence = content.split(/\.\s+/)[0] + '.';
-    if (firstSentence.length < 150) {
-        return firstSentence;
-    }
-    
-    return `Delivers ${title.toLowerCase()} with reliability and ease of use.`;
-}
-
 function setupSubpageBreadcrumbs(projectId) {
-    // Add click handlers to breadcrumb
-    setTimeout(() => {
-        const breadcrumbLinks = document.querySelectorAll('.subpage-breadcrumb .breadcrumb-link');
-        breadcrumbLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const action = this.dataset.action;
-                const dimensionId = this.dataset.dimension;
-                const projectIdAttr = this.dataset.projectId;
-                
-                if (action === 'home') {
-                    navigateToHome();
-                } else if (dimensionId) {
-                    navigateToDimension(dimensionId);
-                } else if (projectIdAttr) {
-                    navigateToProject(parseInt(projectIdAttr));
-                }
-            });
+    document.querySelectorAll('.subpage-breadcrumb .breadcrumb-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const action = this.dataset.action;
+            const dimensionId = this.dataset.dimension;
+            const projectIdAttr = this.dataset.projectId;
+            if (action === 'home') {
+                navigateToHome();
+            } else if (dimensionId) {
+                navigateToDimension(dimensionId);
+            } else if (projectIdAttr) {
+                navigateToProject(parseInt(projectIdAttr));
+            }
         });
-    }, 50);
+    });
 }
 
 // ============================================
@@ -1525,7 +1339,11 @@ function initFeatureSliders() {
             const dots = dotsContainer.querySelectorAll('.feature-slider-dot');
             dots.forEach((dot, idx) => {
                 dot.classList.toggle('active', idx === currentIndex);
-                dot.setAttribute('aria-selected', idx === currentIndex ? 'true' : 'false');
+                if (idx === currentIndex) {
+                    dot.setAttribute('aria-current', 'true');
+                } else {
+                    dot.removeAttribute('aria-current');
+                }
             });
 
             if (headerCounter) {
@@ -1540,7 +1358,6 @@ function initFeatureSliders() {
                 const dot = document.createElement('button');
                 dot.className = 'feature-slider-dot';
                 dot.type = 'button';
-                dot.setAttribute('role', 'tab');
                 dot.setAttribute('aria-label', `Go to feature ${idx + 1}`);
                 dot.addEventListener('click', () => {
                     currentIndex = idx;
@@ -1579,65 +1396,3 @@ function initFeatureSliders() {
         update();
     });
 }
-
-// ============================================
-// MARKDOWN DOCUMENT VIEWER
-// ============================================
-function markdownToHtml(md) {
-    let html = md
-        .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
-        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/^---+$/gm, '<hr>');
-
-    // Wrap consecutive list items in <ul>
-    html = html.replace(/((?:^- .+\n?)+)/gm, (match) => {
-        const items = match.trim().split('\n').map(line =>
-            `<li>${line.replace(/^- /, '')}</li>`
-        ).join('');
-        return `<ul>${items}</ul>`;
-    });
-
-    // Wrap plain text lines in <p>
-    html = html.replace(/^(?!<[hup\/<]|<hr)(.+)$/gm, '<p>$1</p>');
-
-    return html;
-}
-
-function navigateToMarkdownDoc(url, label) {
-    const pageContainer = document.getElementById('pageContainer');
-    const pageContent = document.getElementById('pageContent');
-    const mainSections = document.querySelectorAll('.section, .footer');
-
-    if (!pageContainer || !pageContent) return;
-
-    pageContent.innerHTML = '<div class="markdown-doc-loading">Loading...</div>';
-    mainSections.forEach(section => { section.style.display = 'none'; });
-    pageContainer.classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    fetch(url)
-        .then(r => r.text())
-        .then(text => {
-            pageContent.innerHTML = `
-                <div class="markdown-doc">
-                    <div class="markdown-doc-body">${markdownToHtml(text)}</div>
-                </div>
-            `;
-        })
-        .catch(() => {
-            pageContent.innerHTML = '<div class="markdown-doc-loading">Failed to load document.</div>';
-        });
-}
-
-document.addEventListener('click', function(e) {
-    const link = e.target.closest('a[href$=".txt"]');
-    if (!link) return;
-    e.preventDefault();
-    const label = link.textContent.trim();
-    navigateToMarkdownDoc(link.getAttribute('href'), label);
-});
-

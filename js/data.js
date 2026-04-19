@@ -11,9 +11,10 @@
 const aboutData = {
     name: "Birkan Celik",
     title: "Computer Engineering Master's Student",
+    tagline: "HCI, biomedical signal processing, and AI systems.",
+    location: "Politecnico di Milano · Milan, Italy",
     bio: "I am a passionate computer engineering master's student at Politecnico di Milano with diverse interests spanning Human-Computer Interaction, and Biomedical Signal Processing. Through my work, I explore the intersection of technology and human experience, building AI systems, conducting research, and developing innovative solutions.",
-    profileImage: "images/birkan_furhat_selfie.jpg", // Add your profile image to the images folder
-   
+    profileImage: "images/birkan_furhat_selfie.jpg",
 };
 
 // ============================================
@@ -621,8 +622,6 @@ const projectsData = [
             ]
         }
     }
-    // Add more projects here by copying the structure above
-    // Remember to include a 'details' object with overview, problem, solution, methodology, results, and subpages
 ];
 
 // ============================================
