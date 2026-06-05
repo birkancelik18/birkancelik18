@@ -224,7 +224,7 @@ const projectsData = [
         techStack: ["MATLAB", "Python", "Deep Learning", "PyTorch", "TensorFlow", "EEG", "Signal Processing", "Spectral Analysis", "EEGLAB", "Independent Component Analysis"],
         dimensions: ["biomedical"],
         links: {
-            pdf: "data/Maths_Anxiety_and_cognitive_state_monitoring_for_neuroadaptive_learning_systems_using_electroencephalography.pdf"
+            github: "https://github.com/birkancelik18"
         },
         date: "2023",
         details: {
@@ -360,7 +360,7 @@ const projectsData = [
         techStack: ["Python", "FastAPI", "SQLite", "Pandas", "SciPy", "OMOP CDM", "Data Integration", "Signal Processing", "Data Cleaning", "API Development", "Web Interface"],
         dimensions: ["biomedical"],
         links: {
-            pdf: "data/Politecnico_di_Milano___HBD___Report.pdf"
+            github: "https://github.com/birkancelik18"
         },
         date: "2024-2025",
         details: {
@@ -425,7 +425,7 @@ const projectsData = [
         techStack: ["Python", "MATLAB", "EEG", "Signal Processing", "Machine Learning", "BCI", "LDA", "XDAWN", "MNE-Python", "Lab Streaming Layer"],
         dimensions: ["biomedical"],
         links: {
-            pdf: "data/thought2text.pdf"
+            github: "https://github.com/birkancelik18"
         },
         date: "2024",
         details: {
@@ -568,7 +568,7 @@ const projectsData = [
         techStack: ["Flutter", "Python", "FastAPI", "Firebase", "LangChain", "OpenAI GPT-4", "Kiwi Tequila API", "Dart", "Cloud Functions"],
         dimensions: ["startup"],
         links: {
-            pdf: "data/Atlas - FinalReport.pdf"
+            github: "https://github.com/birkancelik18"
         },
         date: "Spring 2024",
         details: {
@@ -618,6 +618,71 @@ const projectsData = [
                     id: "system-architecture",
                     title: "System Architecture",
                     content: "ATLAS follows a modular microservices architecture. The frontend is built with Flutter for cross-platform mobile development. The backend uses Python with FastAPI for REST endpoints and WebSocket for LLM agent communication. Firebase provides authentication, Cloud Firestore for data storage, and Cloud Functions for background tasks. The flight search service acts as a middle layer between the app and Kiwi Tequila API, converting data formats. The LLM service integrates with OpenAI and uses FAISS for vector storage of airport codes. This modular approach allows each component to be developed independently and easily adapted to other applications."
+                }
+            ]
+        }
+    },
+    {
+        id: 10,
+        title: "Adaptive Prevention of Computer Vision Syndrome with Edge-Based Camera-Only Smart Glasses",
+        description: "Designed a camera-only smart glasses system that autonomously mitigates Computer Vision Syndrome (CVS) by operationalizing the 20-20-20 rule. A front-facing micro-camera and an on-device edge AI agent (MobileNetV1) discriminate active screen use from non-digital near-work in real time, triggering unobtrusive haptic micro-vibrations once 20 continuous minutes of screen viewing are accumulated. Runs entirely on an ESP32 microcontroller, preserving privacy and battery without any cloud processing.",
+        image: "images/smart_glass_image_cvs.jpg",
+        techStack: ["MobileNetV1", "Edge Impulse", "TensorFlow", "Computer Vision", "Edge AI", "ESP32 / ESP-EYE", "int8 Quantization", "Haptic Feedback", "SolidWorks", "3D Printing"],
+        dimensions: ["hci", "biomedical"],
+        links: {
+            github: "https://github.com/birkancelik18",
+            pdf: "docs/reports/Adaptive%20Prevention%20of%20Computer%20Vision%20Syndrome%20with%20Edge-Based%20Camera-Only%20Smart%20Glasses.pdf"
+        },
+        date: "2025 - 2026",
+        details: {
+            teamPhoto: "images/group_photo_cvs_helper.jpg",
+            team: "Andrea Florian, Birkan Çelik, Edoardo Meschi, Matteo Maiani & Mattia Rocco",
+            overview: "This project, developed at Politecnico di Milano, presents a camera-only smart glasses system engineered to autonomously mitigate Computer Vision Syndrome (CVS) caused by prolonged near-vision use of digital screens. Rather than functioning as a static timer, the system operates as a dynamic, adaptive mechanism that adjusts in real time to user behavior: a front-facing micro-camera and an edge computing processor running a local AI agent analyze the egocentric visual stream to discriminate active, light-emitting screen use from non-digital near-work, and trigger unobtrusive haptic micro-vibrations once an unbroken screen-viewing threshold is accumulated. By processing the visual stream entirely on-device, the system guarantees user privacy while avoiding the latency, battery drain, and bulky multi-sensor arrays of existing wearable approaches. The work demonstrates that embedding complex vision tasks directly onto wearable edge devices is feasible, offering a privacy-preserving, low-power solution for CVS mitigation that is scalable to diverse digital platforms.",
+            problem: "The pervasive use of digital screens has catalyzed a global rise in Computer Vision Syndrome (CVS), with recent meta-analyses establishing a pooled global prevalence of 66% among device users, surging as high as 94.5% in university cohorts. Prolonged, uninterrupted near-vision work suppresses the blink reflex and leads to visual exhaustion, tension headaches, dry eyes, and degraded sleep. The clinically endorsed 20-20-20 rule (every 20 minutes, look at something 20 feet away for 20 seconds) is an effective countermeasure, but enforcing it is hard. Existing solutions fall short: software timers are 'blind' to real context and brutally interrupt focus, causing habituation; external webcams are location-bound and raise privacy concerns; multi-sensor wearables (RGB + IMU + LiDAR) are bulky, overheat, and drain quickly; and egocentric-vision systems that stream video to the cloud negate privacy and exhaust batteries in minutes.",
+            solution: "We developed a smart glasses system that relies strictly on the visual stream from an embedded forward-facing micro-camera to detect digital screen exposure in real time, performing all inference locally on an ESP32 microcontroller. A lightweight MobileNetV1 classifier samples the egocentric field of view at 1 FPS and outputs a probability that an active, light-emitting screen is present. A rolling exposure timer accumulates continuous screen time; once an unbroken 20-minute threshold is reached, the microprocessor drives a haptic motor to deliver a discreet vibration cue, prompting the user to look away without disruptive visual or auditory alerts. The system then runs a 20-second break countdown, and adaptively resets the main timer whenever a natural break of 20+ continuous screen-free seconds is detected, ensuring the workflow is never interrupted unnecessarily. To make the model robust, confounding elements such as bright windows and reflective surfaces were folded into the screen-absent class, extending the classifier's decision boundary to real-world conditions.",
+            methodology: [
+                "Custom Egocentric Dataset: Constructed a purpose-built dataset (~982 annotated frames) of first-person, head-mounted footage to close the domain gap between public third-person datasets and the real glasses' field of view, lens distortion, and screen-glare dynamics. Two binary classes were defined: screen-active (looking at a screen) and screen-absent (looking away). The training set comprised 686 images (370 screen-active, 316 screen-absent).",
+                "Dataset Diversity & Confounders: Recorded multiple screen types (monitors, laptops, smartphones), lighting conditions (daylight, fluorescent, low-light), and natural viewing distances/head tilts characteristic of CVS postures. Bright windows, reflective/glossy surfaces, and external TVs/projectors were deliberately incorporated as negative samples so the model learns the discriminative features of an emissive screen rather than raising false alarms.",
+                "Edge ML Architecture: Employed transfer learning on a pre-trained MobileNetV1 (96x96 input, width multiplier alpha=0.1, 27,648 input features) whose depthwise separable convolutions make real-time inference feasible on microcontrollers. The final dense layer was replaced with a custom 8-neuron layer + 0.1 dropout, followed by a 2-node output layer for the binary screen vs. no-screen task.",
+                "Training: Trained on the Edge Impulse platform over 40 epochs with a learning rate of 0.0005 and GPU acceleration. Data augmentation was enabled to increase variance and improve generalization. Images were resized to 96x96 using a 'fit shortest' scaling mode.",
+                "Adaptive 20-20-20 Logic & Haptic Feedback: Implemented a rolling exposure timer that triggers a haptic micro-vibration after 20 continuous minutes of detected screen use, runs a 20-second break countdown, and automatically resets the main timer when a natural 20+ second screen-free break is detected, so users are never interrupted needlessly.",
+                "Edge Deployment & Optimization: Compiled the trained model into an Arduino library using the Edge Impulse EON Compiler, which reduced RAM usage by 18% and Flash usage by 34% without sacrificing accuracy. Targeted an Espressif ESP-EYE (ESP32 @ 240MHz). The int8 quantized model requires only 194.9 KB RAM and 182.1 KB Flash, with total inference latency of 934 ms per image (15 ms DSP + 919 ms neural network).",
+                "Physical Prototype: Modeled the wearable in SolidWorks around the dimensional constraints of the ESP32 camera module and fabricated it via additive manufacturing (3D printing), integrating a frontal camera for an egocentric viewpoint and a dedicated housing for the haptic motor connected to the embedded processing unit."
+            ],
+            results: [
+                "Achieved 94.87% accuracy (int8) and 95.51% accuracy (float32) on a completely unseen hold-out test set (N=156), with a macro-average F1-score stable at 0.95 across both data types — indicating the model identifies the presence and absence of a screen equally well, without bias toward either class.",
+                "Demonstrated negligible accuracy degradation from int8 quantization while dropping computational load, validating the feasibility of embedding complex computer vision directly on-device.",
+                "Reached sub-second-class on-device inference (934 ms per image) on an ESP32 microcontroller, with a minimal memory footprint (194.9 KB RAM, 182.1 KB Flash).",
+                "Cut RAM usage by 18% and Flash usage by 34% via the EON Compiler, with no loss of accuracy.",
+                "Delivered a functional 3D-printed wearable prototype integrating the ESP32 camera board and a haptic motor, proving the physical feasibility of the designed interaction.",
+                "Eliminated cloud dependency entirely, processing the visual stream locally to guarantee user privacy and avoid streaming latency and rapid battery drain.",
+                "Extended the classifier's robustness to real-world confounders (bright windows, reflective surfaces, external displays) by incorporating them into the negative class, reducing false alarms."
+            ],
+            subpages: [
+                {
+                    id: "20-20-20-rule",
+                    title: "The 20-20-20 Rule and Adaptive Logic",
+                    content: "The clinically endorsed 20-20-20 rule recommends that for every 20 minutes of screen use, a person looks at an object roughly 20 feet (optical infinity) away for 20 seconds, restoring tear film stability and releasing intraocular muscular tension. Conventional timer apps enforce this with rigid, context-blind countdowns that fire even when the user is already resting, causing habituation and disruption. Our system instead operationalizes the rule dynamically. The camera samples the field of view at a low 1 FPS to preserve battery, and a rolling exposure timer accumulates only continuous screen time. When an unbroken 20-minute threshold is reached, the microprocessor triggers a discreet haptic vibration cue prompting the user to look away; the system then runs a 20-second break countdown and notifies the user with a second haptic cue when the break is complete. Crucially, if the camera stops detecting an active screen for at least 20 continuous seconds during the 20-minute window, the main timer resets automatically — the system assumes a sufficient natural break was already taken, ensuring the user's workflow is never interrupted unnecessarily."
+                },
+                {
+                    id: "egocentric-dataset",
+                    title: "Custom Egocentric Dataset and Confounders",
+                    content: "A central challenge for robust on-device inference is the domain gap between publicly available image datasets — which predominantly feature third-person viewpoints — and the actual first-person (egocentric) perspective of a head-mounted micro-camera, with its unique angles, lens distortions, and screen-glare dynamics. To address this, a custom egocentric dataset of approximately 982 annotated frames was constructed using a micro-camera module matching the final glasses' specifications, mounted on a wearable frame to naturally simulate head movements and CVS postures. Frames were labelled into two binary classes: screen-active (the user is looking at a screen) and screen-absent (the user is looking away, satisfying the rest condition). The training set held 686 images (370 screen-active, 316 screen-absent). To prevent false positives from visually similar high-luminance stimuli, confounding samples — bright windows, reflective and glossy surfaces, and televisions or projectors outside the user's primary working context — were deliberately incorporated into the screen-absent class. This taught the model to learn the discriminative features that distinguish an emissive working screen from other bright or reflective stimuli, extending its decision boundary to real-world conditions without needing additional label categories."
+                },
+                {
+                    id: "edge-ml-model",
+                    title: "Edge ML Model and Quantization",
+                    content: "To accurately detect screen exposure on computationally limited hardware, the system uses transfer learning built on MobileNetV1, a class of highly efficient convolutional neural networks designed for mobile and embedded vision. MobileNetV1 replaces standard convolutions with depthwise separable convolutions, factorizing each operation into a depthwise stage (one filter per input channel) and a pointwise stage that linearly combines the outputs — drastically reducing both computational cost and model size. The specific variant is MobileNetV1 96x96 with width multiplier alpha=0.1 (input layer of 27,648 features for the RGB channels), uniformly scaling down the number of filters per layer for an extremely compact backbone. The pre-trained dense head was removed and replaced with a custom 8-neuron dense layer with 0.1 dropout, followed by a 2-node output layer for the binary screen vs. no-screen task. Training ran for 40 epochs on the Edge Impulse platform (learning rate 0.0005, data augmentation enabled). On the unseen test set the model reached 95.51% accuracy (float32) and 94.87% (int8) with a stable 0.95 macro-F1. A key finding was the minimal impact of int8 quantization on predictive power: the quantized model dropped computational load with negligible accuracy degradation, confirming that complex on-device vision is feasible for smart wearables where privacy, power efficiency, and real-time processing are paramount."
+                },
+                {
+                    id: "hardware-prototype",
+                    title: "Hardware and 3D-Printed Prototype",
+                    content: "A critical requirement was seamless deployment on a microcontroller. The trained model was compiled into a standard Arduino library using the Edge Impulse EON Compiler, which reduced RAM usage by 18% and Flash (ROM) usage by 34% without sacrificing accuracy. Performance profiling targeted an Espressif ESP-EYE (ESP32 running at 240MHz): the quantized int8 model requires only 194.9 KB of RAM and 182.1 KB of Flash, with a total inference latency of 934 ms per image (15 ms for digital signal processing and 919 ms for the neural network). To validate physical feasibility, a functional wearable prototype was modeled in SolidWorks and engineered around the dimensional constraints of the ESP32 camera module, then fabricated through additive manufacturing (3D printing) for rapid iteration and ergonomic evaluation. The frame integrates a frontally positioned camera to capture an egocentric viewpoint corresponding to the user's natural perspective, alongside a dedicated housing for the haptic motor connected to the embedded processing unit. The current prototype serves as a proof-of-concept demonstrating the interaction experience and operational feasibility; future industrial design work would miniaturize the electronics for integration within the dimensions of commercially viable smart glasses."
+                },
+                {
+                    id: "privacy-future-work",
+                    title: "Privacy, Impact, and Future Work",
+                    content: "Unlike egocentric-vision systems that stream video to the cloud — negating privacy, introducing latency, and draining batteries in minutes — this system analyzes the visual data stream entirely locally and in real time. This circumvents external data transmission, guaranteeing the absolute user privacy lacking in prior models while eliminating unnecessary hardware overhead and latency. The single-camera, edge-only architecture also answers the demand for seamless daily integration, avoiding the thickness, overheating, and power consumption of multi-sensor fusion arrays (RGB + IMU + LiDAR), and the silent haptic micro-vibrations enforce the 20-20-20 rule without abruptly interrupting the user's workflow. This creates an unobtrusive interaction model balancing functional precision, physical invisibility, and long-term computational sustainability. Future work focuses on three directions: (1) testing the prototype in real-world contexts with an adequate sample of individuals to scientifically measure its tangible effectiveness on ocular well-being; (2) broadening detection by expanding the custom dataset to recognize additional pervasive screens such as smartphones and tablets; and (3) maximizing model accuracy by significantly increasing the volume of reference images, exposing the network to a wider variety of real-world environments, reflections, and complex lighting conditions."
                 }
             ]
         }
