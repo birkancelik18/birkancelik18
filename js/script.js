@@ -198,17 +198,18 @@ function renderExperience() {
     const timeline = document.getElementById('timeline');
     if (!timeline || !experienceData) return;
 
-    timeline.innerHTML = experienceData.map((exp, idx) => `
-        <div class="timeline-item ${exp.type}" style="--reveal-index: ${idx};">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-                <div class="timeline-date">${exp.date}</div>
-                <h3 class="timeline-title">${exp.title}</h3>
-                <h4 class="timeline-organization">${exp.organization}</h4>
-                <p class="timeline-description">${exp.description}</p>
-            </div>
-        </div>
-    `).join('');
+    const rowsHTML = [...experienceData]
+        .sort((a, b) => b.sort - a.sort)
+        .map(exp => `
+            <div class="exp-row">
+                <div class="exp-row-main">
+                    <h3 class="exp-row-title">${exp.title}</h3>
+                    <span class="exp-row-org">${exp.organization}</span>
+                </div>
+                <span class="exp-row-period">${exp.period}</span>
+            </div>`).join('');
+
+    timeline.innerHTML = `<div class="exp-list">${rowsHTML}</div>`;
 }
 
 function renderContact() {

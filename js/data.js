@@ -692,72 +692,17 @@ const projectsData = [
 // ============================================
 // EXPERIENCE / TIMELINE
 // ============================================
-// To add new experience, copy the structure below
+// Minimal "highlight reel": one line per role. `sort` (YYYYMM start) drives the
+// newest-first order; `period` is the short label shown on the right.
 const experienceData = [
-    {
-        id: 1,
-        date: "Feb 2025 - Present",
-        title: "Master of Science, Computer Science and Engineering",
-        organization: "Politecnico di Milano",
-        description: "Pursuing advanced studies in Computer Science and Engineering with focus on HCI, biomedical signals, and AI systems.",
-        type: "education"
-    },
-    {
-        id: 2,
-        date: "Jan 2024 - Jan 2025",
-        title: "Applied AI Engineer",
-        organization: "Novus, Istanbul, Turkey",
-        description: "Built and deployed production-grade RAG pipelines, improving query response accuracy. Engineered intelligent agent orchestration frameworks, automating 50+ complex tasks. Developed conversational AI chatbots using fine-tuned LLMs. Mentored 4+ junior engineers on AI pipeline development.",
-        type: "work"
-    },
-    {
-        id: 3,
-        date: "Sep - Oct 2023",
-        title: "Research Internship",
-        organization: "University of Essex, Brain-Computer Interfaces & Neural Engineering Laboratory, Colchester, England",
-        description: "Preprocessed raw EEG data through spectral analysis. Engineered deep learning models for the classification of mental states. Supervised by Prof. Reinhold Scherer.",
-        type: "work"
-    },
-    {
-        id: 4,
-        date: "May - Nov 2023",
-        title: "Participant",
-        organization: "Google Developers Machine Learning Bootcamp, Remote",
-        description: "Completed Google Machine Learning Bootcamp, earning TensorFlow Developer Certificate and finishing the Deep Learning Specialization on Coursera. Competed in 2 Kaggle challenges.",
-        type: "work"
-    },
-    {
-        id: 5,
-        date: "June - Sep 2022",
-        title: "Robotics System and Autonomous Driving Engineering Intern",
-        organization: "Delivers.AI, Istanbul, Turkey",
-        description: "Implemented deep learning-based data labeling automation, increasing labeling speed 10x and improving accuracy by 50%. Researched and integrated low-cost camera solutions, decreasing hardware expenses by 80% while maintaining performance benchmarks.",
-        type: "work"
-    },
-    {
-        id: 6,
-        date: "Nov 2018 - June 2024",
-        title: "Undergraduate Researcher",
-        organization: "Koc University Intelligent User Interfaces Laboratory, Istanbul, Turkey",
-        description: "Developed sketch recognition models by integrating human perception principles, utilizing deep learning, real-time databases, and extensive data collection. Presented research at 2022 SIU Conference. Supervised by Prof. Dr. T. Metin Sezgin.",
-        type: "work"
-    },
-    {
-        id: 7,
-        date: "Jan - July 2021",
-        title: "STAR Research Intern",
-        organization: "The Scientific and Technological Research Council of Turkey (TUBITAK), Istanbul, Turkey",
-        description: "Contributed to the development of Kart-ON (Accessible e-Learning Interfaces), utilizing AI-powered mobile applications and tangible interfaces. Designed an AI-powered game utilizing tangibles to effectively teach programming concepts.",
-        type: "work"
-    },
-    {
-        id: 8,
-        date: "2019 - 2024",
-        title: "Bachelor of Science in Electrical and Electronics Engineering, Double Major in Computer Engineering",
-        organization: "Koc University, College of Engineering, 100% Scholarship",
-        description: "CGPA: 3.59 out of 4.0. Full-merit undergraduate scholarship recipient.",
-        type: "education"
-    }
+    { id: 1, sort: 202502, period: "2025 — Now", title: "M.Sc. Computer Science & Engineering", organization: "Politecnico di Milano", type: "education" },
+    { id: 2, sort: 202401, period: "2024 — 25",  title: "Applied AI Engineer",                  organization: "Novus",                  type: "work" },
+    { id: 3, sort: 202309, period: "2023",       title: "Research Intern",                      organization: "University of Essex · BCI Lab", type: "work" },
+    { id: 4, sort: 202305, period: "2023",       title: "Machine Learning Fellow",              organization: "Google ML Bootcamp",     type: "work" },
+    { id: 5, sort: 202206, period: "2022",       title: "Robotics & Autonomous Driving Intern", organization: "Delivers.AI",            type: "work" },
+    { id: 7, sort: 202101, period: "2021",       title: "STAR Research Intern",                 organization: "TÜBİTAK",                type: "work" },
+    { id: 6, sort: 201811, period: "2018 — 24",  title: "Undergraduate Researcher",             organization: "Koç University · IUI Lab", type: "work" },
+    { id: 8, sort: 201909, period: "2019 — 24",  title: "B.Sc. Electrical & Computer Engineering", organization: "Koç University",      type: "education" }
 ];
 
 // ============================================
