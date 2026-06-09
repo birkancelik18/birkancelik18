@@ -623,7 +623,7 @@ const projectsData = [
         }
     },
     {
-        id: 10,
+        id: 12,
         title: "Adaptive Prevention of Computer Vision Syndrome with Edge-Based Camera-Only Smart Glasses",
         description: "Designed a camera-only smart glasses system that autonomously mitigates Computer Vision Syndrome (CVS) by operationalizing the 20-20-20 rule. A front-facing micro-camera and an on-device edge AI agent (MobileNetV1) discriminate active screen use from non-digital near-work in real time, triggering unobtrusive haptic micro-vibrations once 20 continuous minutes of screen viewing are accumulated. Runs entirely on an ESP32 microcontroller, preserving privacy and battery without any cloud processing.",
         image: "images/smart_glass_image_cvs.jpg",
