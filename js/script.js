@@ -74,7 +74,6 @@ function initDynamicContent() {
     renderAbout();
     renderDimensions();
     renderProjects();
-    initProjectsSlider();
     initProjectFiltering();
     renderExperience();
     renderContact();
@@ -155,14 +154,6 @@ function renderProjects() {
             </div>
         ` : '';
 
-        const techStackHTML = project.techStack.map(tech => 
-            `<span class="tech-tag">${tech}</span>`
-        ).join('');
-
-        // Get key highlight from details if available - make it concise
-        const keyHighlight = project.details?.results?.[0] 
-            ? (project.details.results[0].length > 120 ? project.details.results[0].substring(0, 120) + '...' : project.details.results[0])
-            : (project.details?.overview ? (project.details.overview.length > 120 ? project.details.overview.substring(0, 120) + '...' : project.details.overview) : '');
         const hasSubpages = project.details?.subpages && project.details.subpages.length > 0;
         
         // Truncate description to be more concise (max 150 characters)
@@ -171,27 +162,19 @@ function renderProjects() {
             : project.description;
         
         return `
-            <div class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}" style="--reveal-index: ${pIdx};">
-                <div class="project-image-container">
-                    <img src="${project.image}" alt="${project.title}" class="project-image" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
-                    <div class="project-overlay">
+            <article class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}" style="--reveal-index: ${pIdx};" tabindex="0" role="button" aria-label="${project.title}">
+                <img src="${project.image}" alt="${project.title}" class="project-image" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22400%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
+                ${hasSubpages ? '<div class="project-subpages-badge">Details</div>' : ''}
+                <div class="project-card-date">${project.date}</div>
+                <div class="project-overlay">
+                    <div class="project-dimensions">${dimensionsHTML}</div>
+                    <h3 class="project-title">${project.title}</h3>
+                    <div class="project-reveal">
+                        <p class="project-description">${truncatedDescription}</p>
                         ${linksHTML}
                     </div>
-                    ${hasSubpages ? '<div class="project-subpages-badge">Details</div>' : ''}
                 </div>
-                <div class="project-content">
-                    <div class="project-header-row">
-                        <div class="project-dimensions">${dimensionsHTML}</div>
-                        <div class="project-date-badge">${project.date}</div>
-                    </div>
-                    <h3 class="project-title">${project.title}</h3>
-                    ${keyHighlight ? `<div class="project-key-result">
-                        <span class="result-text">${keyHighlight}</span>
-                    </div>` : ''}
-                    <p class="project-description">${truncatedDescription}</p>
-                    <div class="project-tech">${techStackHTML}</div>
-                </div>
-            </div>
+            </article>
         `;
     }).join('');
 
@@ -200,6 +183,13 @@ function renderProjects() {
             if (e.target.closest('.project-link')) return;
             const projectId = parseInt(this.dataset.projectId);
             navigateToProject(projectId);
+        });
+        card.addEventListener('keydown', function(e) {
+            if (e.target.closest('.project-link')) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigateToProject(parseInt(this.dataset.projectId));
+            }
         });
     });
 }
@@ -272,14 +262,6 @@ function renderContact() {
 }
 
 // ============================================
-// PROJECT SLIDER STATE
-// ============================================
-let sliderState = {
-    currentIndex: 0,
-    filteredProjects: []
-};
-
-// ============================================
 // PROJECT FILTERING
 // ============================================
 function initProjectFiltering() {
@@ -294,167 +276,13 @@ function initProjectFiltering() {
 
             const filter = this.dataset.filter;
 
-            const visibleCards = [];
-            projectCards.forEach((card, index) => {
+            projectCards.forEach(card => {
                 const matches = filter === 'all'
                     || card.dataset.dimensions.split(',').includes(filter);
                 card.classList.toggle('is-hidden', !matches);
-                if (matches) visibleCards.push(index);
             });
-
-            // Update slider state
-            sliderState.filteredProjects = visibleCards;
-            sliderState.currentIndex = 0;
-            
-            // Update slider and dots
-            if (typeof window.updateSlider === 'function') {
-                window.updateSlider();
-            }
-            if (typeof window.updateSliderDots === 'function') {
-                window.updateSliderDots();
-            }
         });
     });
-}
-
-// ============================================
-// PROJECTS SLIDER
-// ============================================
-function initProjectsSlider() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const slider = document.querySelector('.projects-slider');
-    const projectCards = document.querySelectorAll('.project-card');
-
-    if (!slider || !prevBtn || !nextBtn) return;
-
-    sliderState.filteredProjects = Array.from({ length: projectCards.length }, (_, i) => i);
-
-    // Calculate items per view based on screen size
-    // Since cards are now horizontal (image left, content right), show 1 at a time
-    function getItemsPerView() {
-        return 1; // Always show one project card at a time
-    }
-
-    function updateSlider() {
-        const itemsPerView = getItemsPerView();
-        const visibleCount = sliderState.filteredProjects.length;
-        const maxIndex = Math.max(0, visibleCount - itemsPerView);
-        sliderState.currentIndex = Math.min(sliderState.currentIndex, maxIndex);
-
-        if (visibleCount === 0) {
-            slider.style.transform = 'translateX(0px)';
-            prevBtn.disabled = true;
-            nextBtn.disabled = true;
-            return;
-        }
-
-        // Get the first visible card width
-        const firstVisibleIndex = sliderState.filteredProjects[0];
-        const firstCard = projectCards[firstVisibleIndex];
-        if (!firstCard) return;
-
-        const cardWidth = firstCard.offsetWidth || 0;
-        const gap = parseInt(getComputedStyle(slider).gap) || 16;
-        const translateX = -(sliderState.currentIndex * (cardWidth + gap));
-
-        slider.style.transform = `translateX(${translateX}px)`;
-
-        // Update button states
-        prevBtn.disabled = sliderState.currentIndex === 0;
-        nextBtn.disabled = sliderState.currentIndex >= maxIndex || visibleCount <= itemsPerView;
-    }
-
-    function slideNext() {
-        const itemsPerView = getItemsPerView();
-        const maxIndex = Math.max(0, sliderState.filteredProjects.length - itemsPerView);
-        if (sliderState.currentIndex < maxIndex) {
-            sliderState.currentIndex++;
-            updateSlider();
-            updateSliderDots();
-        }
-    }
-
-    function slidePrev() {
-        if (sliderState.currentIndex > 0) {
-            sliderState.currentIndex--;
-            updateSlider();
-            updateSliderDots();
-        }
-    }
-
-    // Event listeners
-    nextBtn.addEventListener('click', slideNext);
-    prevBtn.addEventListener('click', slidePrev);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.target.matches('input, textarea, select, [contenteditable="true"]')) return;
-        if (e.target.closest('.project-feature-slider')) return;
-        const projectsSection = document.getElementById('projects');
-        if (!projectsSection || !isElementInViewport(projectsSection)) return;
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            slidePrev();
-        } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            slideNext();
-        }
-    });
-
-    // Handle window resize
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            updateSlider();
-            updateSliderDots();
-        }, 250);
-    });
-
-    // Initialize slider
-    updateSlider();
-    updateSliderDots();
-
-    // Make updateSlider and updateSliderDots available globally for filtering
-    window.updateSlider = updateSlider;
-    window.updateSliderDots = updateSliderDots;
-}
-
-function updateSliderDots() {
-    const dotsContainer = document.getElementById('sliderDots');
-    if (!dotsContainer) return;
-
-    const itemsPerView = 1; // Always show one project at a time
-    const visibleCount = sliderState.filteredProjects.length;
-    const totalSlides = Math.ceil(visibleCount / itemsPerView);
-
-    dotsContainer.innerHTML = '';
-
-    // Only show dots if there are more items than can fit in one view
-    if (totalSlides <= 1) {
-        return;
-    }
-
-    for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('button');
-        dot.className = `slider-dot ${i === Math.floor(sliderState.currentIndex / itemsPerView) ? 'active' : ''}`;
-        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-        dot.addEventListener('click', () => {
-            sliderState.currentIndex = i * itemsPerView;
-            if (typeof window.updateSlider === 'function') {
-                window.updateSlider();
-            }
-            updateSliderDots();
-        });
-        dotsContainer.appendChild(dot);
-    }
-}
-
-function isElementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-    const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-    const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-    return rect.top < viewHeight && rect.bottom > 0 && rect.left < viewWidth && rect.right > 0;
 }
 
 // ============================================
