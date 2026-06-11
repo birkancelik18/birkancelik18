@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initNavigation() {
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('.nav-link, .nav-logo');
     const navbar = document.getElementById('navbar');
 
     const setNavOpen = (open) => {
@@ -45,8 +45,15 @@ function initNavigation() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
+
+            // If a detail page is open, exit it back to the main page first so the
+            // target section is visible (and has a layout position) before scrolling.
+            const pageContainer = document.getElementById('pageContainer');
+            if (pageContainer && !pageContainer.classList.contains('hidden')) {
+                navigateToHome();
+            }
+
             const targetSection = document.querySelector(targetId);
-            
             if (targetSection) {
                 const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
                 window.scrollTo({
