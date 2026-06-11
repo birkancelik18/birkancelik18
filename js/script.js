@@ -700,26 +700,6 @@ function navigateToProject(projectId, updateHistory = true) {
         </section>
     ` : '';
 
-    // Create quick summary box
-    const quickSummary = `
-        <div class="project-quick-summary">
-            <div class="summary-item">
-                <span class="summary-label">The Problem</span>
-                <p class="summary-text">${project.details.problem}</p>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">The Solution</span>
-                <p class="summary-text">${project.details.solution}</p>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Key Results</span>
-                <div class="summary-results">
-                    ${project.details.results.slice(0, 4).map(r => `<div class="summary-result-badge">${r}</div>`).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-
     const primaryDimension = dimensionsData[project.dimensions[0]];
     const readingMinutes = estimateReadingTime(getProjectFullText(project));
 
@@ -783,7 +763,6 @@ function navigateToProject(projectId, updateHistory = true) {
                 </div>
             </div>
             
-            ${quickSummary}
             ${galleryHTML}
             <div class="project-detail-content-wrapper">
                 ${tocHTML}

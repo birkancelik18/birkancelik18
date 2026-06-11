@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Birkan Celik - Computer Engineering Master's student at Politecnico di Milano. Showcasing projects, research, and experience in HCI, Start Up, and Biomedical Signals.">
+    <meta property="og:title" content="Birkan Celik - Computer Engineering Master's Student">
+    <meta property="og:description" content="Computer Engineering Master's student at Politecnico di Milano. Exploring HCI, Biomedical Signals, and AI.">
+    <meta property="og:type" content="website">
+    <title>Birkan Celik - Computer Engineering Master's Student</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="images/birkan_furhat_selfie.jpg">
+<style>.section{opacity:1!important;transform:none!important;min-height:auto!important}</style></head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#about" class="nav-logo">Birkan Celik</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#dimensions" class="nav-link">Dimensions</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main">
+    <!-- Hero/About Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-content" id="aboutContent">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Dimensions Section -->
+    <section id="dimensions" class="section dimensions-section">
+        <div class="container">
+            <span class="section-eyebrow">Focus areas</span>
+            <h2 class="section-title">Dimensions</h2>
+            <p class="section-subtitle">Different facets of my work and interests</p>
+            <div class="dimensions-grid" id="dimensionsGrid">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="container">
+            <span class="section-eyebrow">Selected work</span>
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">Showcase of my work over the years</p>
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="hci">HCI</button>
+                <button class="filter-btn" data-filter="startup">Startup Ideas</button>
+                <button class="filter-btn" data-filter="biomedical">Healthcare & AI</button>
+            </div>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Dimension/Project Page Container -->
+    <div id="pageContainer" class="page-container hidden">
+        <button class="back-button" id="backButton" aria-label="Back to main page">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+        </button>
+        <div class="page-content" id="pageContent">
+            <!-- Content will be dynamically generated -->
+        </div>
+    </div>
+
+    <!-- Experience/Timeline Section -->
+    <section id="experience" class="section experience-section">
+        <div class="container">
+            <span class="section-eyebrow">Background</span>
+            <h2 class="section-title">Experience</h2>
+            <p class="section-subtitle">My journey and achievements</p>
+            <div class="timeline" id="timeline">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <span class="section-eyebrow">Get in touch</span>
+            <h2 class="section-title">Contact</h2>
+            <p class="section-subtitle">Let's talk</p>
+            <div class="contact-content" id="contactContent">
+                <!-- Content will be dynamically generated from data.js -->
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/data.js" defer></script>
+    <script src="js/script.js" defer></script>
+</body>
+</html>
+
