@@ -665,7 +665,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
             <div class="dimension-project-content">
                 <div class="dimension-project-header">
                     <h3 class="dimension-project-title">${project.title}</h3>
-                    ${project.details ? '<span class="project-details-badge">View Details →</span>' : ''}
+                    ${project.details ? '<span class="project-details-badge">View project ↗</span>' : ''}
                 </div>
                 <p class="dimension-project-description">${project.description}</p>
                 <div class="dimension-project-footer">
@@ -682,29 +682,30 @@ function navigateToDimension(dimensionId, updateHistory = true) {
     pageContent.innerHTML = `
         <div class="dimension-page">
             <div class="dimension-breadcrumb">
-                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <a href="#projects" class="breadcrumb-link" data-action="home">Portfolio</a>
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-current">${dimension.title}</span>
             </div>
-            <div class="dimension-page-header" style="border-left: 4px solid ${dimension.color}">
+            <div class="dimension-page-header">
                 <div class="dimension-page-title-section">
+                    <span class="detail-eyebrow">Areas of practice</span>
                     <h1 class="dimension-page-title">${dimension.title}</h1>
-                    <h2 class="dimension-page-subtitle">${dimension.subtitle}</h2>
+                    <p class="dimension-page-subtitle">${dimension.subtitle}</p>
                 </div>
             </div>
             <div class="dimension-projects-section-top">
-                <h3 class="dimension-projects-title">Projects</h3>
+                <h2 class="dimension-projects-title">Selected projects</h2>
                 <div class="dimension-projects-list">
                     ${projectsHTML}
                 </div>
             </div>
             <div class="dimension-page-content">
                 <div class="dimension-overview">
-                    <h3>Overview</h3>
+                    <h2>Overview</h2>
                     <p>${dimension.pageContent.overview}</p>
                 </div>
                 <div class="dimension-research-areas">
-                    <h3>Research Areas</h3>
+                    <h2>Research areas</h2>
                     <div class="research-areas-grid">
                         ${dimension.pageContent.researchAreas.map(area => `<span class="research-area-tag">${area}</span>`).join('')}
                     </div>
@@ -728,6 +729,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
     const breadcrumbLink = document.querySelector('.dimension-breadcrumb .breadcrumb-link');
     if (breadcrumbLink) {
         breadcrumbLink.addEventListener('click', function(e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
             e.preventDefault();
             navigateToHome();
         });
@@ -768,7 +770,7 @@ function navigateToProject(projectId, updateHistory = true) {
 
     const subpagesHTML = project.details.subpages && project.details.subpages.length > 0 ? `
         <div class="project-subpages">
-            <h3>Explore Components</h3>
+            <h2>Explore the project</h2>
             <div class="subpages-grid">
                 ${project.details.subpages.map((subpage, index) => {
                     // Get first sentence or first 120 chars as preview
@@ -778,8 +780,8 @@ function navigateToProject(projectId, updateHistory = true) {
                     return `
                     <a href="#project/${project.id}/${subpage.id}" class="subpage-card" data-subpage-id="${subpage.id}">
                         <div class="subpage-card-header">
-                            <div class="subpage-card-number">${index + 1}</div>
-                            <h4>${subpage.title}</h4>
+                            <span class="subpage-card-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                            <h3>${subpage.title}</h3>
                         </div>
                         <p class="subpage-card-preview">${preview}</p>
                         <div class="subpage-card-footer">
@@ -877,9 +879,9 @@ function navigateToProject(projectId, updateHistory = true) {
         </div>
         <div class="project-detail-page">
             <div class="project-breadcrumb">
-                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <a href="#projects" class="breadcrumb-link" data-action="home">Portfolio</a>
                 <span class="breadcrumb-separator">/</span>
-                <a href="#" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
+                <a href="#dimension/${project.dimensions[0]}" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-current">${project.title}</span>
             </div>
@@ -913,7 +915,7 @@ function navigateToProject(projectId, updateHistory = true) {
                 ${tocHTML}
                 <div class="project-detail-content">
                     <div class="project-detail-section" id="section-overview">
-                        <h3>Overview</h3>
+                        <h2>Overview</h2>
                         <p>${project.details.overview}</p>
                         ${project.details.teamPhoto ? `
                             <div class="project-team-photo">
@@ -923,15 +925,15 @@ function navigateToProject(projectId, updateHistory = true) {
                         ` : ''}
                     </div>
                     <div class="project-detail-section" id="section-problem">
-                        <h3>The Problem</h3>
+                        <h2>The problem</h2>
                         <p>${project.details.problem}</p>
                     </div>
                     <div class="project-detail-section" id="section-solution">
-                        <h3>The Solution</h3>
+                        <h2>The solution</h2>
                         <p>${project.details.solution}</p>
                     </div>
                     <div class="project-detail-section" id="section-methodology">
-                        <h3>Methodology</h3>
+                        <h2>Methodology</h2>
                         <div class="methodology-steps">
                             ${project.details.methodology.map((item, idx) => `
                                 <div class="methodology-step">
@@ -947,7 +949,7 @@ function navigateToProject(projectId, updateHistory = true) {
                         </div>
                     </div>
                     <div class="project-detail-section" id="section-results">
-                        <h3>Results</h3>
+                        <h2>Results</h2>
                         <div class="results-grid">
                             ${project.details.results.map(item => {
                                 const colonIdx = item.indexOf(':');
@@ -965,7 +967,7 @@ function navigateToProject(projectId, updateHistory = true) {
                     </div>
                     ${project.details.collaborators && project.details.collaborators.length > 0 ? `
                     <div class="project-detail-section" id="section-collaborators">
-                        <h3>Collaborators</h3>
+                        <h2>Collaborators</h2>
                         <ul class="collaborators-list">
                             ${project.details.collaborators.map(c => `
                             <li class="collaborator-item">
@@ -1002,6 +1004,7 @@ function navigateToProject(projectId, updateHistory = true) {
 
     document.querySelectorAll('.project-breadcrumb .breadcrumb-link').forEach(link => {
         link.addEventListener('click', function(e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
             e.preventDefault();
             const action = this.dataset.action;
             const dimensionId = this.dataset.dimension;
@@ -1121,12 +1124,27 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
         `;
     })() : '';
 
-    // CTA to return to project
+    const articles = project.details.subpages || [];
+    const articleIndex = articles.findIndex(item => item.id === subpageId);
+    const articleLink = (item, direction) => item ? `
+        <a href="#project/${projectId}/${item.id}" class="article-step article-step-${direction}" data-subpage-id="${item.id}">
+            <span class="article-step-label">${direction === 'previous' ? '← Previous article' : 'Next article →'}</span>
+            <span class="article-step-title">${item.title}</span>
+        </a>
+    ` : '';
+    const articleNavigationHTML = articles.length > 1 ? `
+        <nav class="article-pagination" aria-label="Project articles">
+            ${articleLink(articles[articleIndex - 1], 'previous')}
+            ${articleLink(articles[articleIndex + 1], 'next')}
+        </nav>
+    ` : '';
+
     const ctaHTML = `
         <div class="subpage-cta">
-            <div class="subpage-cta-title">Explore More About ${project.title}</div>
-            <div class="subpage-cta-text">Discover the full project details, methodology, and results.</div>
-            <a href="#" class="subpage-cta-button" data-project-id="${projectId}">View Full Project</a>
+            <span class="detail-eyebrow">Full case study</span>
+            <h2 class="subpage-cta-title">${project.cardTitle || project.title}</h2>
+            <p class="subpage-cta-text">Explore the methods, results, and project resources.</p>
+            <a href="#project/${projectId}" class="subpage-cta-button" data-project-id="${projectId}">View project <span aria-hidden="true">↗</span></a>
         </div>
     `;
     
@@ -1136,17 +1154,18 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
         </div>
         <div class="subpage-detail-page">
             <div class="subpage-breadcrumb">
-                <a href="#" class="breadcrumb-link" data-action="home">Home</a>
+                <a href="#projects" class="breadcrumb-link" data-action="home">Portfolio</a>
                 <span class="breadcrumb-separator">/</span>
-                <a href="#" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
+                <a href="#dimension/${project.dimensions[0]}" class="breadcrumb-link" data-dimension="${project.dimensions[0]}">${primaryDimension?.title || project.dimensions[0]}</a>
                 <span class="breadcrumb-separator">/</span>
-                <a href="#" class="breadcrumb-link" data-project-id="${projectId}">${project.title}</a>
+                <a href="#project/${projectId}" class="breadcrumb-link" data-project-id="${projectId}">${project.title}</a>
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-current">${subpage.title}</span>
             </div>
             
             <div class="subpage-hero">
                 <div class="subpage-header">
+                    <span class="detail-eyebrow">Project notes</span>
                     <h1 class="subpage-title">${subpage.title}</h1>
                     <div class="subpage-meta-row">
                         <div class="subpage-project-info">
@@ -1163,16 +1182,25 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
                 ${externalQuoteHTML}
                 ${sectionsHTML}
                 ${videosHTML}
+                ${articleNavigationHTML}
                 ${ctaHTML}
             </div>
         </div>
     `;
 
     setupSubpageBreadcrumbs(projectId);
+    pageContent.querySelectorAll('.article-step').forEach(link => {
+        link.addEventListener('click', event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            navigateToSubpage(projectId, link.dataset.subpageId);
+        });
+    });
 
     const ctaButton = document.querySelector('.subpage-cta-button');
     if (ctaButton) {
         ctaButton.addEventListener('click', (e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
             e.preventDefault();
             navigateToProject(projectId);
         });
@@ -1222,12 +1250,13 @@ function initTocScrollSpy() {
     // Smooth-scroll on click
     tocLinks.forEach(link => {
         link.addEventListener('click', function(e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
             e.preventDefault();
             const targetId = this.dataset.section;
             const target = document.getElementById(targetId);
             if (target) {
                 const offset = target.getBoundingClientRect().top + window.scrollY - 100;
-                window.scrollTo({ top: offset, behavior: 'smooth' });
+                window.scrollTo({ top: offset, behavior: motionBehavior() });
             }
         });
     });
@@ -1257,6 +1286,7 @@ function initTocScrollSpy() {
 function setupSubpageBreadcrumbs(projectId) {
     document.querySelectorAll('.subpage-breadcrumb .breadcrumb-link').forEach(link => {
         link.addEventListener('click', function(e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
             e.preventDefault();
             const action = this.dataset.action;
             const dimensionId = this.dataset.dimension;
