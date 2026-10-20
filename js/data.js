@@ -11,7 +11,7 @@
 const aboutData = {
     name: "Birkan Celik",
     title: "Computer Engineering Master's Student",
-    tagline: "AI systems, designed around people",
+    tagline: "AI systems, designed around people.",
     location: "Politecnico di Milano · Milan, Italy",
     bio: "I’m pursuing a master’s degree in Computer Science & Engineering at Politecnico di Milano. I build AI systems at the intersection of human-computer interaction and biomedical signals. My work connects research with practical tools for the people who use them.",
     profileImage: "images/birkan_furhat_selfie.jpg",
