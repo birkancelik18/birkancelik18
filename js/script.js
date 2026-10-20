@@ -5,6 +5,7 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functionality
+    initTheme();
     initNavigation();
     initSectionFocus();
     initDynamicContent();
@@ -13,6 +14,35 @@ document.addEventListener('DOMContentLoaded', function() {
     initRouting();
     setCurrentYear();
 });
+
+// ============================================
+// COLOR THEME
+// ============================================
+function initTheme() {
+    const root = document.documentElement;
+    const button = document.getElementById('themeToggle');
+    if (!button) return;
+    const label = button.querySelector('[data-theme-label]');
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    const applyTheme = theme => {
+        root.dataset.theme = theme;
+        const nextTheme = theme === 'light' ? 'dark' : 'light';
+        const action = `Switch to ${nextTheme} theme`;
+        button.setAttribute('aria-label', action);
+        button.title = action;
+        if (label) label.textContent = nextTheme === 'light' ? 'Light' : 'Dark';
+        themeColor?.setAttribute('content', theme === 'light' ? '#F8F7F4' : '#0F0E0D');
+    };
+    applyTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
+    button.addEventListener('click', () => {
+        const theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+        applyTheme(theme);
+        try { window.localStorage.setItem('portfolio-theme', theme); } catch (_) {}
+    });
+    window.addEventListener('storage', event => {
+        if (event.key === 'portfolio-theme') applyTheme(event.newValue === 'light' ? 'light' : 'dark');
+    });
+}
 
 // ============================================
 // NAVIGATION
@@ -51,7 +81,7 @@ function initNavigation() {
             event.preventDefault();
             setOpen(false, true);
         } else if (event.key === 'Tab') {
-            const targets = [toggle, ...menu.querySelectorAll('a')];
+            const targets = [...navbar.querySelectorAll('a[href], button')].filter(target => target.getClientRects().length > 0);
             const first = targets[0];
             const last = targets[targets.length - 1];
             if (event.shiftKey && document.activeElement === first) {

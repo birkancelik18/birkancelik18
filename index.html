@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" class="home-view">
+<html lang="en" class="home-view" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#0F0E0D">
     <meta name="description" content="Birkan Celik - Computer Engineering Master's student at Politecnico di Milano. Showcasing projects, research, and experience in human-computer interaction, AI products, and biomedical signals.">
     <meta property="og:title" content="Birkan Celik - Computer Engineering Master's Student">
     <meta property="og:description" content="Computer Engineering Master's student at Politecnico di Milano. Exploring HCI, Biomedical Signals, and AI.">
     <meta property="og:type" content="website">
     <title>Birkan Celik — Engineering, Research &amp; AI</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>
+        (() => {
+            let theme = 'dark';
+            try {
+                const saved = window.localStorage.getItem('portfolio-theme');
+                if (saved === 'light' || saved === 'dark') theme = saved;
+            } catch (_) {}
+            document.documentElement.dataset.theme = theme;
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#F8F7F4' : '#0F0E0D');
+        })();
+    </script>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,11 +34,6 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#about" class="nav-logo">Birkan Celik</a>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
@@ -33,6 +41,18 @@
                 <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
+            <div class="nav-actions">
+                <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light theme" title="Switch to light theme">
+                    <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+                    <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M20.4 13.2A8.5 8.5 0 0 1 10.8 3.6a8.5 8.5 0 1 0 9.6 9.6Z"/></svg>
+                    <span data-theme-label>Light</span>
+                </button>
+                <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
