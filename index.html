@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="home-view">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Birkan Celik - Computer Engineering Master's student at Politecnico di Milano. Showcasing projects, research, and experience in HCI, Start Up, and Biomedical Signals.">
+    <meta name="description" content="Birkan Celik - Computer Engineering Master's student at Politecnico di Milano. Showcasing projects, research, and experience in human-computer interaction, AI products, and biomedical signals.">
     <meta property="og:title" content="Birkan Celik - Computer Engineering Master's Student">
     <meta property="og:description" content="Computer Engineering Master's student at Politecnico di Milano. Exploring HCI, Biomedical Signals, and AI.">
     <meta property="og:type" content="website">
-    <title>Birkan Celik - Computer Engineering Master's Student</title>
+    <title>Birkan Celik — Engineering, Research &amp; AI</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +28,8 @@
             </button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#dimensions" class="nav-link">Dimensions</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#dimensions" class="nav-link">Focus Areas</a></li>
                 <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
@@ -44,36 +44,80 @@
                 <!-- Content will be dynamically generated from data.js -->
             </div>
         </div>
-    </section>
-
-    <!-- Dimensions Section -->
-    <section id="dimensions" class="section dimensions-section">
-        <div class="container">
-            <span class="section-eyebrow">Focus areas</span>
-            <h2 class="section-title">Dimensions</h2>
-            <p class="section-subtitle">Different facets of my work and interests</p>
-            <div class="dimensions-grid" id="dimensionsGrid">
-                <!-- Content will be dynamically generated from data.js -->
-            </div>
-        </div>
+        <nav class="section-wayfinding" aria-label="About section navigation">
+            <a href="#projects" class="section-step section-step-next" data-scroll-target aria-label="Next section: Projects">
+                <span class="section-step-text"><span class="section-step-label">Next</span><span class="section-step-name">Projects</span></span>
+                <span class="section-step-arrow" aria-hidden="true">↓</span>
+            </a>
+        </nav>
     </section>
 
     <!-- Projects Section -->
     <section id="projects" class="section projects-section">
         <div class="container">
-            <span class="section-eyebrow">Selected work</span>
-            <h2 class="section-title">Projects</h2>
-            <p class="section-subtitle">Showcase of my work over the years</p>
-            <div class="filter-buttons" id="filterButtons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="hci">HCI</button>
-                <button class="filter-btn" data-filter="startup">Startup Ideas</button>
-                <button class="filter-btn" data-filter="biomedical">Healthcare & AI</button>
+            <div class="projects-intro">
+                <div>
+                    <span class="section-eyebrow">01 / Portfolio</span>
+                    <h2 class="section-title" id="projectsHeading">Selected projects.</h2>
+                </div>
+                <p class="section-subtitle">Applied AI, human-computer interaction, and biomedical research.</p>
             </div>
-            <div class="projects-grid" id="projectsGrid">
+            <div class="project-gallery-toolbar">
+                <div class="filter-buttons" id="filterButtons" role="group" aria-label="Filter projects">
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="filter-btn" data-filter="biomedical" aria-pressed="false">Healthcare &amp; AI</button>
+                    <button class="filter-btn" data-filter="hci" aria-pressed="false">HCI</button>
+                    <button class="filter-btn" data-filter="startup" aria-pressed="false">Products &amp; Prototypes</button>
+                </div>
+                <div class="project-gallery-controls">
+                    <span class="project-position" id="projectPosition">01 / 09</span>
+                    <button type="button" class="gallery-arrow" id="projectsPrev" aria-label="Previous project" aria-controls="projectsGrid" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5m7 7-7-7 7-7"/></svg>
+                    </button>
+                    <button type="button" class="gallery-arrow" id="projectsNext" aria-label="Next project" aria-controls="projectsGrid">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <p class="visually-hidden" id="projectGalleryHelp">Swipe or scroll to explore projects. When the gallery is focused, use the arrow keys, Home, or End.</p>
+            <div class="projects-grid" id="projectsGrid" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Project gallery" aria-describedby="projectGalleryHelp">
+                <!-- Project slides are generated from data.js -->
+            </div>
+            <p class="visually-hidden" id="projectFilterStatus" role="status" aria-live="polite"></p>
+        </div>
+        <nav class="section-wayfinding" aria-label="Projects section navigation">
+            <a href="#about" class="section-step section-step-previous" data-scroll-target aria-label="Previous section: About">
+                <span class="section-step-arrow" aria-hidden="true">↑</span>
+                <span class="section-step-text"><span class="section-step-label">Previous</span><span class="section-step-name">About</span></span>
+            </a>
+            <a href="#dimensions" class="section-step section-step-next" data-scroll-target aria-label="Next section: Focus areas">
+                <span class="section-step-text"><span class="section-step-label">Next</span><span class="section-step-name">Focus areas</span></span>
+                <span class="section-step-arrow" aria-hidden="true">↓</span>
+            </a>
+        </nav>
+    </section>
+
+    <!-- Dimensions Section -->
+    <section id="dimensions" class="section dimensions-section" aria-labelledby="focusHeading">
+        <div class="container">
+            <div class="section-heading">
+                <div><span class="section-eyebrow">02 / Areas of practice</span><h2 class="section-title" id="focusHeading">Areas of focus.</h2></div>
+                <p class="section-subtitle">Three connected perspectives on people, technology, and the problems between them.</p>
+            </div>
+            <div class="dimensions-grid" id="dimensionsGrid">
                 <!-- Content will be dynamically generated from data.js -->
             </div>
         </div>
+        <nav class="section-wayfinding" aria-label="Focus areas section navigation">
+            <a href="#projects" class="section-step section-step-previous" data-scroll-target aria-label="Previous section: Projects">
+                <span class="section-step-arrow" aria-hidden="true">↑</span>
+                <span class="section-step-text"><span class="section-step-label">Previous</span><span class="section-step-name">Projects</span></span>
+            </a>
+            <a href="#experience" class="section-step section-step-next" data-scroll-target aria-label="Next section: Experience">
+                <span class="section-step-text"><span class="section-step-label">Next</span><span class="section-step-name">Experience</span></span>
+                <span class="section-step-arrow" aria-hidden="true">↓</span>
+            </a>
+        </nav>
     </section>
 
     <!-- Dimension/Project Page Container -->
@@ -90,34 +134,53 @@
     </div>
 
     <!-- Experience/Timeline Section -->
-    <section id="experience" class="section experience-section">
+    <section id="experience" class="section experience-section" aria-labelledby="experienceHeading">
         <div class="container">
-            <span class="section-eyebrow">Background</span>
-            <h2 class="section-title">Experience</h2>
-            <p class="section-subtitle">My journey and achievements</p>
+            <div class="section-heading">
+                <div><span class="section-eyebrow">03 / Background</span><h2 class="section-title" id="experienceHeading">Experience.</h2></div>
+                <p class="section-subtitle">A background in applied AI, research, and engineering.</p>
+            </div>
             <div class="timeline" id="timeline">
                 <!-- Content will be dynamically generated from data.js -->
             </div>
         </div>
+        <nav class="section-wayfinding" aria-label="Experience section navigation">
+            <a href="#dimensions" class="section-step section-step-previous" data-scroll-target aria-label="Previous section: Focus areas">
+                <span class="section-step-arrow" aria-hidden="true">↑</span>
+                <span class="section-step-text"><span class="section-step-label">Previous</span><span class="section-step-name">Focus areas</span></span>
+            </a>
+            <a href="#contact" class="section-step section-step-next" data-scroll-target aria-label="Next section: Contact">
+                <span class="section-step-text"><span class="section-step-label">Next</span><span class="section-step-name">Contact</span></span>
+                <span class="section-step-arrow" aria-hidden="true">↓</span>
+            </a>
+        </nav>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="section contact-section">
+    <section id="contact" class="section contact-section" aria-labelledby="contactHeading">
         <div class="container">
-            <span class="section-eyebrow">Get in touch</span>
-            <h2 class="section-title">Contact</h2>
-            <p class="section-subtitle">Let's talk</p>
+            <div class="section-heading">
+                <div><span class="section-eyebrow">04 / Contact</span><h2 class="section-title" id="contactHeading">Let’s talk.</h2></div>
+                <p class="section-subtitle">For research collaborations, thoughtful products, and interesting problems.</p>
+            </div>
             <div class="contact-content" id="contactContent">
                 <!-- Content will be dynamically generated from data.js -->
             </div>
         </div>
+        <nav class="section-wayfinding" aria-label="Contact section navigation">
+            <a href="#experience" class="section-step section-step-previous" data-scroll-target aria-label="Previous section: Experience">
+                <span class="section-step-arrow" aria-hidden="true">↑</span>
+                <span class="section-step-text"><span class="section-step-label">Previous</span><span class="section-step-name">Experience</span></span>
+            </a>
+        </nav>
     </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; <span id="currentYear"></span> All rights reserved.</p>
+        <div class="container footer-content">
+            <p>&copy; <span id="currentYear"></span> Birkan Celik</p>
+            <a href="#about" data-scroll-target>Back to top <span aria-hidden="true">↑</span></a>
         </div>
     </footer>
 

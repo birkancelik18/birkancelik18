@@ -11,9 +11,9 @@
 const aboutData = {
     name: "Birkan Celik",
     title: "Computer Engineering Master's Student",
-    tagline: "HCI, biomedical signal processing, and AI systems.",
+    tagline: "AI systems, designed around people",
     location: "Politecnico di Milano · Milan, Italy",
-    bio: "I am a passionate computer engineering master's student at Politecnico di Milano with diverse interests spanning Human-Computer Interaction, and Biomedical Signal Processing. Through my work, I explore the intersection of technology and human experience, building AI systems, conducting research, and developing innovative solutions.",
+    bio: "I’m pursuing a master’s degree in Computer Science & Engineering at Politecnico di Milano. I build AI systems at the intersection of human-computer interaction and biomedical signals. My work connects research with practical tools for the people who use them.",
     profileImage: "images/birkan_furhat_selfie.jpg",
 };
 
@@ -25,9 +25,10 @@ const dimensionsData = {
         id: "hci",
         title: "HCI",
         subtitle: "Human-Computer Interaction",
+        summary: "Sketch recognition, tangible interfaces, and accessible learning tools.",
         description: "Previously researched and developed sketch recognition models by integrating human perception principles at Koc University Intelligent User Interfaces Laboratory. Worked on accessible e-learning interfaces and tangible computing to improve human-computer interaction.",
         icon: "", // Removed emoji for elegant design
-        color: "#4A90E2",
+        color: "#B8B8B3",
         pageContent: {
             overview: "My work in Human-Computer Interaction focuses on creating more intuitive and accessible interfaces that bridge the gap between human cognition and digital systems. Through previous research at Koc University's Intelligent User Interfaces Laboratory, I explored how we can make technology more natural and inclusive.",
             highlights: [
@@ -46,11 +47,12 @@ const dimensionsData = {
     },
     startup: {
         id: "startup",
-        title: "Startup Ideas",
+        title: "Products & Prototypes",
         subtitle: "Personal Projects & Innovation",
+        summary: "AI applications and prototypes that turn an idea into a practical tool.",
         description: "Projects I work on in my free time alongside my studies and research. These include intelligent web applications and other innovative solutions that combine technical expertise with practical applications.",
         icon: "", // Removed emoji for elegant design
-        color: "#50C878",
+        color: "#B8B8B3",
         pageContent: {
             overview: "My startup ideas represent a space for experimentation and innovation. These initiatives allow me to explore new technologies, solve interesting problems, and build solutions that combine my technical skills with creative thinking.",
             highlights: [
@@ -70,9 +72,10 @@ const dimensionsData = {
         id: "biomedical",
         title: "Healthcare & AI",
         subtitle: "Healthcare Technology",
+        summary: "EEG signal processing, neural interfaces, and assistive communication.",
         description: "Researching brain-computer interfaces and neural engineering at University of Essex. Preprocessing EEG data through spectral analysis and engineering deep learning models for mental state classification to improve healthcare outcomes.",
         icon: "", // Removed emoji for elegant design
-        color: "#E74C3C",
+        color: "#B8B8B3",
         pageContent: {
             overview: "My research in biomedical signals focuses on understanding and interpreting neural data to create assistive technologies and improve healthcare outcomes. Working with EEG data and brain-computer interfaces, I develop deep learning models that can decode mental states and neural patterns.",
             highlights: [
@@ -100,7 +103,9 @@ const projectsData = [
     {
         id: 10,
         title: "PAIR LEGAL: AI-Powered Contract Copilot",
-        description: "A Microsoft Word add-in that turns contract review from hours of manual reading into minutes of AI analysis. It helps legal teams catch risks, keep language consistent, and review contracts up to 70% faster — all without leaving Word.",
+        cardTitle: "PAIR LEGAL",
+        cardSummary: "AI contract review inside Microsoft Word, with clause analysis, precedent search, and document Q&A.",
+        description: "A Microsoft Word add-in that automates first-pass contract review, helps legal teams spot risks, and keeps language consistent — all without leaving Word.",
         image: "images/Pair/how_pair_legal_initiates.png",
         techStack: ["React", "Office.js", "Fluent UI", "Azure Functions", "Node.js", "OpenAI", "RAG"],
         dimensions: ["startup"],
@@ -121,7 +126,7 @@ const projectsData = [
             ],
             results: [
                 "The whole review now happens in one window, so there is no switching between tools and fewer errors from things falling through the cracks.",
-                "Automatic analysis cuts review time by up to 70%, surfacing risks, missing clauses, and fixes in minutes instead of hours.",
+                "Automatic analysis surfaces risks, missing clauses, and suggested fixes for lawyer review.",
                 "Lawyers get a risk read and suggestions for any clause the instant they select it, which speeds up the call on whether to flag it.",
                 "Precedent language is searchable, so contracts stay consistent with the firm's standards instead of drifting deal to deal.",
                 "Finding a specific term is now a question, not a manual hunt through the document.",
@@ -179,6 +184,8 @@ const projectsData = [
     {
         id: 3,
         title: "Sketch Recognition Models",
+        cardTitle: "Sketch Recognition",
+        cardSummary: "Deep learning shaped by human perception, supported by crowdsourced data and in-person experiments.",
         description: "Sketch recognition models built around how people actually perceive drawings, developed at Koç University's Intelligent User Interfaces Laboratory (Nov 2018 – June 2024). The work combined deep learning with real-time databases and a large dataset gathered three ways: web scraping, Amazon MTurk crowdsourcing, and in-person experiments.",
         image: "images/sketch_recognition.png",
         techStack: ["Python", "Deep Learning", "TensorFlow", "PyTorch"],
@@ -219,6 +226,8 @@ const projectsData = [
     {
         id: 4,
         title: "EEG Mental State Classification",
+        cardTitle: "EEG Mental States",
+        cardSummary: "Signal processing and deep learning to investigate workload, math anxiety, fatigue, and attention.",
         description: "I contributed to an EEG study of the cognitive states people move through while solving math problems, run at the University of Essex Brain-Computer Interfaces & Neural Engineering Laboratory. My part was preprocessing the raw EEG through spectral analysis and building deep learning models for mental state classification, which fed into the team's identification of distinct neural patterns for Mental Workload, Math Anxiety, Fatigue, and Attention across participants with high and low math anxiety.",
         image: "images/mental_state.png",
         techStack: ["MATLAB", "Python", "Deep Learning", "PyTorch", "TensorFlow", "EEG", "Signal Processing", "Spectral Analysis", "EEGLAB", "Independent Component Analysis"],
@@ -293,6 +302,8 @@ const projectsData = [
     {
         id: 5,
         title: "KART-ON Kodlama Oyunları: Accessible Programming Education",
+        cardTitle: "KART-ON",
+        cardSummary: "Physical programming cards, everyday objects, and a smartphone make learning to code more accessible.",
         description: "KART-ON Coding Games, built at TÜBİTAK/Koç University, lets children program games by arranging physical cards that a camera reads. Built with p5.js and Teachable Machine, it brings early coding within reach without a computer — a smartphone and some everyday objects stand in for the programming blocks.",
         image: "images/karton.png",
         techStack: ["JavaScript", "p5.js", "Teachable Machine", "Computer Vision", "Mobile Development", "Tangible Interfaces"],
@@ -355,6 +366,8 @@ const projectsData = [
     {
         id: 7,
         title: "Health Big Data: Fetal Biosignals Integration Pipeline",
+        cardTitle: "Health Big Data",
+        cardSummary: "An integration pipeline connecting fetal biosignals and clinical records through the OMOP data model.",
         description: "An end-to-end pipeline for biosignal and clinical data from pregnant women and their fetuses, collected across several hospitals in Italy. It profiles, cleans, integrates, and migrates fetal heart rate (FHR), uterine contraction (TOCO), and clinical metadata into a relational SQLite database mapped to the OMOP Common Data Model — with a FastAPI service and a graphical interface on top for clinicians and researchers.",
         image: "images/hbd.png",
         techStack: ["Python", "FastAPI", "SQLite", "Pandas", "SciPy", "OMOP CDM", "Data Integration", "Signal Processing", "Data Cleaning", "API Development", "Web Interface"],
@@ -420,6 +433,8 @@ const projectsData = [
     {
         id: 8,
         title: "Thought2Text: Brain Computer Interface using P300 Signals to Generate Text",
+        cardTitle: "Thought2Text",
+        cardSummary: "A P300 brain-computer interface that turns EEG responses into text for assistive communication.",
         description: "A P300-based brain-computer interface (BCI) that lets people type using brain activity alone. Built to help individuals with severe motor disabilities, it reaches 90% accuracy and an 11 bits/min information transfer rate with an 8-channel g.tec EEG device and the classic row-column paradigm.",
         image: "images/thought2text.png",
         techStack: ["Python", "MATLAB", "EEG", "Signal Processing", "Machine Learning", "BCI", "LDA", "XDAWN", "MNE-Python", "Lab Streaming Layer"],
@@ -495,6 +510,8 @@ const projectsData = [
     {
         id: 11,
         title: "Socrates AI: Real-Time Clinical Mentorship",
+        cardTitle: "Socrates AI",
+        cardSummary: "A clinical mentorship prototype that asks better questions to support a physician’s reasoning.",
         description: "Socrates AI, built at the HSIL Hackathon (Harvard Health Systems Innovation Lab), is a clinical mentorship tool that listens in on a consultation and prompts the physician with sharper questions instead of handing over a diagnosis. The hackathon — a two-day event run simultaneously in 30+ countries under the theme 'Building High-Value Health Systems: Leveraging AI' — came to Milan on April 10–11, 2026, at MIND – Milano Innovation District, the first time Italy hosted it.",
         image: "images/socrates_demo.png",
         techStack: ["Healthcare AI", "Clinical Decision Support", "Real-time NLP", "Mentorship Design", "LLM"],
@@ -563,6 +580,8 @@ const projectsData = [
     {
         id: 9,
         title: "ATLAS: Your Intelligent Travel Assistant",
+        cardTitle: "ATLAS",
+        cardSummary: "A conversational travel assistant for personalized flight search, route tracking, and notifications.",
         description: "A mobile travel assistant that personalizes flight recommendations from real-time flight data. Built with Flutter, Python FastAPI, and Firebase, with an LLM agent powered by OpenAI GPT-4 Turbo. It does personalized flight search, route tracking, push notifications, and a conversational interface you can just talk to.",
         image: "images/atlas.png",
         techStack: ["Flutter", "Python", "FastAPI", "Firebase", "LangChain", "OpenAI GPT-4", "Kiwi Tequila API", "Dart", "Cloud Functions"],
@@ -625,6 +644,8 @@ const projectsData = [
     {
         id: 12,
         title: "Adaptive Prevention of Computer Vision Syndrome with Edge-Based Camera-Only Smart Glasses",
+        cardTitle: "Vision Care Glasses",
+        cardSummary: "Camera-only smart glasses that recognize screen use on-device and prompt regular visual breaks.",
         description: "Camera-only smart glasses that fight Computer Vision Syndrome (CVS) by enforcing the 20-20-20 rule on their own. A front-facing micro-camera feeds an on-device edge AI model (MobileNetV1) that tells active screen use apart from ordinary near-work in real time, and once you've looked at a screen for 20 unbroken minutes, a soft haptic buzz reminds you to look away. Everything runs on an ESP32 microcontroller — no cloud, so privacy and battery both stay intact.",
         image: "images/smart_glass_image_cvs.jpg",
         techStack: ["MobileNetV1", "Edge Impulse", "TensorFlow", "Computer Vision", "Edge AI", "ESP32 / ESP-EYE", "int8 Quantization", "Haptic Feedback", "SolidWorks", "3D Printing"],
@@ -709,7 +730,8 @@ const experienceData = [
 // CONTACT INFORMATION
 // ============================================
 const contactData = {
-    email: "birkan.celik@mail.polimi.it",
+    email: "birkancelik18@hotmail.com",
+    alternateEmail: "birkan.celik@mail.polimi.it",
     phone: "",
     location: "Milano, Italy",
     socialLinks: {

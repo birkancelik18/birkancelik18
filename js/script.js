@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functionality
     initNavigation();
+    initSectionFocus();
     initDynamicContent();
     initScrollAnimations();
     // initContactForm() is now called from renderContact()
@@ -16,71 +17,96 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================
 // NAVIGATION
 // ============================================
+function motionBehavior() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+}
+
 function initNavigation() {
-    const navToggle = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navMenu');
-    const navLinks = document.querySelectorAll('.nav-link, .nav-logo');
+    const toggle = document.getElementById('navToggle');
+    const menu = document.getElementById('navMenu');
     const navbar = document.getElementById('navbar');
+    if (!toggle || !menu || !navbar) return;
+    const mobile = window.matchMedia('(max-width: 768px)');
+    let open = false;
 
-    const setNavOpen = (open) => {
-        navMenu.classList.toggle('active', open);
-        navToggle.classList.toggle('active', open);
-        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const setOpen = (next, restoreFocus = false) => {
+        open = mobile.matches && next;
+        menu.classList.toggle('active', open);
+        toggle.classList.toggle('active', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        menu.inert = mobile.matches && !open;
+        if (menu.inert) menu.setAttribute('aria-hidden', 'true');
+        else menu.removeAttribute('aria-hidden');
         document.body.classList.toggle('nav-open', open);
+        document.documentElement.classList.toggle('nav-open', open);
+        if (restoreFocus) toggle.focus();
     };
+    toggle.addEventListener('click', () => setOpen(!open));
+    mobile.addEventListener('change', () => setOpen(false));
+    setOpen(false);
 
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            const isOpen = navMenu.classList.contains('active');
-            setNavOpen(!isOpen);
-        });
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => setNavOpen(false));
-    });
-
-    // Smooth scrolling for navigation links
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-
-            // If a detail page is open, exit it back to the main page first so the
-            // target section is visible (and has a layout position) before scrolling.
-            const pageContainer = document.getElementById('pageContainer');
-            if (pageContainer && !pageContainer.classList.contains('hidden')) {
-                navigateToHome();
+    document.addEventListener('keydown', event => {
+        if (!open) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            setOpen(false, true);
+        } else if (event.key === 'Tab') {
+            const targets = [toggle, ...menu.querySelectorAll('a')];
+            const first = targets[0];
+            const last = targets[targets.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault(); last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault(); first.focus();
             }
-
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Navbar background on scroll
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
         }
     });
+
+    document.addEventListener('click', event => {
+        const link = event.target.closest('.nav-link, .nav-logo, [data-scroll-target]');
+        if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const href = link.getAttribute('href');
+        if (!href || !href.startsWith('#') || href.includes('/')) return;
+        const section = document.getElementById(href.slice(1));
+        if (!section) return;
+        event.preventDefault();
+        setOpen(false);
+        navigateToHome(true, section.id);
+    });
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30), { passive: true });
 }
 
 // ============================================
-// DYNAMIC CONTENT RENDERING
+// HOME SECTION SCROLLING
 // ============================================
+function initSectionFocus() {
+    const updateEditingState = () => {
+        const active = document.activeElement;
+        const editing = active?.matches('input, textarea, select, [contenteditable="true"]') && active.closest('.contact-form');
+        document.documentElement.classList.toggle('editing-contact', Boolean(editing));
+    };
+    document.addEventListener('focusin', updateEditingState);
+    document.addEventListener('focusout', () => requestAnimationFrame(updateEditingState));
+}
+
+function setHomeView(isHome) {
+    document.documentElement.classList.toggle('home-view', isHome);
+    if (!isHome) document.documentElement.classList.remove('editing-contact');
+}
+
+function scrollToHomeSection(section, behavior = motionBehavior()) {
+    window.scrollTo({ top: Math.max(0, section.getBoundingClientRect().top + window.scrollY), behavior });
+}
+
+// ============================================
+// DYNAMIC CONTENT
+// ============================================
+
 function initDynamicContent() {
     renderAbout();
     renderDimensions();
     renderProjects();
+    initProjectCarousel();
     initProjectFiltering();
     renderExperience();
     renderContact();
@@ -89,134 +115,166 @@ function initDynamicContent() {
 function renderAbout() {
     const aboutContent = document.getElementById('aboutContent');
     if (!aboutContent || !aboutData) return;
-
-    const metaParts = [aboutData.title, aboutData.location].filter(Boolean);
-
     aboutContent.innerHTML = `
-        <div class="about-image-container">
-            <img src="${aboutData.profileImage}" alt="${aboutData.name}" class="about-image"
-                 loading="eager" decoding="async" fetchpriority="high"
-                 onerror="this.style.display='none'">
-        </div>
         <div class="about-text">
+            <p class="hero-eyebrow">Engineering · Research · Human experience</p>
             <h1 class="about-name">${aboutData.name}</h1>
-            ${aboutData.tagline ? `<p class="about-tagline">${aboutData.tagline}</p>` : ''}
-            ${metaParts.length ? `<p class="about-meta">${metaParts.join(' · ')}</p>` : ''}
+            <p class="about-tagline">${aboutData.tagline}</p>
             <p class="about-bio">${aboutData.bio}</p>
+            <div class="about-actions">
+                <a class="about-action-primary" href="#projects" data-scroll-target>Explore my work <span aria-hidden="true">↗</span></a>
+                <a class="about-action-secondary" href="#contact" data-scroll-target>Get in touch <span aria-hidden="true">→</span></a>
+            </div>
         </div>
+        <figure class="about-image-container">
+            <img src="${aboutData.profileImage}" alt="Birkan with Furhat, a social robot" class="about-image" width="512" height="512" loading="eager" decoding="async" fetchpriority="high">
+            <figcaption>Exploring the human side of technology.</figcaption>
+        </figure>
     `;
 }
 
 function renderDimensions() {
-    const dimensionsGrid = document.getElementById('dimensionsGrid');
-    if (!dimensionsGrid || !dimensionsData) return;
-
-    const dimensions = Object.values(dimensionsData);
-    
-    dimensionsGrid.innerHTML = dimensions.map((dim, idx) => {
-        const quickHighlight = dim.pageContent?.highlights?.[0] || dim.description.substring(0, 80) + '...';
-
-        return `
-        <div class="dimension-card" data-dimension="${dim.id}" style="--reveal-index: ${idx};">
-            <div class="dimension-card-header">
-                <div class="dimension-accent" style="background-color: ${dim.color}"></div>
-            </div>
+    const grid = document.getElementById('dimensionsGrid');
+    if (!grid || !dimensionsData) return;
+    grid.innerHTML = Object.values(dimensionsData).map((dimension, index) => `
+        <a href="#dimension/${dimension.id}" class="dimension-card" data-dimension="${dimension.id}" aria-label="Explore ${dimension.title}">
+            <span class="dimension-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
             <div class="dimension-card-content">
-                <h3 class="dimension-title">${dim.title}</h3>
-                <h4 class="dimension-subtitle">${dim.subtitle}</h4>
-                <div class="dimension-quick-highlight">
-                    <span>${quickHighlight}</span>
-                </div>
+                <h3 class="dimension-title">${dimension.title}</h3>
+                <p class="dimension-subtitle">${dimension.subtitle}</p>
+                <p class="dimension-summary">${dimension.summary || dimension.pageContent.highlights[0]}</p>
             </div>
-        </div>
-    `;
-    }).join('');
-
-    // Add click interaction to navigate to dimension page
-    document.querySelectorAll('.dimension-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const dimension = this.dataset.dimension;
-            navigateToDimension(dimension);
+            <span class="dimension-arrow" aria-hidden="true">↗</span>
+        </a>
+    `).join('');
+    grid.querySelectorAll('.dimension-card').forEach(link => {
+        link.addEventListener('click', event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            navigateToDimension(link.dataset.dimension);
         });
     });
 }
 
 function renderProjects() {
-    const projectsGrid = document.getElementById('projectsGrid');
-    if (!projectsGrid || !projectsData) return;
-
-    // Clear existing content
-    projectsGrid.innerHTML = '';
-
-    projectsGrid.innerHTML = projectsData.map((project, pIdx) => {
-        const dimensionsHTML = project.dimensions.map(dim => 
-            `<span class="project-dimension" data-dimension="${dim}">${dimensionsData[dim]?.title || dim}</span>`
-        ).join('');
-
-        const linksHTML = project.links ? `
-            <div class="project-links">
-                ${project.links.live ? `<a href="${project.links.live}" target="_blank" rel="noopener noreferrer" class="project-link">Live Demo</a>` : ''}
-                ${project.links.github ? `<a href="${project.links.github}" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>` : ''}
-                ${project.links.pdf ? `<a href="${project.links.pdf}" target="_blank" rel="noopener noreferrer" class="project-link">${project.links.pdfLabel || 'View PDF'}</a>` : ''}
-            </div>
-        ` : '';
-
-        const hasSubpages = project.details?.subpages && project.details.subpages.length > 0;
-        
-        // Truncate description to be more concise (max 150 characters)
-        const truncatedDescription = project.description && project.description.length > 150 
-            ? project.description.substring(0, 150).trim() + '...'
-            : project.description;
-        
+    const track = document.getElementById('projectsGrid');
+    if (!track || !projectsData) return;
+    // Cross-listed projects appear once, in their highest-priority category.
+    const categoryPriority = { biomedical: 0, hci: 1, startup: 2 };
+    const categoryRank = project => Math.min(3, ...project.dimensions.map(id => categoryPriority[id] ?? 3));
+    // Date ranges use their latest year; equal dates keep their existing order.
+    const latestYear = project => Math.max(0, ...(String(project.date || '').match(/\b(?:19|20)\d{2}\b/g) || []).map(Number));
+    const sortedProjects = [...projectsData].sort((a, b) => categoryRank(a) - categoryRank(b) || latestYear(b) - latestYear(a));
+    track.innerHTML = sortedProjects.map((project, index) => {
+        const title = project.cardTitle || project.title;
+        const summary = project.cardSummary || project.description;
+        const categories = [...project.dimensions].sort((a, b) => (categoryPriority[a] ?? 3) - (categoryPriority[b] ?? 3)).map(id => dimensionsData[id]?.title || id).join(' / ');
         return `
-            <article class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}" style="--reveal-index: ${pIdx};" tabindex="0" role="button" aria-label="${project.title}">
-                <img src="${project.image}" alt="${project.title}" class="project-image" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22400%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
-                ${hasSubpages ? '<div class="project-subpages-badge">Details</div>' : ''}
-                <div class="project-card-date">${project.date}</div>
-                <div class="project-overlay">
-                    <div class="project-dimensions">${dimensionsHTML}</div>
-                    <h3 class="project-title">${project.title}</h3>
-                    <div class="project-reveal">
-                        <p class="project-description">${truncatedDescription}</p>
-                        ${linksHTML}
+            <article class="project-card" data-dimensions="${project.dimensions.join(',')}" data-project-id="${project.id}" aria-roledescription="slide" aria-label="${index + 1} of ${sortedProjects.length}">
+                <a href="#project/${project.id}" class="project-card-link" data-project-id="${project.id}" aria-labelledby="project-title-${project.id}">
+                    <div class="project-card-media">
+                        <img src="${project.image}" alt="" class="project-image" width="960" height="600" loading="lazy" decoding="async" onerror="this.hidden=true">
                     </div>
-                </div>
+                    <div class="project-card-content">
+                        <div class="project-card-meta"><p class="project-category">${categories}</p><span class="project-card-date">${project.date}</span></div>
+                        <h3 class="project-title" id="project-title-${project.id}">${title}</h3>
+                        <p class="project-description">${summary}</p>
+                        <div class="project-card-footer"><span>Details</span><span aria-hidden="true">↗</span></div>
+                    </div>
+                </a>
             </article>
         `;
     }).join('');
-
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (e.target.closest('.project-link')) return;
-            const projectId = parseInt(this.dataset.projectId);
-            navigateToProject(projectId);
-        });
-        card.addEventListener('keydown', function(e) {
-            if (e.target.closest('.project-link')) return;
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                navigateToProject(parseInt(this.dataset.projectId));
-            }
+    track.querySelectorAll('.project-card-link').forEach(link => {
+        link.addEventListener('click', event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            navigateToProject(Number(link.dataset.projectId));
         });
     });
+}
+
+let syncProjectGallery = () => {};
+
+function initProjectCarousel() {
+    const track = document.getElementById('projectsGrid');
+    const previous = document.getElementById('projectsPrev');
+    const next = document.getElementById('projectsNext');
+    const position = document.getElementById('projectPosition');
+    if (!track || !previous || !next || !position) return;
+    const slides = () => [...track.querySelectorAll('.project-card')].filter(card => !card.hidden);
+    const nearestIndex = cards => {
+        const origin = track.getBoundingClientRect().left;
+        let nearest = 0;
+        cards.forEach((card, index) => {
+            if (Math.abs(card.getBoundingClientRect().left - origin) < Math.abs(cards[nearest].getBoundingClientRect().left - origin)) nearest = index;
+        });
+        return nearest;
+    };
+    const update = () => {
+        const cards = slides();
+        const frame = track.getBoundingClientRect();
+        const inView = cards.map((card, index) => ({ bounds: card.getBoundingClientRect(), index }))
+            .filter(({ bounds }) => Math.min(bounds.right, frame.right) - Math.max(bounds.left, frame.left) >= bounds.width * 0.5);
+        const first = inView.length ? inView[0].index + 1 : (cards.length ? nearestIndex(cards) + 1 : 0);
+        const last = inView.length ? inView[inView.length - 1].index + 1 : first;
+        const range = first === last ? String(first).padStart(2, '0') : `${String(first).padStart(2, '0')}–${String(last).padStart(2, '0')}`;
+        position.textContent = `${range} / ${String(cards.length).padStart(2, '0')}`;
+        previous.disabled = !cards.length || track.scrollLeft <= 2;
+        next.disabled = !cards.length || track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    };
+    const goTo = index => {
+        const cards = slides();
+        if (!cards.length) return;
+        const card = cards[Math.max(0, Math.min(index, cards.length - 1))];
+        const left = track.scrollLeft + card.getBoundingClientRect().left - track.getBoundingClientRect().left;
+        track.scrollTo({ left, behavior: motionBehavior() });
+        requestAnimationFrame(update);
+    };
+    previous.addEventListener('click', () => goTo(nearestIndex(slides()) - 1));
+    next.addEventListener('click', () => goTo(nearestIndex(slides()) + 1));
+    track.addEventListener('keydown', event => {
+        if (event.target !== track) return;
+        const index = nearestIndex(slides());
+        if (event.key === 'ArrowLeft') { event.preventDefault(); goTo(index - 1); }
+        else if (event.key === 'ArrowRight') { event.preventDefault(); goTo(index + 1); }
+        else if (event.key === 'Home') { event.preventDefault(); goTo(0); }
+        else if (event.key === 'End') { event.preventDefault(); goTo(slides().length - 1); }
+    });
+    let queued = false;
+    track.addEventListener('scroll', () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => { queued = false; update(); });
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
+    syncProjectGallery = (reset = false) => {
+        if (reset) track.scrollTo({ left: 0, behavior: 'auto' });
+        requestAnimationFrame(update);
+    };
+    update();
 }
 
 function renderExperience() {
     const timeline = document.getElementById('timeline');
     if (!timeline || !experienceData) return;
-
-    const rowsHTML = [...experienceData]
-        .sort((a, b) => b.sort - a.sort)
-        .map(exp => `
-            <div class="exp-row">
-                <div class="exp-row-main">
-                    <h3 class="exp-row-title">${exp.title}</h3>
-                    <span class="exp-row-org">${exp.organization}</span>
+    const sorted = [...experienceData].sort((a, b) => b.sort - a.sort);
+    const groups = [
+        { id: 'workExperienceHeading', label: 'Work & research', items: sorted.filter(item => item.type !== 'education') },
+        { id: 'educationHeading', label: 'Education', items: sorted.filter(item => item.type === 'education') }
+    ];
+    timeline.innerHTML = `<div class="experience-groups">${groups.map(group => `
+        <section class="experience-group" aria-labelledby="${group.id}">
+            <h3 class="experience-group-label" id="${group.id}">${group.label}</h3>
+            <div class="exp-list">${group.items.map(item => `
+                <div class="exp-row">
+                    <div class="exp-row-main"><h4 class="exp-row-title">${item.title}</h4><span class="exp-row-org">${item.organization}</span></div>
+                    <span class="exp-row-period">${item.period}</span>
                 </div>
-                <span class="exp-row-period">${exp.period}</span>
-            </div>`).join('');
-
-    timeline.innerHTML = `<div class="exp-list">${rowsHTML}</div>`;
+            `).join('')}</div>
+        </section>
+    `).join('')}</div>`;
 }
 
 function renderContact() {
@@ -232,39 +290,75 @@ function renderContact() {
             </a>`;
         }).join('');
 
-    const phoneHTML = contactData.phone ? `<p class="contact-phone"><strong>Phone:</strong> ${contactData.phone}</p>` : '';
-    const locationHTML = contactData.location ? `<p class="contact-location"><strong>Location:</strong> ${contactData.location}</p>` : '';
+    const phoneHTML = contactData.phone ? `<div class="contact-detail"><span class="contact-detail-label">Phone</span><span>${contactData.phone}</span></div>` : '';
 
     contactContent.innerHTML = `
         <div class="contact-info">
-            <p class="contact-email">
-                <strong>Email:</strong> 
-                <a href="mailto:${contactData.email}">${contactData.email}</a>
-            </p>
-            ${phoneHTML}
-            ${locationHTML}
-            <div class="social-links">
-                ${socialLinksHTML}
+            <div class="contact-details-card">
+                <div class="contact-primary">
+                    <span class="contact-detail-label">Primary email</span>
+                    <button type="button" class="contact-copy-email" data-copy-email="${contactData.email}" aria-label="Copy ${contactData.email}">${contactData.email}</button>
+                    <span class="contact-copy-status" role="status" aria-live="polite"></span>
+                </div>
+                <div class="contact-details-secondary">
+                    ${contactData.alternateEmail ? `<div class="contact-detail"><span class="contact-detail-label">University email</span><button type="button" class="contact-copy-email" data-copy-email="${contactData.alternateEmail}" aria-label="Copy ${contactData.alternateEmail}">${contactData.alternateEmail}</button><span class="contact-copy-status" role="status" aria-live="polite"></span></div>` : ''}
+                    ${contactData.location ? `<div class="contact-detail"><span class="contact-detail-label">Based in</span><span>${contactData.location}</span></div>` : ''}
+                    ${phoneHTML}
+                </div>
             </div>
+            <p class="contact-copy-hint">Click an email address to copy it.</p>
+            <div class="social-links">${socialLinksHTML}</div>
         </div>
-        <form class="contact-form" id="contactForm">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+        <form class="contact-form" id="contactForm" aria-label="Prepare an email">
+            <div class="contact-form-row">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
+                <textarea id="message" name="message" rows="3" placeholder="Tell me what you have in mind." required></textarea>
             </div>
-            <button type="submit" class="submit-btn">Send Message</button>
-            <p class="form-note">Clicking send will open your email client to deliver the message.</p>
+            <div class="contact-form-footer">
+                <button type="submit" class="submit-btn">Compose email <span aria-hidden="true">↗</span></button>
+                <p class="form-note">Opens a draft in your email app.</p>
+            </div>
         </form>
     `;
-    
+
+    contactContent.querySelectorAll('.contact-copy-email').forEach(copyEmailLink => {
+        const copyEmailStatus = copyEmailLink.closest('.contact-primary, .contact-detail')?.querySelector('.contact-copy-status');
+        copyEmailLink.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const email = copyEmailLink.dataset.copyEmail;
+            let copied = false;
+            try {
+                if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(email);
+                    copied = true;
+                }
+            } catch (_) {}
+            if (!copied) {
+                const field = document.createElement('textarea');
+                field.value = email;
+                field.setAttribute('readonly', '');
+                field.style.position = 'fixed';
+                field.style.opacity = '0';
+                document.body.appendChild(field);
+                field.select();
+                try { copied = document.execCommand('copy'); } catch (_) {}
+                field.remove();
+                copyEmailLink.focus({ preventScroll: true });
+            }
+            if (copyEmailStatus) copyEmailStatus.textContent = copied ? 'Email copied to clipboard.' : 'Copy failed. Select the address to copy it.';
+        });
+    });
+
     // Initialize form after it's rendered
     initContactForm();
 }
@@ -273,22 +367,25 @@ function renderContact() {
 // PROJECT FILTERING
 // ============================================
 function initProjectFiltering() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card');
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Update active button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            const filter = this.dataset.filter;
-
-            projectCards.forEach(card => {
-                const matches = filter === 'all'
-                    || card.dataset.dimensions.split(',').includes(filter);
-                card.classList.toggle('is-hidden', !matches);
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('#projectsGrid .project-card');
+    const status = document.getElementById('projectFilterStatus');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            buttons.forEach(item => {
+                const active = item === button;
+                item.classList.toggle('active', active);
+                item.setAttribute('aria-pressed', String(active));
             });
+            let count = 0;
+            cards.forEach(card => {
+                const show = button.dataset.filter === 'all' || card.dataset.dimensions.split(',').includes(button.dataset.filter);
+                card.hidden = !show;
+                if (show) count++;
+            });
+            [...cards].filter(card => !card.hidden).forEach((card, index) => card.setAttribute('aria-label', `${index + 1} of ${count}`));
+            syncProjectGallery(true);
+            if (status) status.textContent = `${count} ${count === 1 ? 'project' : 'projects'} in ${button.textContent.trim()}.`;
         });
     });
 }
@@ -296,7 +393,13 @@ function initProjectFiltering() {
 // ============================================
 // SCROLL ANIMATIONS
 // ============================================
+
 function initScrollAnimations() {
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.section').forEach(section => section.classList.add('fade-in-visible'));
+        initScrollProgress();
+        return;
+    }
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -397,12 +500,12 @@ function initContactForm() {
             return;
         }
 
-        // In a real implementation, you would send this to a server
-        // For now, we'll use mailto as a fallback
-        const mailtoLink = `mailto:${contactData.email}?subject=Contact from Portfolio&body=Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage: ${message}`;
-        window.location.href = mailtoLink;
+        const subject = encodeURIComponent('Contact from portfolio');
+        const body = encodeURIComponent(`Name: ${name}
+Email: ${email}
 
-        form.reset();
+${message}`);
+        window.location.href = `mailto:${contactData.email}?subject=${subject}&body=${body}`;
     });
 }
 
@@ -438,67 +541,94 @@ function getProjectFullText(project) {
 // ============================================
 // ROUTING SYSTEM
 // ============================================
-function initRouting() {
-    const backButton = document.getElementById('backButton');
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            navigateToHome();
-        });
+let homeReturnFocus = null;
+let homeReturnY = 0;
+
+function rememberHomePosition() {
+    if (!document.getElementById('pageContainer')?.classList.contains('hidden')) return;
+    homeReturnY = window.scrollY;
+    homeReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    window.history.replaceState({ type: 'home' }, '', window.location.href);
+}
+
+function focusDetailPage() {
+    const heading = document.querySelector('#pageContent h1');
+    if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+        document.title = `${heading.textContent} | Birkan Celik`;
     }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+}
 
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', function(e) {
-        if (e.state) {
-            if (e.state.type === 'dimension') {
-                navigateToDimension(e.state.id, false);
-            } else if (e.state.type === 'project') {
-                navigateToProject(e.state.id, false);
-            } else if (e.state.type === 'subpage') {
-                navigateToSubpage(e.state.projectId, e.state.subpageId, false);
-            }
-        } else {
-            navigateToHome(false);
-        }
+function initRouting() {
+    document.getElementById('backButton')?.addEventListener('click', () => navigateToHome());
+    window.addEventListener('popstate', event => {
+        const state = event.state;
+        if (state?.type === 'dimension') navigateToDimension(state.id, false);
+        else if (state?.type === 'project') navigateToProject(state.id, false);
+        else if (state?.type === 'subpage') navigateToSubpage(state.projectId, state.subpageId, false);
+        else navigateToHome(false, state?.sectionId || null);
     });
-
-    // Check initial hash
     handleInitialRoute();
 }
 
 function handleInitialRoute() {
-    const hash = window.location.hash;
-    if (hash) {
-        const parts = hash.substring(1).split('/');
-        if (parts[0] === 'dimension' && parts[1]) {
-            navigateToDimension(parts[1], false);
-        } else if (parts[0] === 'project' && parts[1]) {
-            const projectId = parseInt(parts[1]);
-            if (parts[2]) {
-                navigateToSubpage(projectId, parts[2], false);
-            } else {
-                navigateToProject(projectId, false);
-            }
+    const parts = window.location.hash.slice(1).split('/');
+    if (parts[0] === 'dimension' && dimensionsData[parts[1]]) {
+        window.history.replaceState({ type: 'dimension', id: parts[1] }, '', window.location.href);
+        navigateToDimension(parts[1], false);
+    } else if (parts[0] === 'project' && projectsData.some(project => project.id === Number(parts[1]))) {
+        const projectId = Number(parts[1]);
+        const project = projectsData.find(item => item.id === projectId);
+        const subpage = project.details?.subpages?.find(item => item.id === parts[2]);
+        if (subpage) {
+            window.history.replaceState({ type: 'subpage', projectId, subpageId: subpage.id }, '', window.location.href);
+            navigateToSubpage(projectId, subpage.id, false);
+        } else {
+            window.history.replaceState({ type: 'project', id: projectId }, '', window.location.href);
+            navigateToProject(projectId, false);
         }
+    } else {
+        const section = document.getElementById(parts[0]);
+        const sectionId = section?.classList.contains('section') ? section.id : 'about';
+        window.history.replaceState({ type: 'home', sectionId }, '', `#${sectionId}`);
+        setHomeView(true);
+        if (sectionId !== 'about') navigateToHome(false, sectionId);
     }
 }
 
-function navigateToHome(updateHistory = true) {
-    const pageContainer = document.getElementById('pageContainer');
-    const mainSections = document.querySelectorAll('.section, .footer');
-    
-    if (pageContainer) {
-        pageContainer.classList.add('hidden');
-    }
-    
-    mainSections.forEach(section => {
-        section.style.display = '';
-    });
-    
+function navigateToHome(updateHistory = true, sectionId = null) {
+    setHomeView(true);
+    const page = document.getElementById('pageContainer');
+    const wasDetail = page && !page.classList.contains('hidden');
+    page?.classList.add('hidden');
+    document.querySelectorAll('.section, .footer').forEach(section => { section.style.display = ''; });
+    document.title = 'Birkan Celik — Engineering, Research & AI';
     if (updateHistory) {
-        window.history.replaceState({ type: 'home' }, '', '#');
+        const state = { type: 'home', ...(sectionId ? { sectionId } : {}) };
+        const hash = sectionId ? `#${sectionId}` : '#projects';
+        if (wasDetail) window.history.pushState(state, '', hash);
+        else window.history.replaceState(state, '', hash);
     }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    syncProjectGallery();
+    if (sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        const heading = section.querySelector('h1, h2');
+        heading?.setAttribute('tabindex', '-1');
+        heading?.focus({ preventScroll: true });
+        scrollToHomeSection(section);
+    } else if (homeReturnFocus?.isConnected && homeReturnFocus !== document.body) {
+        window.scrollTo({ top: homeReturnY, behavior: 'auto' });
+        homeReturnFocus.focus({ preventScroll: true });
+    } else {
+        const projects = document.getElementById('projects');
+        const heading = document.getElementById('projectsHeading');
+        heading?.setAttribute('tabindex', '-1');
+        heading?.focus({ preventScroll: true });
+        if (projects) scrollToHomeSection(projects, 'auto');
+    }
 }
 
 function navigateToDimension(dimensionId, updateHistory = true) {
@@ -510,6 +640,8 @@ function navigateToDimension(dimensionId, updateHistory = true) {
     const mainSections = document.querySelectorAll('.section, .footer');
 
     if (!pageContainer || !pageContent) return;
+    if (updateHistory) rememberHomePosition();
+    setHomeView(false);
 
     // Hide main sections
     mainSections.forEach(section => {
@@ -526,7 +658,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
     const projectsHTML = dimensionProjects.map(project => {
         const hasDetails = project.details ? 'has-details' : 'no-details';
         return `
-        <div class="dimension-project-card ${hasDetails}" data-project-id="${project.id}">
+        <a href="#project/${project.id}" class="dimension-project-card ${hasDetails}" data-project-id="${project.id}">
             <div class="dimension-project-image">
                 <img src="${project.image}" alt="${project.title}" loading="lazy" decoding="async" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%230F0E0D%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23FAFAF9%22 font-family=%22Arial%22 font-size=%2218%22%3EProject Image%3C/text%3E%3C/svg%3E'">
             </div>
@@ -543,7 +675,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
                     <div class="dimension-project-date">${project.date}</div>
                 </div>
             </div>
-        </div>
+        </a>
     `;
     }).join('');
 
@@ -582,7 +714,9 @@ function navigateToDimension(dimensionId, updateHistory = true) {
     `;
 
     document.querySelectorAll('.dimension-project-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function(event) {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
             const projectId = parseInt(this.dataset.projectId);
             const project = projectsData.find(p => p.id === projectId);
             if (project && project.details) {
@@ -603,7 +737,7 @@ function navigateToDimension(dimensionId, updateHistory = true) {
         window.history.pushState({ type: 'dimension', id: dimensionId }, '', `#dimension/${dimensionId}`);
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    focusDetailPage();
 }
 
 function navigateToProject(projectId, updateHistory = true) {
@@ -621,6 +755,8 @@ function navigateToProject(projectId, updateHistory = true) {
     const mainSections = document.querySelectorAll('.section, .footer');
 
     if (!pageContainer || !pageContent) return;
+    if (updateHistory) rememberHomePosition();
+    setHomeView(false);
 
     // Hide main sections
     mainSections.forEach(section => {
@@ -640,7 +776,7 @@ function navigateToProject(projectId, updateHistory = true) {
                     const preview = firstSentence.length > 150 ? subpage.content.substring(0, 147) + '...' : firstSentence;
                     
                     return `
-                    <div class="subpage-card" data-subpage-id="${subpage.id}">
+                    <a href="#project/${project.id}/${subpage.id}" class="subpage-card" data-subpage-id="${subpage.id}">
                         <div class="subpage-card-header">
                             <div class="subpage-card-number">${index + 1}</div>
                             <h4>${subpage.title}</h4>
@@ -649,7 +785,7 @@ function navigateToProject(projectId, updateHistory = true) {
                         <div class="subpage-card-footer">
                             <span class="subpage-link">Read more</span>
                         </div>
-                    </div>
+                    </a>
                 `;
                 }).join('')}
             </div>
@@ -709,6 +845,7 @@ function navigateToProject(projectId, updateHistory = true) {
 
     const primaryDimension = dimensionsData[project.dimensions[0]];
     const readingMinutes = estimateReadingTime(getProjectFullText(project));
+    const leadOutcome = project.details?.results?.[0];
 
     // Build TOC entries from sections
     const tocSections = [
@@ -763,6 +900,7 @@ function navigateToProject(projectId, updateHistory = true) {
                             </div>
                             ${linksHTML}
                         </div>
+                        ${leadOutcome ? `<p class="project-lead-outcome"><span>At a glance</span>${leadOutcome}</p>` : ''}
                     </div>
                 </div>
                 <div class="project-detail-image">
@@ -853,7 +991,9 @@ function navigateToProject(projectId, updateHistory = true) {
 
     if (project.details.subpages && project.details.subpages.length > 0) {
         document.querySelectorAll('.subpage-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function(event) {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
                 const subpageId = this.dataset.subpageId;
                 navigateToSubpage(projectId, subpageId);
             });
@@ -877,7 +1017,7 @@ function navigateToProject(projectId, updateHistory = true) {
         window.history.pushState({ type: 'project', id: projectId }, '', `#project/${projectId}`);
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    focusDetailPage();
 }
 
 function navigateToSubpage(projectId, subpageId, updateHistory = true) {
@@ -892,6 +1032,8 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
     const mainSections = document.querySelectorAll('.section, .footer');
 
     if (!pageContainer || !pageContent) return;
+    if (updateHistory) rememberHomePosition();
+    setHomeView(false);
 
     // Hide main sections
     mainSections.forEach(section => {
@@ -1043,7 +1185,7 @@ function navigateToSubpage(projectId, subpageId, updateHistory = true) {
         window.history.pushState({ type: 'subpage', projectId: projectId, subpageId: subpageId }, '', `#project/${projectId}/${subpageId}`);
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    focusDetailPage();
 }
 
 // Initialize reading progress indicator
